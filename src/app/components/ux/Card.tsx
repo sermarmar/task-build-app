@@ -48,8 +48,8 @@ export const CardTitle: React.FC<{ children: React.ReactNode, className?: string
 
 export const CardText: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
     return (
-        <p className={`text-gray-600 mt-2 ${className}`}>
+        <div className={`text-gray-600 mt-2 ${className}`}>
             { children }
-        </p>
+        </div>
     )
 }

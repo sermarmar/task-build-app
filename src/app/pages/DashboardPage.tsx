@@ -1,7 +1,8 @@
 
 import { Navbar } from "../components/template/Navbar";
-import { Pomodoro } from "../components/template/Pomodoro";
-import { TasksCard } from "../components/template/tasks/TasksCard";
+import { Pomodoro } from '../features/Pomodoro';
+import { TasksCard } from "../features/tasks/TasksCard";
+
 
 export const DashboardPage: React.FC = () => {
 

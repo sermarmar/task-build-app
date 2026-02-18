@@ -1,0 +1,22 @@
+[
+    {
+        "key": "sports",
+        "value": "Deporte"
+    },
+    {
+        "key": "study",
+        "value": "Estudio"
+    },
+    {
+        "key": "work",
+        "value": "Trabajo"
+    },
+    {
+        "key": "leisure",
+        "value": "Ocio"
+    },
+    {
+        "key": "home",
+        "value": "Hogar"
+    }
+]

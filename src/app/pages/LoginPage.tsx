@@ -1,5 +1,5 @@
 import { Clock } from "lucide-react";
-import { LoginForm } from "../components/template/LoginForm";
+import { LoginForm } from '../features/LoginForm';
 
 export const LoginPage: React.FC = () => {
 

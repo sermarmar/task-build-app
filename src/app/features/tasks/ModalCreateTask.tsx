@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { Card, CardTitle } from '../../ux/Card';
-import { Input } from '../../ux/Input';
+import { Card, CardTitle } from "../../components/ux/Card";
+import { Input } from "../../components/ux/Input";
+import { categories, states } from "../../shared/Option";
+import { Select } from "../../components/ux/Select";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -9,6 +11,7 @@ interface ModalCreateTaskProps {
 }
 
 export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose }) => {
+
     // keep mounted to allow exit animation
     const [visible, setVisible] = useState(show);
 
@@ -27,7 +30,6 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
         <div
             id="modal-create-task"
             tabIndex={-1}
-            aria-hidden="true"
             className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${
                 show ? "backdrop-blur-sm opacity-100" : "backdrop-blur-none opacity-0"
             }`}
@@ -42,10 +44,14 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                     Crear nueva tarea
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form className="mt-4">
-                    <div>
-                        <Input type="text" placeholder="Título de la tarea" className="w-full mb-4 text-2xl" />
+                <form className="grid grid-cols-3 gap-5 mt-4">
+                    <Input type="text" placeholder="Título de la tarea" className="w-full col-span-3 mb-4 text-2xl" />
+                    <div className="col-span-2">
                         <Input type="textarea" label="Descripción" placeholder="Descripción de la tarea" className="w-full mb-4" />
+                    </div>
+                    <div>
+                        <Select name="state" label="Estado" list={ states.map(s => s.value) } onChange={() => {}} className="mb-4"/>
+                        <Select name="category" label="Categoría" list={ categories.map(c => c.value) } onChange={() => {}} className="mb-4"/>
                     </div>
                 </form>
             </Card>

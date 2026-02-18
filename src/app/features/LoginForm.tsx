@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-import { Button } from "../ux/Button"
-import { Input } from "../ux/Input"
-import { useAuth } from "../../contexts/auth/useAuth";
+import { useAuth } from '../contexts/auth/useAuth';
+import { useNavigate } from 'react-router';
+import { Input } from '../components/ux/Input';
+import { Button } from '../components/ux/Button';
+import { useState, useEffect } from 'react';
 
 export const LoginForm: React.FC = () => {
 

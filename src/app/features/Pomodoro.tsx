@@ -1,8 +1,8 @@
 import { ClockFading, Pause, Play, RotateCcw } from "lucide-react";
-import { Card, CardBody, CardText, CardTitle } from "../ux/Card";
 import type React from 'react';
-import { Button } from "../ux/Button";
 import { useEffect, useState } from "react";
+import { Card, CardTitle, CardBody, CardText } from '../components/ux/Card';
+import { Button } from '../components/ux/Button';
 
 export const Pomodoro: React.FC = () => {
 
@@ -12,6 +12,7 @@ export const Pomodoro: React.FC = () => {
     const MINUTES_WORK = 25;
     const MINUTES_SHORT_BREAK = 5;
     const MINUTES_LONG_BREAK = 15;
+    const audio = new Audio('/assets/alarm.mp3');
 
     const [minutes, setMinutes] = useState<number>(25);
     const [seconds, setSeconds] = useState<number>(0);
@@ -21,6 +22,7 @@ export const Pomodoro: React.FC = () => {
 
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
+        audio.load();
         if(isActive) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             interval = setInterval(() => {
@@ -29,6 +31,7 @@ export const Pomodoro: React.FC = () => {
                         // Timer completed
                         setIsActive(false);
                         retrieveTimerByMode(mode);
+                        audio.play();
                     } else {
                         setMinutes(minutes - 1);
                         setSeconds(59);
@@ -49,7 +52,7 @@ export const Pomodoro: React.FC = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [isActive, seconds, minutes, mode])
+    }, [isActive, seconds, minutes, mode, audio]);
     
 
     const toggleTimer = () => {
@@ -61,6 +64,8 @@ export const Pomodoro: React.FC = () => {
         // Lógica para reiniciar el temporizador
         setIsActive(false);
         retrieveTimerByMode(mode);
+        audio.currentTime = 0;
+        audio.pause();
     }
 
     const changeMode = (newMode: 'work' | 'shortBreak' | 'longBreak') => {
@@ -101,9 +106,9 @@ export const Pomodoro: React.FC = () => {
                     <div className="text-7xl font-bold text-center mt-8">
                         {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
                     </div>
-                    <p className="text-center mt-2 text-text-muted">
+                    <div className="text-center mt-2 text-text-muted">
                         Tiempo de trabajo
-                    </p>
+                    </div>
                     <div className="flex justify-center mt-4 gap-4">
                         <Button type="button" color="primary" onClick={() => toggleTimer()}>
                             {isActive ? <Pause /> : <Play />}
@@ -114,9 +119,9 @@ export const Pomodoro: React.FC = () => {
                             Reiniciar
                         </Button>
                     </div>
-                    <p className="text-center mt-5 text-text-muted">
+                    <div className="text-center mt-5 text-text-muted">
                         Cíclos completados: {completedCycles}
-                    </p>
+                    </div>
                 </CardText>
             </CardBody>
             

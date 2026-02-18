@@ -1,16 +1,16 @@
 import { ClipboardList, Plus } from "lucide-react";
-import { Card, CardTitle } from "../../ux/Card";
-import { Button } from "../../ux/Button";
 import { ModalCreateTask } from "./ModalCreateTask";
 
 import { useState } from "react";
+import { Card, CardTitle } from "../../components/ux/Card";
+import { Button } from "../../components/ux/Button";
 
 export const TasksCard: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <>
-            <Card >
+            <Card>
                 <CardTitle className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
                         <ClipboardList />

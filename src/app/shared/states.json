@@ -1,0 +1,22 @@
+[
+    {
+        "key": "pending",
+        "value": "Pendiente"
+    },
+    {
+        "key": "in_progress",
+        "value": "En progreso"
+    },
+    {
+        "key": "testing",
+        "value": "Testing"
+    },
+    {
+        "key": "completed",
+        "value": "Completada"
+    },
+    {
+        "key": "cancelled",
+        "value": "Cancelada"
+    }
+]
