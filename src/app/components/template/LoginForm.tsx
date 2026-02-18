@@ -62,10 +62,12 @@ export const LoginForm: React.FC = () => {
                 value={password}
                 required
             />
-
-            <Button type="submit" disabled={loading}>
-                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-            </Button>
+            <div className="flex justify-end">
+                <Button type="submit" disabled={loading} >
+                    {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                </Button>
+            </div>
+            
         </form>
     )
 }

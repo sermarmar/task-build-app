@@ -4,7 +4,7 @@ import { RouterProvider } from './app/routes/RouteProvider'
 function App() {
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="h-screen">
       <RouterProvider />
     </div>
   )
