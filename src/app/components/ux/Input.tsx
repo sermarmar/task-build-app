@@ -8,9 +8,10 @@ interface InputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
     required?: boolean;
+    className?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ name, label, type, value, onChange, placeholder, required }) => {
+export const Input: React.FC<InputProps> = ({ name, label, type, value, onChange, placeholder, required, className }) => {
     
     let labelElement: ReactElement = <></>;
 
@@ -28,7 +29,7 @@ export const Input: React.FC<InputProps> = ({ name, label, type, value, onChange
                 value={ value }
                 name={ name }
                 onChange={ onChange }
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                className={`w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition ${className || ''}`}
                 placeholder={ placeholder }
                 required ={ required }
             />

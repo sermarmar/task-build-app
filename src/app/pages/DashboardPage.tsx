@@ -1,8 +1,7 @@
 
-import { ClipboardList } from "lucide-react";
 import { Navbar } from "../components/template/Navbar";
-import { Card, CardTitle } from "../components/ux/Card";
 import { Pomodoro } from "../components/template/Pomodoro";
+import { TasksCard } from "../components/template/tasks/TasksCard";
 
 export const DashboardPage: React.FC = () => {
 
@@ -14,12 +13,7 @@ export const DashboardPage: React.FC = () => {
                     <Pomodoro />
                 </div>
                 <div className="col-span-2">
-                    <Card >
-                        <CardTitle className="flex gap-2 items-center">
-                            <ClipboardList />
-                            Mis Tareas
-                        </CardTitle>
-                    </Card>
+                    <TasksCard />
                 </div>
                 
             </div>
