@@ -4,6 +4,7 @@ import { Card, CardTitle } from "../../components/ux/Card";
 import { Input } from "../../components/ux/Input";
 import { categories, states } from "../../shared/Option";
 import { Select } from "../../components/ux/Select";
+import { TextareaDynamic } from "../../components/ux/TextareaDynamic";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -44,10 +45,10 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                     Crear nueva tarea
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form className="grid grid-cols-3 gap-5 mt-4">
+                <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-3 gap-5 mt-4">
                     <Input type="text" placeholder="Título de la tarea" className="w-full col-span-3 mb-4 text-2xl" />
                     <div className="col-span-2">
-                        <Input type="textarea" label="Descripción" placeholder="Descripción de la tarea" className="w-full mb-4" />
+                        <TextareaDynamic label="Descripción" />
                     </div>
                     <div>
                         <Select name="state" label="Estado" list={ states.map(s => s.value) } onChange={() => {}} className="mb-4"/>
