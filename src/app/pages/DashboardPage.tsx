@@ -1,7 +1,7 @@
 
 import { Navbar } from "../components/template/Navbar";
 import { Pomodoro } from '../features/Pomodoro';
-import { TasksCard } from "../features/tasks/TasksCard";
+import { TasksBoard } from "../features/tasks/components/TasksBoard";
 
 
 export const DashboardPage: React.FC = () => {
@@ -14,7 +14,7 @@ export const DashboardPage: React.FC = () => {
                     <Pomodoro />
                 </div>
                 <div className="col-span-2">
-                    <TasksCard />
+                    <TasksBoard />
                 </div>
                 
             </div>

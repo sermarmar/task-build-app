@@ -1,16 +1,31 @@
 import type React from "react";
 
-export const Card: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
+interface CardProps {
+    children: React.ReactNode;
+    className?: string;
+    /**
+     * Tailwind background utility class (including the `bg-` prefix).
+     * Example: "bg-white", "bg-red-500", "bg-gray-100".
+     */
+    color?: string;
+    withPadding?: boolean;
+}
+
+export const Card: React.FC<CardProps> = ({ children, className = "", color = "bg-white", withPadding = true }) => {
+    // Expect the full bg- utility to avoid Tailwind purge issues with dynamic values.
+    const paddingClass = withPadding ? "p-6" : "";
+    const classes = `${color} rounded-lg shadow-lg ${paddingClass} ${className}`;
+
     return (
-        <div className={`bg-white rounded-lg shadow-lg p-6 ${className}`}>
+        <div className={classes}>
             { children }
         </div>
-    )
+    );
 }
 
 export const CardHeader: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
     return (
-        <div className={`border-b pb-4 mb-4 ${className}`}>
+        <div className={`border-b pb-4 ${className}`}>
             { children }
         </div>
     )

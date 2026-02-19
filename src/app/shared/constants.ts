@@ -1,3 +1,5 @@
+import type { Status } from "../features/tasks/models/Status";
+
 /* ─── Constants ──────────────────────────────────────────────────────────── */
 export const MODES = {
   pomodoro: { label: "Pomodoro",       s: 25 * 60, color: "#e85d35", ring: "stroke-[#e85d35]" },
@@ -11,7 +13,13 @@ export const PRIORITIES = {
   baja:  { label: "Baja",  hex: "#4fa38a" },
 };
 
-export const ESTADOS = ["pendiente", "en progreso", "revisión", "completada", "cerrada"];
+export const ESTADOS: Status[] = [
+  { id: "1", name: "Pendiente", color: "slate-600", active: true },
+  { id: "2", name: "En progreso", color: "blue-600", active: true },
+  { id: "3", name: "Revisión", color: "amber-500", active: true },
+  { id: "4", name: "Completada", color: "teal-600", active: true },
+  { id: "5", name: "Cerrada", color: "gray-700", active: false },
+];
 
 export const ESTADO_HEX = {
   "pendiente":   "#555",
