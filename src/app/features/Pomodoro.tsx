@@ -3,6 +3,7 @@ import type React from 'react';
 import { useEffect, useState } from "react";
 import { Card, CardTitle, CardBody, CardText } from '../components/ux/Card';
 import { Button } from '../components/ux/Button';
+import { useAlarm } from "../hooks/useAlarm";
 
 export const Pomodoro: React.FC = () => {
 
@@ -12,17 +13,16 @@ export const Pomodoro: React.FC = () => {
     const MINUTES_WORK = 25;
     const MINUTES_SHORT_BREAK = 5;
     const MINUTES_LONG_BREAK = 15;
-    const audio = new Audio('/assets/alarm.mp3');
 
-    const [minutes, setMinutes] = useState<number>(25);
+    const [minutes, setMinutes] = useState<number>(MINUTES_WORK);
     const [seconds, setSeconds] = useState<number>(0);
     const [isActive, setIsActive] = useState<boolean>(false);
-    const [mode, setMode] = useState<'work' | 'shortBreak' | 'longBreak'>('work');
+    const [mode, setMode] = useState<'work' | 'shortBreak' | 'longBreak'>(WORK);
     const [completedCycles, setCompletedCycles] = useState<number>(0);
+    const alarm = useAlarm();
 
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
-        audio.load();
         if(isActive) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             interval = setInterval(() => {
@@ -30,20 +30,34 @@ export const Pomodoro: React.FC = () => {
                     if (minutes === 0) {
                         // Timer completed
                         setIsActive(false);
-                        retrieveTimerByMode(mode);
-                        audio.play();
+                        if(mode === SHORT_BREAK) {
+                            setMode(WORK);
+                            retrieveTimerByMode(WORK);
+                        } else if (mode === WORK) {
+                            setMode(SHORT_BREAK);
+                            retrieveTimerByMode(SHORT_BREAK);
+                        }
+
+                        setCompletedCycles(prev => {
+                            if (prev < 5 && mode === WORK) {
+                                return prev + 1;
+                            }
+                            return prev;
+                        });
+                        alarm.play();
+                        
                     } else {
                         setMinutes(minutes - 1);
                         setSeconds(59);
                     }
                 } else {
                     setSeconds(seconds - 1);
-                    setCompletedCycles(prev => {
+                    /*setCompletedCycles(prev => {
                         if (prev < 3 && mode === WORK) {
                             return prev + 1;
                         }
                         return prev;
-                    });
+                    });*/
                 }
             }, 1000)
         } else if(interval) {
@@ -52,7 +66,7 @@ export const Pomodoro: React.FC = () => {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [isActive, seconds, minutes, mode, audio]);
+    }, [isActive, seconds, minutes, mode, alarm]);
     
 
     const toggleTimer = () => {
