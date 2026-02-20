@@ -7,10 +7,11 @@ import { Button } from "../../../components/ux/Button";
 import { TaskColumns } from "./TaskColumns";
 import { ESTADOS } from "../../../shared/constants";
 import type { Task } from "../models/Task";
+import { tasksMock } from "../mocks/TaskMock";
 
 export const TasksBoard: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Task[]>(tasksMock);
 
     return (
         <>
@@ -31,7 +32,7 @@ export const TasksBoard: React.FC = () => {
                     </Button>
                 </CardTitle>
                 <CardBody className="mt-5">
-                    <TaskColumns states={ESTADOS} tasks={tasks} />
+                    <TaskColumns status={ESTADOS} tasks={tasks} />
                 </CardBody>
             </Card>
             <ModalCreateTask show={isModalOpen} onClose={() => setIsModalOpen(false)} />

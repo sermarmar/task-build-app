@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { Card, CardBody, CardTitle, CardHeader } from '../../../components/ux/Card';
+import { Card, CardBody, CardTitle, CardHeader, CardText } from '../../../components/ux/Card';
+import type { Task } from "../models/Task";
+import type { Status } from "../models/Status";
+import { Badge } from "../../../components/ux/Badge";
+import { TaskCard } from "./TaskCard";
 
 interface TasksColumnProps {
     status: Status;
-    tasks: any[];
+    tasks: Task[];
 }
 
 export const TasksColumn: React.FC<TasksColumnProps> = ({ status, tasks }) => {
@@ -17,8 +21,8 @@ export const TasksColumn: React.FC<TasksColumnProps> = ({ status, tasks }) => {
             </CardHeader>
             
             <CardBody className="flex flex-col gap-4 mb-4 p-4">
-            { tasksData.map((t, i) => (
-                <div key={i}>{ t.title }</div>
+            { tasksData.map((task) => (
+                <TaskCard key={task.id} task={task} />
             )) }
             {
                 tasksData.length === 0 && (
