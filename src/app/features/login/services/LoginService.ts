@@ -7,7 +7,7 @@ export const LoginService = {
      * 1. Busca el email asociado al username en la tabla `profile`.
      * 2. Autentica con Supabase Auth usando email + password.
      */
-    login: async (username: string, password: string) => {
+    login: async (username: string, password: string): Promise<{ user: User | null, error: any }> => {
         // Paso 1: Obtener el email del perfil por username
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -16,7 +16,7 @@ export const LoginService = {
             .single();
 
         if (profileError || !profile?.email) {
-            return { data: null, error: { message: 'Usuario no encontrado.' } };
+            return { user: null, error: { message: 'Usuario no encontrado.' } };
         }
 
         // Paso 2: Autenticar con email + contraseña
@@ -26,13 +26,13 @@ export const LoginService = {
         });
 
         if (error) {
-            return { data: null, error };
+            return { user: null, error };
         }
         const user: User = {
             id: profile.id,
             username: profile.username,
             email: profile.email,
-            name: profile.full_name,
+            name: profile.name,
             lastName: profile.last_name,
         };
 
