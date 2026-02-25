@@ -1,6 +1,7 @@
 import React, { useState, useEffect, type ReactNode } from 'react';
 import { AuthContext, type AuthContextType } from './AuthContext';
-import { LoginService } from '../../../services/LoginService';
+import { LoginService } from '../../features/login/services/LoginService';
+import type { User } from '../../features/login/model/User';
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -8,15 +9,15 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Verificar si hay sesión guardada al montar el componente
     useEffect(() => {
-        const token = sessionStorage.getItem('token');
-        const savedUser = sessionStorage.getItem('user');
+        const savedUser: User | null = JSON.parse(sessionStorage.getItem('user') || '{}');
+        console.log(savedUser);
 
-        if (token && savedUser) {
+        if (savedUser) {
             setIsAuthenticated(true);
             setUser(savedUser);
         }
@@ -27,11 +28,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(true);
         try {
             const response = await LoginService.login(username, password);
-            if (response.success) {
+            console.log(response);
+            if (response.user) {
                 setIsAuthenticated(true);
-                setUser(username);
-                sessionStorage.setItem('user', username);
-                sessionStorage.setItem('token', response.token);
+                setUser(response.user);
+                sessionStorage.setItem('user', JSON.stringify(response.user));
             }
         } finally {
             setLoading(false);
@@ -41,7 +42,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const logout = () => {
         setIsAuthenticated(false);
         setUser(null);
-        sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
     };
 

@@ -1,8 +1,9 @@
 import { createContext } from "react";
+import type { User } from "../../features/login/model/User";
 
 export interface AuthContextType {
     isAuthenticated: boolean;
-    user: string | null;
+    user: User | null;
     loading: boolean;
     login: (username: string, password: string) => Promise<void>;
     logout: () => void;
