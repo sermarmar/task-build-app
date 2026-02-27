@@ -14,7 +14,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Verificar si hay sesión guardada al montar el componente
     useEffect(() => {
-        const savedUser: User | null = JSON.parse(sessionStorage.getItem('user') || '{}');
+        const savedUser: User | null = JSON.parse(sessionStorage.getItem('user') || 'null');
 
         if (savedUser) {
             setIsAuthenticated(true);
