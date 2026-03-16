@@ -99,7 +99,7 @@ const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement> }> = ({
             onMouseDown={(e) => { e.preventDefault(); exec("removeFormat"); setTimeout(refresh, 0); }}
             className="px-2 py-1 rounded border border-[#252525] bg-transparent text-[#555] text-[11px] hover:bg-[#1e1e1e] hover:text-[#e8e0d5] hover:border-[#3a3a3a] transition-all"
             title="Limpiar formato"
-        >✕ fmt</button>
+        >Borrar formato</button>
         </div>
     );
 }

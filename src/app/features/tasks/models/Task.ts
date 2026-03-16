@@ -1,14 +1,13 @@
 import type { Priority } from "./Priority";
-import type { Status } from "./Status";
 
 export interface Task {
-    id: string;
+    id?: string;
     title: string;
     description: string;
-    status: Status;
-    category: string;
+    status_id: string;
+    category_id: string;
     points: number;
-    priority: Priority;
-    createdAt: Date;
-    updatedAt: Date;
+    priority?: Priority;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

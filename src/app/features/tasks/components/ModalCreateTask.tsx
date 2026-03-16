@@ -7,6 +7,8 @@ import { Button } from "../../../components/ux/Button";
 import { Stars } from "../../../components/ux/Stars";
 import { SelectCategory } from "../../../components/template/category/SelectCategory";
 import { SelectStatus } from "../../../components/template/status/SelectStatus";
+import { CreateTaskService } from "../services/CreateTaskService";
+import type { Task } from "../models/Task";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -17,6 +19,11 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     // keep mounted to allow exit animation
     const [visible, setVisible] = useState(show);
+    const [title, setTitle] = useState('');
+    const [points, setPoints] = useState(0);
+    const [description, setDescription] = useState('');
+    const [category_id, setCategoryId] = useState('');
+    const [status_id, setStatusId] = useState('');
 
     useEffect(() => {
         if (show) {
@@ -28,6 +35,26 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
     }, [show]);
 
     if (!visible) return null;
+
+    const handleCreateTask = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const task: Task = {
+            title,
+            description,
+            points,
+            category_id,
+            status_id
+        };
+
+        const response = await CreateTaskService.create(task);
+
+        if (response.error) {
+            alert("Error al crear la tarea")
+        } else {
+            onClose();
+        }
+    }
 
     return (
         <div
@@ -46,16 +73,15 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                     Crear nueva tarea
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-3 gap-5 mt-4">
-                    <Input type="text" placeholder="Escribe un título para la tarea" className="w-full col-span-3 mb-4 text-2xl" />
+                <form onSubmit={ handleCreateTask } className="grid grid-cols-3 gap-5 mt-4">
+                    <Input type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Escribe un título para la tarea" className="w-full col-span-3 mb-4 text-2xl" />
                     <div className="col-span-2">
-                        <TextareaDynamic label="Descripción" />
+                        <TextareaDynamic label="Descripción" onChange={(value) => setDescription(value)}/>
                     </div>
                     <div>
-                        <Stars className="mb-4"/>
-                        <SelectCategory />
-                        <SelectStatus />
-                        {/*<Select name="state" label="Estado" list={ ESTADOS.map(s => s.name) } onChange={() => {}} className="mb-4"/>*/}
+                        <Stars points={points} onChange={setPoints} className="mb-4" />
+                        <SelectCategory onChange={(c) => setCategoryId(c.id)}/>
+                        <SelectStatus onChange={(s) => setStatusId(s.id)}/>
                         <div className="flex justify-end items-end h-53">
                             <Button type="submit" color="primary" className="justify-center">Crear tarea</Button>
                         </div>

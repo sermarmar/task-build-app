@@ -2,11 +2,13 @@ import { Star } from "lucide-react";
 import { useState } from "react";
 
 interface StartProps {
+  points?: number;
   className?: string;
+  onChange?: (points: number) => void;
 }
 
-export const Stars: React.FC<StartProps> = ({ className }) => {
-  const [stars, setStars] = useState(0);
+export const Stars: React.FC<StartProps> = ({ points = 0, className, onChange }) => {
+  const [stars, setStars] = useState(points);
   const [hover, setHover] = useState(0);
 
   return (
@@ -17,7 +19,10 @@ export const Stars: React.FC<StartProps> = ({ className }) => {
           <Star
             key={star}
             onMouseOver={() => setHover(star)}
-            onClick={() => setStars(star)}
+            onClick={() => {
+              setStars(star);
+              onChange?.(star);
+            }}
             className={`cursor-pointer ${(hover || stars) >= star ? "text-yellow-500" : "text-gray-500"}`}
           />
         ))}

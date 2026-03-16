@@ -3,7 +3,7 @@ import { CategoryService } from "../../../core/service/categories/CategoryServic
 import type { Category } from "../../../core/models/Category";
 import { Select } from "../../ux/Select";
 
-export const SelectCategory = () => {
+export const SelectCategory = ({ onChange }: { onChange: (category: Category) => void }) => {
 
     const [categories, setCategories] = useState<Category[]>([]);
 
@@ -18,7 +18,10 @@ export const SelectCategory = () => {
             name="category" 
             label="Categoría" 
             list={ categories } 
-            onChange={() => {}} 
+            onChange={(e) => {
+                const selected = categories.find(c => c.id === e.target.value);
+                if (selected) onChange(selected);
+            }} 
             className="mb-4"
             getOptionValue={(category: Category) => category.id}
             getOptionLabel={(category: Category) => category.name}
