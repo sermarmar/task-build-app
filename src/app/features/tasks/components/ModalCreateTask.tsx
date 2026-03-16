@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Card, CardTitle } from "../../../components/ux/Card";
 import { Input } from "../../../components/ux/Input";
-import { Select } from "../../../components/ux/Select";
 import { TextareaDynamic } from "../../../components/ux/TextareaDynamic";
 import { Button } from "../../../components/ux/Button";
-import { CATEGORIAS, ESTADOS } from "../../../shared/constants";
+import { Stars } from "../../../components/ux/Stars";
+import { SelectCategory } from "../../../components/template/category/SelectCategory";
+import { SelectStatus } from "../../../components/template/status/SelectStatus";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -51,8 +52,10 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                         <TextareaDynamic label="Descripción" />
                     </div>
                     <div>
-                        <Select name="state" label="Estado" list={ ESTADOS.map(s => s.name) } onChange={() => {}} className="mb-4"/>
-                        <Select name="category" label="Categoría" list={ CATEGORIAS.map(c => c.label) } onChange={() => {}} className="mb-4"/>
+                        <Stars className="mb-4"/>
+                        <SelectCategory />
+                        <SelectStatus />
+                        {/*<Select name="state" label="Estado" list={ ESTADOS.map(s => s.name) } onChange={() => {}} className="mb-4"/>*/}
                         <div className="flex justify-end items-end h-53">
                             <Button type="submit" color="primary" className="justify-center">Crear tarea</Button>
                         </div>

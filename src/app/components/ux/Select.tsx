@@ -1,16 +1,19 @@
 import type { ReactElement } from "react";
 
-interface InputProps {
+
+interface InputProps<T> {
     name: string;
     label?: string;
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     required?: boolean;
     className?: string;
-    list: string[];
+    list: T[];
+    getOptionValue: (item: T) => string;
+    getOptionLabel: (item: T) => string;
 }
 
-export const Select: React.FC<InputProps> = ({ name, label, value, onChange, required, className, list }) => {
+export const Select: React.FC<InputProps<T>> = ({ name, label, value, onChange, required, className, list, getOptionValue, getOptionLabel }) => {
     
     let labelElement: ReactElement = <></>;
 
@@ -31,7 +34,7 @@ export const Select: React.FC<InputProps> = ({ name, label, value, onChange, req
                 required ={ required }
             >
                 {
-                    list.map((item, index) => <option key={index} value={item}>{item}</option>)
+                    list.map((item: T, index: number) => <option key={index} value={getOptionValue(item)}>{getOptionLabel(item)}</option>)
                 }
             </select>
         </>

@@ -7,6 +7,7 @@ export interface Task {
     description: string;
     status: Status;
     category: string;
+    points: number;
     priority: Priority;
     createdAt: Date;
     updatedAt: Date;
