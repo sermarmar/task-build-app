@@ -27,6 +27,14 @@ export const CategoryService = {
             return { categories, error: null };
         }
         
+    },
+
+    getFirstCategory: async (): Promise<{ category: Category | null, error: any }> => {
+        const categoriesJson = JSON.parse(sessionStorage.getItem('categories') || 'null');
+        if (categoriesJson && categoriesJson.length > 0) {
+            return { category: categoriesJson[0], error: null };
+        }
+        return { category: null, error: null };
     }
 
 }

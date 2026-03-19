@@ -27,6 +27,14 @@ export const StatusService = {
             return { status: statuses, error: null };
         }
         
+    },
+
+    getFirstStatus: async (): Promise<{ status: Status | null, error: any }> => {
+        const statusJson = JSON.parse(sessionStorage.getItem('status') || 'null');
+        if (statusJson && statusJson.length > 0) {
+            return { status: statusJson[0], error: null };
+        }
+        return { status: null, error: null };
     }
 
 }

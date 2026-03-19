@@ -9,6 +9,12 @@ import { SelectCategory } from "../../../components/template/category/SelectCate
 import { SelectStatus } from "../../../components/template/status/SelectStatus";
 import { CreateTaskService } from "../services/CreateTaskService";
 import type { Task } from "../models/Task";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import type { TaskFormValues } from "../resource/TaskResponse";
+import { CategoryService } from "../../../core/service/categories/CategoryService";
+import type { Category } from "../../../core/models/Category";
+import type { Status } from "../../../core/models/Status";
+import { StatusService } from "../../../core/service/status/StatusService";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -19,11 +25,31 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     // keep mounted to allow exit animation
     const [visible, setVisible] = useState(show);
-    const [title, setTitle] = useState('');
-    const [points, setPoints] = useState(0);
-    const [description, setDescription] = useState('');
-    const [category_id, setCategoryId] = useState('');
-    const [status_id, setStatusId] = useState('');
+    const [category, setCategory] = useState<Category | null>(null);
+    const [status, setStatus] = useState<Status | null>(null);
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            const res = await CategoryService.getFirstCategory();
+            setCategory(res.category);
+        };
+        const fetchStatus = async () => {
+            const res = await StatusService.getFirstStatus();
+            setStatus(res.status);
+        };
+        fetchStatus();
+        fetchCategory();
+    }, []);
+
+    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<TaskFormValues>({
+        defaultValues: {
+            title: '',
+            description: '',
+            points: 0,
+            category_id: category ? category.id : '',
+            status_id: status ? status.id : '',
+        }
+    });
 
     useEffect(() => {
         if (show) {
@@ -36,21 +62,20 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     if (!visible) return null;
 
-    const handleCreateTask = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    const handleCreateTask = async (form: TaskFormValues) => {
+        
         const task: Task = {
-            title,
-            description,
-            points,
-            category_id,
-            status_id
+            title: form.title,
+            description: form.description,
+            points: form.points,
+            category_id: form.category_id,
+            status_id: form.status_id
         };
 
         const response = await CreateTaskService.create(task);
 
         if (response.error) {
-            alert("Error al crear la tarea")
+            console.log("Error al crear la tarea");
         } else {
             onClose();
         }
@@ -73,15 +98,44 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                     Crear nueva tarea
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form onSubmit={ handleCreateTask } className="grid grid-cols-3 gap-5 mt-4">
-                    <Input type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Escribe un título para la tarea" className="w-full col-span-3 mb-4 text-2xl" />
+                <form onSubmit={ handleSubmit(handleCreateTask) } className="grid grid-cols-3 gap-5 mt-4">
+                    <div className="col-span-3 mb-4">
+                        <Input
+                            type="text"
+                            placeholder="Escribe un título para la tarea"
+                            className={`w-full text-2xl ${errors.title ? 'border-red-500' : ''}`}
+                            {...register('title', { required: 'El título es obligatorio' })}
+                        />
+                        {errors.title && (
+                            <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+                        )}
+                    </div>
                     <div className="col-span-2">
-                        <TextareaDynamic label="Descripción" onChange={(value) => setDescription(value)}/>
+                        <TextareaDynamic
+                            label="Descripción"
+                            onChange={(value) => setValue('description', value)}
+                        />
                     </div>
                     <div>
-                        <Stars points={points} onChange={setPoints} className="mb-4" />
-                        <SelectCategory onChange={(c) => setCategoryId(c.id)}/>
-                        <SelectStatus onChange={(s) => setStatusId(s.id)}/>
+                        <div className="mb-4">
+                            <Controller
+                                name="points"
+                                control={control}
+                                rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
+                                render={({ field }) => (
+                                    <Stars
+                                        points={field.value}
+                                        onChange={(value: number) => field.onChange(value)}
+                                    />
+                                )}
+                            />
+                            {errors.points && (
+                                <span className="text-red-500 text-sm">{errors.points.message}</span>
+                            )}
+                        </div>
+                        
+                        <SelectCategory onChange={(c) => setValue('category_id', c.id)}/>
+                        <SelectStatus onChange={(s) => setValue('status_id', s.id)}/>
                         <div className="flex justify-end items-end h-53">
                             <Button type="submit" color="primary" className="justify-center">Crear tarea</Button>
                         </div>

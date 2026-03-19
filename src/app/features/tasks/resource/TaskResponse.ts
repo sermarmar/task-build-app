@@ -47,3 +47,11 @@ export class TaskResponse {
         return this.points;
     }
 }
+
+export type TaskFormValues = {
+    title: string;
+    description: string;
+    points: number;
+    category_id: string;
+    status_id: string;
+};

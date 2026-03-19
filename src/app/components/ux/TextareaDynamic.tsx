@@ -25,11 +25,12 @@ export const TextareaDynamic: React.FC<TextareaDynamicProps> = ({ label, onChang
             <div
               ref={wrapperRef}
               className="border border-gray-300 rounded-xl overflow-hidden transition-colors">
-                <RichToolbar editorRef={editorRef} />
+                <RichToolbar editorRef={editorRef} onChange={onChange} />
                 <div
                     ref={editorRef}
                     contentEditable
                     suppressContentEditableWarning
+                    onInput={(e) => onChange?.((e.currentTarget as HTMLDivElement).innerText)}
                     className="rich-editor px-4 py-3 text-sm text-black leading-relaxed h-80"
                     data-placeholder="Añade una descripción con formato..."/>
             </div>
@@ -38,7 +39,7 @@ export const TextareaDynamic: React.FC<TextareaDynamicProps> = ({ label, onChang
 
 }
 
-const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement> }> = ({ editorRef }) => {
+const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement | null>; onChange?: (value: string) => void }> = ({ editorRef, onChange }) => {
     const [activeColor, setActiveColor] = useState(TEXT_COLORS[0].hex);
     const [activeFmt, setActiveFmt] = useState({ bold: false, italic: false, underline: false });
 

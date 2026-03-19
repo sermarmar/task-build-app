@@ -2,6 +2,8 @@ import React, { useState, useEffect, type ReactNode } from 'react';
 import { AuthContext, type AuthContextType } from './AuthContext';
 import { LoginService } from '../../features/login/services/LoginService';
 import type { User } from '../../features/login/model/User';
+import { CategoryService } from '../../core/service/categories/CategoryService';
+import { StatusService } from '../../core/service/status/StatusService';
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -32,6 +34,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 setIsAuthenticated(true);
                 setUser(response.user);
                 sessionStorage.setItem('user', JSON.stringify(response.user));
+                await CategoryService.getAllCategories(); // Preload categories after login
+                await StatusService.getAllStatus(); // Preload statuses after login
             }
         } finally {
             setLoading(false);
@@ -42,6 +46,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsAuthenticated(false);
         setUser(null);
         sessionStorage.removeItem('user');
+        sessionStorage.removeItem('categories'); // Clear cached categories on logout
+        sessionStorage.removeItem('status'); // Clear cached statuses on logout
     };
 
     const value: AuthContextType = {
