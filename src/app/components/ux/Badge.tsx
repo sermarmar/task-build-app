@@ -3,6 +3,7 @@
 interface BadgeProps {
     color: string;
     text: string;
+    onClick?: () => void;
 }
 
 const colorMap: Record<string, { bg: string; text: string }> = {
@@ -20,11 +21,11 @@ const colorMap: Record<string, { bg: string; text: string }> = {
     // Añade los colores que necesites...
 };
 
-export const Badge: React.FC<BadgeProps> = ({ color, text }) => {
+export const Badge: React.FC<BadgeProps> = ({ color, text, onClick }) => {
     const { bg, text: textColor } = colorMap[color] ?? { bg: 'bg-gray-300', text: 'text-black' };
 
     return (
-        <span className={`px-2 py-1 rounded text-xs font-bold ${bg} ${textColor}`}>
+        <span className={`px-2 py-1 rounded text-xs font-bold ${bg} ${textColor}`} onClick={onClick}>
             {text}
         </span>
     );

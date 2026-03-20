@@ -1,4 +1,5 @@
 
+import { BadgeStatusDynamic } from '../../../components/template/status/BadgeStatusDynamic';
 import { Badge } from '../../../components/ux/Badge';
 import { Card, CardBody, CardText, CardTitle } from '../../../components/ux/Card';
 import type { Task } from '../models/Task';
@@ -14,7 +15,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             <CardBody className="text-xs text-gray-600 mt-2 flex justify-between items-center">
                 <CardText>{ task.category.name }</CardText>
                 <CardText>
-                    <Badge color={task.status.color} text={task.status.name} />
+                    <BadgeStatusDynamic taskId={ task.id } status={ task.status } />
                 </CardText>
             </CardBody>
         </Card>
