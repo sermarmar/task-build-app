@@ -3,6 +3,7 @@ import type { Status } from "../../../core/models/Status";
 import { Badge } from '../../ux/Badge';
 import { StatusService } from "../../../core/service/status/StatusService";
 import { UpdateTaskService } from "../../../features/tasks/services/UpdateTaskService";
+import { useTaskBoardContext } from "../../../features/tasks/contexts/useTaskBoardContext";
 
 
 interface BadgeStatusDynamicProps {
@@ -12,6 +13,7 @@ interface BadgeStatusDynamicProps {
 
 
 export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ taskId, status }) => {
+    const { refreshTasks } = useTaskBoardContext();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [statuses, setStatuses] = useState<Status[]>([]);
@@ -31,10 +33,12 @@ export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ taskId, 
             if(response.error) {
                 console.error('Error updating task status:', response.error);
             } else {
+                refreshTasks();
                 console.log('Task status updated successfully:', response.taskUpdated);
             }
         });
         setIsOpen(false);
+        
     }
 
     return (

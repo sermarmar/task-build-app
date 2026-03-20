@@ -1,6 +1,5 @@
 
 import { BadgeStatusDynamic } from '../../../components/template/status/BadgeStatusDynamic';
-import { Badge } from '../../../components/ux/Badge';
 import { Card, CardBody, CardText, CardTitle } from '../../../components/ux/Card';
 import type { Task } from '../models/Task';
 

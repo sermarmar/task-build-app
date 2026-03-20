@@ -1,25 +1,9 @@
-import { useEffect, useState } from 'react';
-import type { Task } from '../models/Task';
-import { RetrieveTaskService } from '../services/RetrieveTaskService';
+import { useTaskBoardContext } from '../contexts/useTaskBoardContext';
 import { TaskCard } from './TaskCard';
 
 export const TasksList: React.FC = () => {
 
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchTasks = async () => {
-            const result = await RetrieveTaskService().getTasks(false);
-            if (result.error) {
-                setError(result.error);
-            } else {
-                setTasks(result.tasks);
-            }
-        };
-
-        fetchTasks();
-    }, []);
+    const { tasks, error } = useTaskBoardContext();
 
     return (
         <>
