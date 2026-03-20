@@ -4,14 +4,10 @@ import { ModalCreateTask } from "./ModalCreateTask";
 import { useState } from "react";
 import { Card, CardBody, CardTitle } from "../../../components/ux/Card";
 import { Button } from "../../../components/ux/Button";
-import { TaskColumns } from "./TaskColumns";
-import { ESTADOS } from "../../../shared/constants";
-import type { Task } from "../models/Task";
-import { tasksMock } from "../mocks/TaskMock";
+import { TasksList } from "./TasksList";
 
 export const TasksBoard: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [tasks, setTasks] = useState<Task[]>(tasksMock);
 
     return (
         <>
@@ -32,7 +28,7 @@ export const TasksBoard: React.FC = () => {
                     </Button>
                 </CardTitle>
                 <CardBody className="mt-5">
-                    <TaskColumns status={ESTADOS} tasks={tasks} />
+                    <TasksList />
                 </CardBody>
             </Card>
             <ModalCreateTask show={isModalOpen} onClose={() => setIsModalOpen(false)} />

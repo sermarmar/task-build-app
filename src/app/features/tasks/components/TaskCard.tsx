@@ -12,11 +12,17 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         <Card className='border border-gray-300'>
             <CardTitle className="text-sm">{ task.title }</CardTitle>
             <CardBody className="text-xs text-gray-600 mt-2 flex justify-between items-center">
-                <CardText>{ task.category }</CardText>
+                <CardText>{ task.category.name }</CardText>
                 <CardText>
-                    <Badge color={task.priority.color} text={task.priority.name} />
+                    <Badge color={task.status.color} text={task.status.name} />
                 </CardText>
             </CardBody>
         </Card>
     );
 }
+
+/*
+<CardText>
+                    <Badge color={task.priority.color} text={task.priority.name} />
+                </CardText>
+*/ 

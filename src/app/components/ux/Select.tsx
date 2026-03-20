@@ -9,7 +9,7 @@ interface InputProps<T> {
     required?: boolean;
     className?: string;
     list: T[];
-    getOptionValue: (item: T) => string;
+    getOptionValue: (item: T) => string | number;
     getOptionLabel: (item: T) => string;
 }
 

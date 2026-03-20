@@ -23,7 +23,7 @@ export const SelectStatus = ({ onChange }: SelectStatusProps) => {
             label="Estado" 
             list={ status } 
             onChange={(e) => {
-                const selected = status.find(s => s.id === e.target.value);
+                const selected = status.find(s => s.id === Number(e.target.value));
                 if (selected) onChange(selected);
             }} 
             className="mb-4"

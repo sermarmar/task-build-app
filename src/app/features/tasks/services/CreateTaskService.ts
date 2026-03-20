@@ -1,9 +1,10 @@
 import { supabase } from "../../../../config/Database";
 import type { Task } from "../models/Task";
+import type { TaskResponse } from "../resource/TaskResponse";
 
 export const CreateTaskService = {
 
-    create: async (task: Task): Promise<{taskCreated: Task | null, error: any}> => {
+    create: async (task: TaskResponse): Promise<{taskCreated: Task | null, error: any}> => {
         const {data, error} = await supabase.from('tasks').insert([task]).select('*').single();
 
         if (error) {

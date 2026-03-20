@@ -8,9 +8,8 @@ import { Stars } from "../../../components/ux/Stars";
 import { SelectCategory } from "../../../components/template/category/SelectCategory";
 import { SelectStatus } from "../../../components/template/status/SelectStatus";
 import { CreateTaskService } from "../services/CreateTaskService";
-import type { Task } from "../models/Task";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
-import type { TaskFormValues } from "../resource/TaskResponse";
+import { Controller, useForm } from "react-hook-form";
+import type { TaskResponse } from "../resource/TaskResponse";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
 import type { Category } from "../../../core/models/Category";
 import type { Status } from "../../../core/models/Status";
@@ -41,13 +40,13 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
         fetchCategory();
     }, []);
 
-    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<TaskFormValues>({
+    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<TaskResponse>({
         defaultValues: {
             title: '',
             description: '',
             points: 0,
             category_id: category ? category.id : '',
-            status_id: status ? status.id : '',
+            status_id: status ? status.id : undefined
         }
     });
 
@@ -62,17 +61,8 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     if (!visible) return null;
 
-    const handleCreateTask = async (form: TaskFormValues) => {
-        
-        const task: Task = {
-            title: form.title,
-            description: form.description,
-            points: form.points,
-            category_id: form.category_id,
-            status_id: form.status_id
-        };
-
-        const response = await CreateTaskService.create(task);
+    const handleCreateTask = async (form: TaskResponse) => {
+        const response = await CreateTaskService.create(form);
 
         if (response.error) {
             console.log("Error al crear la tarea");
