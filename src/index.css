@@ -8,6 +8,8 @@
   --color-accent-from: #7c3aed;
   --color-accent-via: #ec4899;
   --color-accent-to: #ef4444;
+  --color-red-from: #e15268;
+  --color-red-to: #f4adb4;
 }
 
 @layer base {

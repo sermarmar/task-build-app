@@ -1,4 +1,5 @@
 import type React from "react";
+import { twMerge } from "tailwind-merge";
 
 interface CardProps {
     children: React.ReactNode;
@@ -14,7 +15,7 @@ interface CardProps {
 export const Card: React.FC<CardProps> = ({ children, className = "", color = "bg-white", withPadding = true }) => {
     // Expect the full bg- utility to avoid Tailwind purge issues with dynamic values.
     const paddingClass = withPadding ? "p-6" : "";
-    const classes = `${color} rounded-lg shadow-lg ${paddingClass} ${className}`;
+    const classes = twMerge(color, 'rounded-3xl shadow-lg', paddingClass, className);
 
     return (
         <div className={classes}>

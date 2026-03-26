@@ -1,7 +1,6 @@
 import { ClipboardList, Plus } from "lucide-react";
-import { Button } from "../../components/ux/Button";
-import { Card, CardBody, CardTitle } from "../../components/ux/Card"
-import { TasksList } from "../tasks/components/TasksList";
+import { Button } from "../../../components/ux/Button";
+import { Card, CardBody, CardTitle } from "../../../components/ux/Card"
 import { useState } from "react";
 import { HabitsCalendar } from "./HabitsCalendar";
 

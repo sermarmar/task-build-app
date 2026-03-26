@@ -1,6 +1,6 @@
 
 import { Navbar } from "../components/template/Navbar";
-import { HabitsBoard } from "../features/habits/HabitsBoard";
+import { HabitsBoard } from "../features/habits/components/HabitsBoard";
 import { Pomodoro } from '../features/Pomodoro';
 import { TasksBoard } from "../features/tasks/components/TasksBoard";
 
