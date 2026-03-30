@@ -15,18 +15,25 @@ export const RetrieveTaskService = () => {
         },
 
         getTasks: async (isClosed: boolean): Promise<{ tasks: Task[]; error: any }> => {
-            const { data, error } = await supabase
-                .from('tasks')
-                .select('*, categories:category_id (*), statuses:status_id (*)')
-                .in('status_id', isClosed ? [5, 6] : [1, 2, 3, 4]);
+            if(sessionStorage.getItem('tasks')) {
+                return { tasks: JSON.parse(sessionStorage.getItem('tasks')!), error: null}
+            } else {
+                const { data, error } = await supabase
+                    .from('tasks')
+                    .select('*, categories:category_id (*), statuses:status_id (*)')
+                    .in('status_id', isClosed ? [5, 6] : [1, 2, 3, 4]);
 
-            if (error) {
-                return { tasks: [], error: 'No se pudieron recuperar las tareas' };
+                if (error) {
+                    return { tasks: [], error: 'No se pudieron recuperar las tareas' };
+                }
+
+                const tasks: Task[] =data.map(TaskFactory);
+
+                sessionStorage.setItem('tasks', JSON.stringify(tasks));
+
+                return { tasks: tasks, error: null };
             }
-
-            const tasks: Task[] =data.map(TaskFactory);
-
-            return { tasks: tasks, error: null };
+            
         }
     };
 };
