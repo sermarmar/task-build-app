@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Card, CardTitle } from "../../../components/ux/Card";
 import { Input } from "../../../components/ux/Input";
 import { TextareaDynamic } from "../../../components/ux/TextareaDynamic";
@@ -14,6 +14,7 @@ import { CategoryService } from "../../../core/service/categories/CategoryServic
 import type { Category } from "../../../core/models/Category";
 import type { Status } from "../../../core/models/Status";
 import { StatusService } from "../../../core/service/status/StatusService";
+import { useNotification } from "../../../contexts/notification/useNotification";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -26,6 +27,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
     const [visible, setVisible] = useState(show);
     const [category, setCategory] = useState<Category | null>(null);
     const [status, setStatus] = useState<Status | null>(null);
+    const { notify } = useNotification();
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -67,8 +69,19 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
         if (response.error) {
             console.log("Error al crear la tarea");
         } else {
+            notifyMessage("success", "Se ha creado la tarea correctamente.")
             onClose();
         }
+    }
+
+    const notifyMessage = (type: "success" | "danger", message: string, icon?: React.ReactElement) => {
+        notify(
+            <>
+                { icon }
+                <span>{ message }</span>
+            </>,
+            type
+        )
     }
 
     return (

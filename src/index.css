@@ -17,3 +17,21 @@
     @apply min-h-screen bg-linear-to-br from-accent-from via-accent-via to-accent-to;
   }
 }
+
+@keyframes notification-in {
+    0%   { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes notification-out {
+    0%   { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(40px); }
+}
+
+@utility animate-notification-in {
+    animation: notification-in 0.3s ease-out forwards;
+}
+
+@utility animate-notification-out {
+    animation: notification-out 0.3s ease-in forwards;
+}
