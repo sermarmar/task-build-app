@@ -69,9 +69,9 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
         const response = await CreateTaskService.create(form);
 
         if (response.error) {
-            console.log("Error al crear la tarea");
+            notifyMessage("danger", "Ha fallado al crear una tarea. Contactá con el administrador.", <X />);
         } else {
-            notifyMessage("success", "Se ha creado la tarea correctamente.");
+            notifyMessage("success", "Se ha creado la tarea correctamente.", <Check />);
             refreshTasks()
             onClose();
         }

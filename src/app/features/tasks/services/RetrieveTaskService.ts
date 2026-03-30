@@ -5,7 +5,7 @@ import { TaskFactory } from './factory/TaskFactory';
 export const RetrieveTaskService = () => {
     return {
         getAllTasks: async (): Promise<{ tasks: Task[]; error: any }> => {
-            const { data, error } = await supabase.from('tasks').select('*');
+            const { data, error } = await supabase.from('tasks').select('*, categories:category_id (*), statuses:status_id (*)');
 
             if (error) {
                 return { tasks: [], error: 'No se pudieron recuperar las tareas' };
@@ -15,8 +15,13 @@ export const RetrieveTaskService = () => {
         },
 
         getTasks: async (isClosed: boolean): Promise<{ tasks: Task[]; error: any }> => {
+
+            const VALID_STATUS_IDS = new Set([1, 2, 3, 4]);
+
             if(sessionStorage.getItem('tasks')) {
-                return { tasks: JSON.parse(sessionStorage.getItem('tasks')!), error: null}
+                const tasksRetrieving: Task[] = JSON.parse(sessionStorage.getItem('tasks')!);
+                const taskFilter = tasksRetrieving.filter(task => VALID_STATUS_IDS.has(task.status?.id!));
+                return { tasks: taskFilter, error: null}
             } else {
                 const { data, error } = await supabase
                     .from('tasks')
