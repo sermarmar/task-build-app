@@ -20,7 +20,7 @@ export const RetrieveTaskService = () => {
 
             if(sessionStorage.getItem('tasks')) {
                 const tasksRetrieving: Task[] = JSON.parse(sessionStorage.getItem('tasks')!);
-                const taskFilter = tasksRetrieving.filter(task => VALID_STATUS_IDS.has(task.status?.id!));
+                const taskFilter = tasksRetrieving.filter(task => VALID_STATUS_IDS.has(task.status.id!));
                 return { tasks: taskFilter, error: null}
             } else {
                 const { data, error } = await supabase
@@ -39,6 +39,10 @@ export const RetrieveTaskService = () => {
                 return { tasks: tasks, error: null };
             }
             
+        },
+
+        removeTasksFromStorage: () => {
+            sessionStorage.removeItem('tasks');
         }
     };
 };

@@ -33,7 +33,7 @@ export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ taskId, 
             if(response.error) {
                 console.error('Error updating task status:', response.error);
             } else {
-                refreshTasks();
+                refreshTasks(true);
                 console.log('Task status updated successfully:', response.taskUpdated);
             }
         });

@@ -4,7 +4,7 @@ import type { Task } from "../models/Task";
 interface TaskBoardContextType {
     tasks: Task[];
     error: string;
-    refreshTasks: () => void;
+    refreshTasks: (cleanStorage?: boolean) => void;
 }
 
 export const TaskBoardContext = createContext<TaskBoardContextType | null>(null);

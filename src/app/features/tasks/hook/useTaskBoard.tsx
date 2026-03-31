@@ -20,7 +20,12 @@ export const useTaskBoard = () => {
         fetchTasks();
     }, [refreshTrigger]);
 
-    const refreshTasks = () => setRefreshTrigger(prev => prev + 1);
+    const refreshTasks = (cleanStorage?: boolean) => {
+        if(cleanStorage) {
+            RetrieveTaskService().removeTasksFromStorage();
+        }
+        setRefreshTrigger(prev => prev + 1);
+    };
 
     return { tasks, error, refreshTasks };
 };

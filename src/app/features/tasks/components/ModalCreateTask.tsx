@@ -72,7 +72,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
             notifyMessage("danger", "Ha fallado al crear una tarea. Contactá con el administrador.", <X />);
         } else {
             notifyMessage("success", "Se ha creado la tarea correctamente.", <Check />);
-            refreshTasks()
+            refreshTasks(true);
             onClose();
         }
     }
