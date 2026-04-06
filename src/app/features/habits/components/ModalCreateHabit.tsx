@@ -13,13 +13,14 @@ import type { Category } from "../../../core/models/Category";
 import { StatusService } from "../../../core/service/status/StatusService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import type { HabitRequest } from "../resources/HabitRequest";
+import { CreateHabitService } from "../services/CreateHabitService";
 
-interface ModalCreateTaskProps {
+interface ModalCreateHabitProps {
     show: boolean;
     onClose: () => void;
 }
 
-export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose }) => {
+export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClose }) => {
 
     // keep mounted to allow exit animation
     const [visible, setVisible] = useState(show);
@@ -37,7 +38,6 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
     const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<HabitRequest>({
         defaultValues: {
             title: '',
-            description: '',
             points: 0,
             category_id: category ? category.id : '',
         }
@@ -54,8 +54,8 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     if (!visible) return null;
 
-    const handleCreateTask = async (form: HabitRequest) => {
-        const response = await CreateHabit.create(form);
+    const handleCreateHabit = async (form: HabitRequest) => {
+        const response = await CreateHabitService.create(form);
 
         if (response.error) {
             notifyMessage("danger", "Ha fallado al crear un hábito. Contactá con el administrador.", <X />);
@@ -77,7 +77,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     return (
         <div
-            id="modal-create-task"
+            id="modal-create-habit"
             tabIndex={-1}
             className={`fixed inset-0 z-50 flex items-center justify-center -top-50 transition-all duration-300 ${
                 show ? "backdrop-blur-sm opacity-100" : "backdrop-blur-none opacity-0"
@@ -89,28 +89,25 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                 }`}/* prevent closing when clicking inside */
             >
                 <CardTitle className="flex justify-between items-center">
-                    Crear nueva tarea
+                    Crear nuevo hábito
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form onSubmit={ handleSubmit(handleCreateTask) } className="grid grid-cols-3 gap-5 mt-4">
-                    <div className="col-span-3 mb-4">
-                        <Input
-                            type="text"
-                            placeholder="Escribe un título para la tarea"
-                            className={`w-full text-2xl ${errors.title ? 'border-red-500' : ''}`}
-                            {...register('title', { required: 'El título es obligatorio' })}
-                        />
-                        {errors.title && (
-                            <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
-                        )}
-                    </div>
-                    <div className="col-span-2">
-                        <TextareaDynamic
-                            label="Descripción"
-                            onChange={(value) => setValue('description', value)}
-                        />
-                    </div>
-                    <div>
+                <form onSubmit={ handleSubmit(handleCreateHabit) } className="grid grid-cols-3 gap-5 mt-4">
+                        <div>
+                            <Input 
+                                label="Nombre del hábito"
+                                type="text"
+                                placeholder="Escribe un título para un hábito"
+                                {...register("title", { required: "El título es obligatorio" })}
+                            />
+                            {errors.title && (
+                                <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+                            )}
+                        </div>
+                        <div>
+                           <SelectCategory onChange={(c) => setValue('category_id', c.id)}/> 
+                        </div>
+                        
                         <div className="mb-4">
                             <Controller
                                 name="points"
@@ -127,13 +124,12 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                                 <span className="text-red-500 text-sm">{errors.points.message}</span>
                             )}
                         </div>
-                        
-                        <SelectCategory onChange={(c) => setValue('category_id', c.id)}/>
-                        <SelectStatus onChange={(s) => setValue('status_id', s.id)}/>
-                        <div className="flex justify-end items-end h-53">
-                            <Button type="submit" color="primary" className="justify-center">Crear tarea</Button>
+                        <div className="flex col-span-3 justify-end">
+                           <Button type="submit">
+                                Crear hábito
+                            </Button> 
                         </div>
-                    </div>
+                        
                 </form>
             </Card>
         </div>
