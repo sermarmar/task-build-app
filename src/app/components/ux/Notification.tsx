@@ -21,7 +21,7 @@ export const Notification: React.FC<NotificationProps> = ( { children, color = '
 
     return (
         <div className={leaving ? 'animate-notification-out' : 'animate-notification-in'}>
-            <Card className={twMerge('rounded-2xl p-5', colorClass)}>
+            <Card className={twMerge('flex items-center rounded-2xl p-5', colorClass)}>
                 {children}
             </Card>
         </div>
