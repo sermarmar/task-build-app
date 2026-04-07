@@ -2,18 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 import { Card, CardTitle } from "../../../components/ux/Card";
 import { Input } from "../../../components/ux/Input";
-import { TextareaDynamic } from "../../../components/ux/TextareaDynamic";
 import { Button } from "../../../components/ux/Button";
 import { Stars } from "../../../components/ux/Stars";
 import { SelectCategory } from "../../../components/template/category/SelectCategory";
-import { SelectStatus } from "../../../components/template/status/SelectStatus";
 import { Controller, useForm } from "react-hook-form";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
 import type { Category } from "../../../core/models/Category";
-import { StatusService } from "../../../core/service/status/StatusService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import type { HabitRequest } from "../resources/HabitRequest";
 import { CreateHabitService } from "../services/CreateHabitService";
+import { FrecuencyDays } from "../../../components/template/frecuency_days/FrecuencyDays";
 
 interface ModalCreateHabitProps {
     show: boolean;
@@ -22,7 +20,6 @@ interface ModalCreateHabitProps {
 
 export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClose }) => {
 
-    // keep mounted to allow exit animation
     const [visible, setVisible] = useState(show);
     const [category, setCategory] = useState<Category | null>(null);
     const { notify } = useNotification();
@@ -123,6 +120,9 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
                             {errors.points && (
                                 <span className="text-red-500 text-sm">{errors.points.message}</span>
                             )}
+                        </div>
+                        <div className="col-span-3">
+                            <FrecuencyDays />
                         </div>
                         <div className="flex col-span-3 justify-end">
                            <Button type="submit">
