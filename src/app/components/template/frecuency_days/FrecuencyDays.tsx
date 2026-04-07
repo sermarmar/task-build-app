@@ -34,6 +34,12 @@ export const FrecuencyDays: React.FC = () => {
         });
     }
 
+    const handleToggleDay = (day: string) => {
+        setSelectedDays(prev =>
+            prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+        );
+    };
+
     return (
         <div className='flex'>
             <div className='flex flex-col gap-2'>
@@ -72,7 +78,7 @@ export const FrecuencyDays: React.FC = () => {
                 </div>
             )}
             {selectedFrequency === 'monthly' && (
-                <Calendar days={selectedDays}/>
+                <Calendar selectedDays={selectedDays} onToggleDay={handleToggleDay} />
             )}
         </div>
     );
