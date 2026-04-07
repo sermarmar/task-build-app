@@ -37,6 +37,9 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
             title: '',
             points: 0,
             category_id: category ? category.id : '',
+            frecuency: '',
+            options_monthly: [],
+            options_weekly: []
         }
     });
 
@@ -70,6 +73,20 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
             </>,
             type
         )
+    }
+
+    const handleFrecuencyClick = (frequency: string, selectedOptions?: string[], selectedDays?: string[]) => {
+        setValue('frecuency', frequency);
+        if (frequency === 'weekly') {
+            setValue('options_weekly', selectedOptions || []);
+            setValue('options_monthly', []);
+        } else if (frequency === 'monthly') {
+            setValue('options_monthly', selectedDays || []);
+            setValue('options_weekly', []);
+        } else {
+            setValue('options_weekly', []);
+            setValue('options_monthly', []);
+        }
     }
 
     return (
@@ -122,7 +139,7 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
                             )}
                         </div>
                         <div className="col-span-3">
-                            <FrecuencyDays />
+                            <FrecuencyDays onClick={handleFrecuencyClick} />
                         </div>
                         <div className="flex col-span-3 justify-end">
                            <Button type="submit">

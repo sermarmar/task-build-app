@@ -14,7 +14,11 @@ type OptionsWeekly = {
     value: string;
 }
 
-export const FrecuencyDays: React.FC = () => {
+interface FrecuencyDaysProps {
+    onClick: (frequency: string, selectedOptions?: string[], selectedDays?: string[]) => void;
+}
+
+export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onClick }) => {
     const frequencyDays: FrecuencyData[] = FrecuencyData;
     const [selectedFrequency, setSelectedFrequency] = useState<string>('');
     const [selectedOption, setSelectedOption] = useState<OptionsWeekly[]>([] as OptionsWeekly[]);
@@ -22,7 +26,8 @@ export const FrecuencyDays: React.FC = () => {
 
     const handleFrequencyChange = (value: string) => {
         setSelectedFrequency(value);
-        setSelectedOption([] as OptionsWeekly[]); // Resetear la opción seleccionada al cambiar la frecuencia
+        setSelectedOption([] as OptionsWeekly[]); 
+        setSelectedDays([]);
     }
 
     const handleSelectedDays = (option: OptionsWeekly) => {
@@ -41,7 +46,7 @@ export const FrecuencyDays: React.FC = () => {
     };
 
     return (
-        <div className='flex'>
+        <div className='flex' onClick={() => onClick(selectedFrequency, selectedOption.map((o) => o.value), selectedDays)}>
             <div className='flex flex-col gap-2'>
                 {frequencyDays.map((frequency) => (
                     <div key={frequency.value}>

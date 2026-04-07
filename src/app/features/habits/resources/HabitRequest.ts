@@ -1,7 +1,8 @@
 export type HabitRequest = {
     title: string;
-    description: string;
     points: number;
     category_id: string;
-    status_id: number;
+    frecuency: string;
+    options_weekly?: string[];
+    options_monthly?: string[];
 };
