@@ -1,10 +1,9 @@
 import { supabase } from "../../../config/Database";
 import type { Habit } from "../../features/habits/models/Habit";
-import type { HabitRequest } from "../../features/habits/resources/HabitRequest";
 
 export const HabitRepository = {
 
-    create: async (habit: HabitRequest): Promise<{habitCreated: Habit | null, error: any}> => {
+    create: async (habit: Habit): Promise<{habitCreated: Habit | null, error: any}> => {
         const {data, error} = await supabase
             .from('habits')
             .insert([habit])

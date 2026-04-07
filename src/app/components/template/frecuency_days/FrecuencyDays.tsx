@@ -15,10 +15,10 @@ type OptionsWeekly = {
 }
 
 interface FrecuencyDaysProps {
-    onClick: (frequency: string, selectedOptions?: string[], selectedDays?: string[]) => void;
+    onChange: (frequency: string, selectedOptions?: string[], selectedDays?: string[]) => void;
 }
 
-export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onClick }) => {
+export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onChange }) => {
     const frequencyDays: FrecuencyData[] = FrecuencyData;
     const [selectedFrequency, setSelectedFrequency] = useState<string>('');
     const [selectedOption, setSelectedOption] = useState<OptionsWeekly[]>([] as OptionsWeekly[]);
@@ -28,25 +28,32 @@ export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onClick }) => {
         setSelectedFrequency(value);
         setSelectedOption([] as OptionsWeekly[]); 
         setSelectedDays([]);
+        onChange(value, [], []);
     }
 
     const handleSelectedDays = (option: OptionsWeekly) => {
         setSelectedOption(prev => {
+            let newOptions;
             if (prev.some((o) => o.value === option.value)) {
-                return prev.filter((o) => o.value !== option.value);
+                newOptions = prev.filter((o) => o.value !== option.value);
+            } else {
+                newOptions = [...prev, option];
             }
-            return [...prev, option];
+            onChange(selectedFrequency, newOptions.map((o) => o.value), selectedDays);
+            return newOptions;
         });
     }
 
     const handleToggleDay = (day: string) => {
-        setSelectedDays(prev =>
-            prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
-        );
+        setSelectedDays(prev => {
+            const newDays = prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day];
+            onChange(selectedFrequency, selectedOption.map((o) => o.value), newDays);
+            return newDays;
+        });
     };
 
     return (
-        <div className='flex' onClick={() => onClick(selectedFrequency, selectedOption.map((o) => o.value), selectedDays)}>
+        <div className='flex'>
             <div className='flex flex-col gap-2'>
                 {frequencyDays.map((frequency) => (
                     <div key={frequency.value}>

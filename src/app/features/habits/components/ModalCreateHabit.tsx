@@ -139,7 +139,7 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
                             )}
                         </div>
                         <div className="col-span-3">
-                            <FrecuencyDays onClick={handleFrecuencyClick} />
+                            <FrecuencyDays onChange={handleFrecuencyClick} />
                         </div>
                         <div className="flex col-span-3 justify-end">
                            <Button type="submit">
