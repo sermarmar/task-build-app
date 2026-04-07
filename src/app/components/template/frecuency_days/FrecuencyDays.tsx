@@ -17,12 +17,21 @@ type OptionsWeekly = {
 export const FrecuencyDays: React.FC = () => {
     const frequencyDays: FrecuencyData[] = FrecuencyData;
     const [selectedFrequency, setSelectedFrequency] = useState<string>('');
-    const [selectedOption, setSelectedOption] = useState<OptionsWeekly>({} as OptionsWeekly);
+    const [selectedOption, setSelectedOption] = useState<OptionsWeekly[]>([] as OptionsWeekly[]);
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
     const handleFrequencyChange = (value: string) => {
         setSelectedFrequency(value);
-        setSelectedOption({} as OptionsWeekly); // Resetear la opción seleccionada al cambiar la frecuencia
+        setSelectedOption([] as OptionsWeekly[]); // Resetear la opción seleccionada al cambiar la frecuencia
+    }
+
+    const handleSelectedDays = (option: OptionsWeekly) => {
+        setSelectedOption(prev => {
+            if (prev.some((o) => o.value === option.value)) {
+                return prev.filter((o) => o.value !== option.value);
+            }
+            return [...prev, option];
+        });
     }
 
     return (
@@ -51,8 +60,8 @@ export const FrecuencyDays: React.FC = () => {
                             <React.Fragment key={option.value}>
                                 <Button
                                     type='button'
-                                    color={selectedOption.value === option.value ? 'primary' : 'secondary'}
-                                    onClick={() => setSelectedOption(option)}
+                                    color={selectedOption.some((o) => o.value === option.value) ? 'primary' : 'secondary'}
+                                    onClick={() => handleSelectedDays(option)}
                                 >
                                     {option.label}
                                 </Button>
@@ -63,7 +72,7 @@ export const FrecuencyDays: React.FC = () => {
                 </div>
             )}
             {selectedFrequency === 'monthly' && (
-                <Calendar />
+                <Calendar days={selectedDays}/>
             )}
         </div>
     );

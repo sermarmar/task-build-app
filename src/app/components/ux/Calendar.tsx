@@ -1,23 +1,29 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+interface CalendarProps {
+    days?: string[];
+}
 
-export const Calendar: React.FC = () => {
+export const Calendar: React.FC<CalendarProps> = ({ days }) => {
 
-    const [selectedDays, setSelectedDays] = useState<string[]>([]);
+    const [localSelectedDays, setLocalSelectedDays] = useState<string[]>(days ?? []);
 
     const toggleDay = (day: string) => {
-        setSelectedDays(prev => 
-            prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
-        );
-    }
+        setLocalSelectedDays(prev => {
+            if (prev.includes(day)) {
+                return prev.filter(d => d !== day);
+            }
+            return [...prev, day];
+        });
+    };
 
     return (
         <div className="grid grid-cols-7 gap-2">
-            {  
+            {
                 Array.from({length: 31}, (_, i) => {
                     const day = (i + 1).toString();
-                    const isSelected = selectedDays.includes(day);
+                    const isSelected = localSelectedDays.includes(day);
 
                     return (
                         <div
