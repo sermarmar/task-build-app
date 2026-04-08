@@ -1,11 +1,12 @@
 import { TaskRepository } from "../../../infra/repositories/TaskRepository";
+import type { ErrorMessage } from "../../../shared/Error";
 import type { Task } from "../models/Task";
 import type { TaskResponse } from "../resource/TaskResponse";
 import { TaskFactory } from "./factory/TaskFactory";
 
 export const CreateTaskService = {
 
-    create: async (task: TaskResponse): Promise<{taskCreated: Task | null, error: any}> => {
+    create: async (task: TaskResponse): Promise<{taskCreated: Task | null, error: ErrorMessage | null}> => {
         const { taskCreated, error } = await TaskRepository.create(task);
 
         if (error) {

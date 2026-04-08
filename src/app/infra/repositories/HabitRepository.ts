@@ -1,9 +1,10 @@
 import { supabase } from "../../../config/Database";
 import type { Habit } from "../../features/habits/models/Habit";
+import type { ErrorMessage } from "../../shared/Error";
 
 export const HabitRepository = {
 
-    getHabitsByDays: async (days: string[]): Promise<{habits: Habit[], error: any}> => {
+    getHabitsByDays: async (days: string[]): Promise<{habits: Habit[], error: ErrorMessage | null}> => {
         let query = supabase
             .from('habits')
             .select('*, categories:category_id (*)');
@@ -15,13 +16,13 @@ export const HabitRepository = {
         const { data, error } = await query;
 
         if (error) {
-            return { habits: [], error: 'No se pudieron recuperar los hábitos' };
+            return { habits: [], error: { message: 'No se pudieron recuperar los hábitos' } };
         }
 
         return { habits: data, error: null };
     },
 
-    create: async (habit: Habit): Promise<{habitCreated: Habit | null, error: any}> => {
+    create: async (habit: Habit): Promise<{habitCreated: Habit | null, error: ErrorMessage | null}> => {
         const {data, error} = await supabase
             .from('habits')
             .insert([habit])
@@ -29,7 +30,7 @@ export const HabitRepository = {
             .single();
 
         if (error) {
-            return { habitCreated: null, error };
+            return { habitCreated: null, error: { message: 'No se pudo crear el hábito' } };
         }
 
         return { habitCreated: data, error: null };

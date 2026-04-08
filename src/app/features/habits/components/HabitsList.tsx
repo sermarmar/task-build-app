@@ -10,7 +10,7 @@ export const HabitsList: React.FC = () => {
             {error && <div className="error">{error}</div>}
             {
                 habits.length === 0 && !error && 
-                <div className='text-gray-400 font-bold text-5xl text-center'>No hay hábitos disponibles</div>
+                <div className='text-gray-400 font-bold text-5xl text-center mt-5'>No hay hábitos disponibles</div>
             }
             <div className="grid grid-cols-1 gap-4 mt-5">
                 {habits

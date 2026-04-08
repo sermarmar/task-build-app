@@ -1,20 +1,21 @@
 import type { Task } from "../models/Task";
 import { supabase } from "../../../../config/Database";
 import { TaskFactory } from './factory/TaskFactory';
+import type { ErrorMessage } from "../../../shared/Error";
 
 export const RetrieveTaskService = () => {
     return {
-        getAllTasks: async (): Promise<{ tasks: Task[]; error: any }> => {
+        getAllTasks: async (): Promise<{ tasks: Task[]; error: ErrorMessage | null }> => {
             const { data, error } = await supabase.from('tasks').select('*, categories:category_id (*), statuses:status_id (*)');
 
             if (error) {
-                return { tasks: [], error: 'No se pudieron recuperar las tareas' };
+                return { tasks: [], error: { message: 'No se pudieron recuperar las tareas' } };
             }
 
             return { tasks: data, error: null };
         },
 
-        getTasks: async (isClosed: boolean): Promise<{ tasks: Task[]; error: any }> => {
+        getTasks: async (isClosed: boolean): Promise<{ tasks: Task[]; error: ErrorMessage | null }> => {
 
             const VALID_STATUS_IDS = new Set([1, 2, 3, 4]);
 
@@ -29,7 +30,7 @@ export const RetrieveTaskService = () => {
                     .in('status_id', isClosed ? [5, 6] : [1, 2, 3, 4]);
 
                 if (error) {
-                    return { tasks: [], error: 'No se pudieron recuperar las tareas' };
+                    return { tasks: [], error: { message: 'No se pudieron recuperar las tareas' } };
                 }
 
                 const tasks: Task[] =data.map(TaskFactory);
