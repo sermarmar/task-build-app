@@ -10,8 +10,8 @@ import { CategoryService } from "../../../core/service/categories/CategoryServic
 import type { Category } from "../../../core/models/Category";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import type { HabitRequest } from "../resources/HabitRequest";
-import { CreateHabitService } from "../services/CreateHabitService";
 import { FrecuencyDays } from "../../../components/template/frecuency_days/FrecuencyDays";
+import { CreateHabitService } from "../services/CreateHabitService";
 
 interface ModalCreateHabitProps {
     show: boolean;

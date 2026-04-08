@@ -8,6 +8,3 @@ interface TaskBoardContextType {
 }
 
 export const TaskBoardContext = createContext<TaskBoardContextType | null>(null);
-
-
-

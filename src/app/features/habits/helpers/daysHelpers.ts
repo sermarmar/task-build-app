@@ -1,4 +1,33 @@
-export const DAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+export const DAY_NAMES = [
+  {
+    label: "Dom",
+    value: "sunday"
+  },
+  {
+    label: "Lun",
+    value: "monday"
+  },
+  {
+    label: "Mar",
+    value: "tuesday"
+  },
+  {
+    label: "Mié",
+    value: "wednesday"
+  },
+  {
+    label: "Jue",
+    value: "thursday"
+  },
+  {
+    label: "Vie",
+    value: "friday"
+  },
+  {
+    label: "Sáb",
+    value: "saturday"
+  }
+];
 
 export const MONTH_NAMES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",

@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { Card } from "../../../components/ux/Card";
 import { Checkbox } from "../../../components/ux/Checkbox";
+import type { Habit } from "../models/Habit";
 
-export const HabitCard: React.FC = () => {
+interface HabitCardProps {
+    habit: Habit;
+}
+
+export const HabitCard: React.FC<HabitCardProps> = ({ habit }) => {
 
     const [checked, setChecked] = useState(false);
 
@@ -10,7 +15,7 @@ export const HabitCard: React.FC = () => {
         <Card>
             <div className="flex items-center">
                 <Checkbox
-                    label="Prueba"
+                    label={habit.title}
                     checked={checked} onChange={setChecked}
                 />
             </div>
