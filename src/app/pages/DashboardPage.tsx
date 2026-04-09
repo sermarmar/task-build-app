@@ -1,6 +1,7 @@
 
 import { Navbar } from "../components/template/Navbar";
 import { HabitsBoard } from "../features/habits/components/HabitsBoard";
+import { MentalHealthBoard } from "../features/mental_healtth/MentalHealthBoard";
 import { Pomodoro } from '../features/Pomodoro';
 import { TasksBoard } from "../features/tasks/components/TasksBoard";
 
@@ -15,7 +16,7 @@ export const DashboardPage: React.FC = () => {
                     <Pomodoro />
                 </div>
                 <div className="col-start-1 row-start-2">
-                    <Pomodoro />
+                    <MentalHealthBoard />
                 </div>
                 <div className="col-span-2 col-start-2 row-start-1 row-span-2 h-full">
                     <TasksBoard />
