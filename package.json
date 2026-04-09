@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",
+    "chart.js": "^4.5.1",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.2",
     "react-router": "^7.13.0",
