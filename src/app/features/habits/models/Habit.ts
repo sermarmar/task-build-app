@@ -1,4 +1,5 @@
 import type { Category } from "../../../core/models/Category";
+import type { HabitLog } from "./HabitLog";
 
 export interface Habit {
     id?: string;
@@ -13,4 +14,5 @@ export interface Habit {
     is_active: boolean;
     created_at?: Date;
     updated_at?: Date;
+    habit_logs?: HabitLog[];
 }

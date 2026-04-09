@@ -8,6 +8,7 @@ type CheckboxVariant = "default" | "teal" | "coral";
 interface CheckboxProps {
   /** Label text shown next to the box */
   label: string;
+  value?: string | number;
   /** Optional description shown below the label (card style) */
   description?: string;
   /** Controlled checked state */
@@ -145,6 +146,7 @@ function Dash({ size, animate }: { size: CheckboxSize; animate: boolean }) {
  
 export function Checkbox({
   label,
+  value,
   description,
   checked = false,
   indeterminate = false,
@@ -226,6 +228,7 @@ export function Checkbox({
         disabled={disabled}
         onChange={handleChange}
         className="sr-only"
+        value={value}
         aria-checked={isIndet ? "mixed" : checked}
       />
     </label>
@@ -256,6 +259,7 @@ export function Checkbox({
         disabled={disabled}
         onChange={handleChange}
         className="sr-only"
+        value={value}
         aria-checked={isIndet ? "mixed" : checked}
       />
     </label>

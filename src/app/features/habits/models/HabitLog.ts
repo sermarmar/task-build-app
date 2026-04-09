@@ -1,7 +1,7 @@
 export interface HabitLog {
     id: string;
-    habitId: string;
-    userId: string;
-    completedAt: Date;
+    habit_id: string;
+    user_id: string;
+    completed_at: Date;
     note?: string;
 }
