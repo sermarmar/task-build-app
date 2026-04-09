@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
     ];
 
     return (
-        <nav className="bg-white fixed w-full z-10 top-0 shadow left-0">
+        <nav className="bg-white w-full shadow left-0">
             <div className="container mx-auto flex justify-between items-center py-3">
                 <div className="text-lg font-bold">Mi Aplicación</div>
                 <DropdownButton

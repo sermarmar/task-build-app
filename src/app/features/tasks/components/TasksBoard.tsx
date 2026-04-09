@@ -12,7 +12,7 @@ export const TasksBoard: React.FC = () => {
 
     return (
         <TaskBoardProvider>
-            <Card>
+            <Card className="h-full flex flex-col">
                 <CardTitle className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
                         <ClipboardList />

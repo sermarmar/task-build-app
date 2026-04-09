@@ -105,7 +105,7 @@ export const Pomodoro: React.FC = () => {
 
 
     return (
-        <Card>
+        <Card className="h-full flex flex-col">
             <CardTitle className="flex gap-2 items-center">
                 <ClockFading />
                 Pomodoro
