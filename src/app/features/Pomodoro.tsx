@@ -22,7 +22,7 @@ export const Pomodoro: React.FC = () => {
     const alarm = useAlarm();
 
     useEffect(() => {
-        let interval: NodeJS.Timeout | null = null;
+        let interval: ReturnType<typeof setTimeout> | null = null;
         if(isActive) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             interval = setInterval(() => {
@@ -78,6 +78,7 @@ export const Pomodoro: React.FC = () => {
         // Lógica para reiniciar el temporizador
         setIsActive(false);
         retrieveTimerByMode(mode);
+        const audio = new Audio('../../../assets/alarm.mp3');
         audio.currentTime = 0;
         audio.pause();
     }

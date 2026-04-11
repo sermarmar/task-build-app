@@ -1,4 +1,5 @@
 import { supabase } from '../../../../config/Database';
+import type { ErrorMessage } from '../../../shared/Error';
 import type { User } from '../model/User';
 
 export const LoginService = {
@@ -7,7 +8,7 @@ export const LoginService = {
      * 1. Busca el email asociado al username en la tabla `profile`.
      * 2. Autentica con Supabase Auth usando email + password.
      */
-    login: async (username: string, password: string): Promise<{ user: User | null, error: any }> => {
+    login: async (username: string, password: string): Promise<{ user: User | null, error: ErrorMessage | null }> => {
         // Paso 1: Obtener el email del perfil por username
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -20,13 +21,13 @@ export const LoginService = {
         }
 
         // Paso 2: Autenticar con email + contraseña
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
             email: profile.email,
             password,
         });
 
         if (error) {
-            return { user: null, error };
+            return { user: null, error: { message: 'Error de autenticación.' } };
         }
         const user: User = {
             id: profile.id,

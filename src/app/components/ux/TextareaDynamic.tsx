@@ -39,7 +39,7 @@ export const TextareaDynamic: React.FC<TextareaDynamicProps> = ({ label, onChang
 
 }
 
-const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement | null>; onChange?: (value: string) => void }> = ({ editorRef, onChange }) => {
+const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement | null>; onChange?: (value: string) => void }> = ({ editorRef }) => {
     const [activeColor, setActiveColor] = useState(TEXT_COLORS[0].hex);
     const [activeFmt, setActiveFmt] = useState({ bold: false, italic: false, underline: false });
 
@@ -49,7 +49,7 @@ const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement | null>;
         underline: document.queryCommandState("underline"), 
     });
 
-    const exec = (cmd, val: string | null = null) => {
+    const exec = (cmd: string, val: string | undefined = undefined) => {
         editorRef.current?.focus();
         document.execCommand(cmd, false, val);
         setTimeout(refresh, 0);
@@ -60,8 +60,8 @@ const RichToolbar: React.FC<{ editorRef: React.RefObject<HTMLDivElement | null>;
         exec("foreColor", hex);
     };
 
-    const fmtBtn = (cmd, char: string, extra = {}) => {
-        const active = activeFmt[cmd];
+    const fmtBtn = (cmd: string, char: string, extra = {}) => {
+        const active = activeFmt[cmd as keyof typeof activeFmt];
         return (
         <button
             onMouseDown={(e) => { e.preventDefault(); exec(cmd); }}

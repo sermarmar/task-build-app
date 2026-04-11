@@ -13,7 +13,7 @@ interface InputProps<T> {
     getOptionLabel: (item: T) => string;
 }
 
-export const Select: React.FC<InputProps<T>> = ({ name, label, value, onChange, required, className, list, getOptionValue, getOptionLabel }) => {
+export const Select = <T,>({ name, label, value, onChange, required, className, list, getOptionValue, getOptionLabel }: InputProps<T>) => {
     
     let labelElement: ReactElement = <></>;
 

@@ -5,7 +5,6 @@ import type { Habit } from "../models/Habit";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
 import { CompleteHabitService } from "../services/CompleteHabitService";
 import { Stars } from "../../../components/ux/Stars";
-import { Badge } from '../../../components/ux/Badge';
 
 interface HabitCardProps {
     habit: Habit;
@@ -24,7 +23,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted }) => {
     const handleHabitCompleted = (isChecked: boolean) => {
         // Aquí puedes agregar la lógica para marcar el hábito como completado o no
         setChecked(isChecked);
-        CompleteHabitService.execute(habit.id, selectedDate.toISOString().split('T')[0], isChecked);
+        CompleteHabitService.execute(habit.id!, selectedDate.toISOString().split('T')[0], isChecked);
     }
 
     return (
@@ -36,7 +35,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted }) => {
                     checked={checked} onChange={() => handleHabitCompleted(!checked)}
                 />
                 <div className="flex items-center gap-6">
-                    <p className="text-sm text-gray-500"> { habit.categories.name } </p>
+                    <p className="text-sm text-gray-500"> { habit.categories && !Array.isArray(habit.categories) && habit.categories.name } </p>
                     <Stars points={habit.points} disabled />
                 </div>
             </div>

@@ -23,7 +23,7 @@ export const HabitsList: React.FC = () => {
             <div className="grid grid-cols-1 gap-4 mt-5">
                 {habits
                 .map(habit => (
-                    <HabitCard key={habit.id} habit={habit} isCompleted={isHabitCompleted(habit.id)} />
+                    <HabitCard key={habit.id!} habit={habit} isCompleted={isHabitCompleted(habit.id!)} />
                 ))}
             </div>
         </>

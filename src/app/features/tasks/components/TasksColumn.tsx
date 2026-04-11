@@ -11,7 +11,7 @@ interface TasksColumnProps {
 
 export const TasksColumn: React.FC<TasksColumnProps> = ({ status, tasks }) => {
     
-    const [tasksData, setTasksData] = useState(tasks)
+    const [tasksData] = useState(tasks)
 
     return (
         <Card className="h-full" color={`bg-${status.color}`} withPadding={false}>

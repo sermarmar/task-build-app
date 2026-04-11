@@ -7,7 +7,7 @@ export const TasksList: React.FC = () => {
 
     return (
         <>
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error">{error.message}</div>}
             {
                 tasks.length === 0 && !error && 
                 <div className='text-gray-400 font-bold text-5xl text-center'>No hay tareas disponibles</div>

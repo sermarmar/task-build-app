@@ -1,16 +1,5 @@
 import { useRef, useState } from "react";
 
-interface UseAlarmReturn {
-  play:            () => void;
-  volume:          number;
-  setVolume:       (v: number) => void;
-  muted:           boolean;
-  toggleMute:      () => void;
-  customFileName:  string | null;
-  loadCustomFile:  (file: File) => Promise<void>;
-  clearCustomFile: () => void;
-}
-
 export const useAlarm = () => {
     const [volume, setVolumeState] = useState<number>(1);
     const [muted,  setMuted] = useState<boolean>(false);
