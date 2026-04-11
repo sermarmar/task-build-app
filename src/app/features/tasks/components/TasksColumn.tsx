@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Card, CardBody, CardTitle, CardHeader, CardText } from '../../../components/ux/Card';
+import { Card, CardBody, CardTitle, CardHeader } from '../../../components/ux/Card';
 import type { Task } from "../models/Task";
-import type { Status } from "../models/Status";
-import { Badge } from "../../../components/ux/Badge";
 import { TaskCard } from "./TaskCard";
+import type { Status } from "../../../core/models/Status";
 
 interface TasksColumnProps {
     status: Status;

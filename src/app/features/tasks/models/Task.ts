@@ -8,6 +8,8 @@ export interface Task {
     description: string;
     status: Status;
     category: Category;
+    statuses: Status;
+    categories: Category;
     points: number;
     priority?: Priority;
     createdAt?: Date;

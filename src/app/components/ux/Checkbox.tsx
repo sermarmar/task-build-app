@@ -180,7 +180,7 @@ export function Checkbox({
     : `border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 ${variantHoverBorder[variant]}`;
   const boxHover = !disabled ? "group-hover:scale-105" : "";
   const boxActive = !disabled ? "group-active:scale-95" : "";
-  const boxDisabled = disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer";
+  //const boxDisabled = disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer";
  
   // Card wrapper (when description exists)
   const cardBase =

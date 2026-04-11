@@ -14,15 +14,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             <CardBody className="text-xs text-gray-600 mt-2 flex justify-between items-center">
                 <CardText>{ task.category?.name }</CardText>
                 <CardText>
-                    <BadgeStatusDynamic taskId={ task.id } status={ task.status } />
+                    <BadgeStatusDynamic taskId={ task.id! } status={ task.status } />
                 </CardText>
             </CardBody>
         </Card>
     );
 }
-
-/*
-<CardText>
-                    <Badge color={task.priority.color} text={task.priority.name} />
-                </CardText>
-*/ 

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { RetrieveTaskService } from "../services/RetrieveTaskService";
 import type { Task } from "../models/Task";
+import type { ErrorMessage } from "../../../shared/Error";
 
 export const useTaskBoard = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [error, setError] = useState<string>('');
+    const [error, setError] = useState<ErrorMessage | null>(null);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     useEffect(() => {
