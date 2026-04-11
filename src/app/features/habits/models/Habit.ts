@@ -6,7 +6,8 @@ export interface Habit {
     user_id?: string;
     title: string;
     description?: string;
-    category_id?: string | Category | null;
+    category_id?: string | null;
+    categories?: Category | Category[] | null;
     points: number;
     frequency: string;
     custom_days?: string[];
