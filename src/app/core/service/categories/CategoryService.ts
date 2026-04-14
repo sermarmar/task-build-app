@@ -1,9 +1,10 @@
 import { supabase } from "../../../../config/Database";
+import type { ErrorMessage } from "../../../shared/Error";
 import type { Category } from "../../models/Category";
 
 export const CategoryService = {
 
-    getAllCategories: async (): Promise<{ categories: Category[] | null, error: any }> => {
+    getAllCategories: async (): Promise<{ categories: Category[] | null, error: ErrorMessage | null }> => {
         
         if(sessionStorage.getItem('categories')) {
             return { categories: JSON.parse(sessionStorage.getItem('categories')!), error: null };
@@ -11,7 +12,7 @@ export const CategoryService = {
             const { data, error } = await supabase.from('categories').select('*');
 
             if (error) {
-                return { categories: null, error };
+                return { categories: null, error: { message: "No se ha recuperado la lista de categorías." } };
             }
 
             const categories: Category[] = data.map((category: any) => ({

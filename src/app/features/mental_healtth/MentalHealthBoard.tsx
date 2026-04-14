@@ -1,39 +1,36 @@
-import {
-  Chart as ChartJS,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+
 import { Leaf } from "lucide-react";
 import { Card, CardBody, CardTitle } from "../../components/ux/Card";
-import { Radar } from "react-chartjs-2";
+import { CategoryService } from '../../core/service/categories/CategoryService';
+import { useEffect, useState } from 'react';
+import type { Category } from '../../core/models/Category';
+import { RadarChart } from '../../components/ux/RadarChart';
+import { MetalHealthService } from "./services/MetalHealthService";
 
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-);
+
 
 export const MentalHealthBoard: React.FC = () => {
 
-    const data = {
-        labels: ["Salud", "Trabajo", "Ocio", "Social", "Proyecto"],
-        datasets: [
-            {
-                label: "Salud mental",
-                data: [3, 4, 2, 5, 4],
-                backgroundColor: "rgba(34, 202, 236, 0.2)",
-                borderColor: "rgba(34, 202, 236, 1)",
-            }
-        ]
+    const [pointsData, setPointsData] = useState<{ [key: string]: number }>({});
 
-    };
+    useEffect(() => {
+        Promise.all([
+            CategoryService.getAllCategories(),
+            MetalHealthService.getMentalHealthData()
+        ]).then(([{ categories }, { points, error }]) => {
+            if (error) {
+                console.error('Error fetching mental health data:', error);
+                return;
+            }
+            if (categories && points) {
+                const filtered = categories.reduce((acc: { [key: string]: number }, category: Category) => {
+                    acc[category.name] = points[category.name] ?? 0;  // si no existe, 0
+                    return acc;
+                }, {});
+                setPointsData(filtered);
+            }
+        });
+    }, []);
 
     return (
         <Card className="h-full flex flex-col">
@@ -44,7 +41,7 @@ export const MentalHealthBoard: React.FC = () => {
                 </div>
             </CardTitle>
             <CardBody className="mt-5">
-                <Radar data={ data }/>
+                <RadarChart data={pointsData} />
             </CardBody>
         </Card>
     );
