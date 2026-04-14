@@ -1,7 +1,40 @@
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { Leaf } from "lucide-react";
 import { Card, CardBody, CardTitle } from "../../components/ux/Card";
+import { Radar } from "react-chartjs-2";
+
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+);
 
 export const MentalHealthBoard: React.FC = () => {
+
+    const data = {
+        labels: ["Salud", "Trabajo", "Ocio", "Social", "Proyecto"],
+        datasets: [
+            {
+                label: "Salud mental",
+                data: [3, 4, 2, 5, 4],
+                backgroundColor: "rgba(34, 202, 236, 0.2)",
+                borderColor: "rgba(34, 202, 236, 1)",
+            }
+        ]
+
+    };
+
     return (
         <Card className="h-full flex flex-col">
             <CardTitle className="flex justify-between items-center">
@@ -11,7 +44,7 @@ export const MentalHealthBoard: React.FC = () => {
                 </div>
             </CardTitle>
             <CardBody className="mt-5">
-                <p>CLorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creació</p>
+                <Radar data={ data }/>
             </CardBody>
         </Card>
     );
