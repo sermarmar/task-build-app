@@ -10,7 +10,7 @@ export interface HabitLog {
         id: string;
         name: string;
         description?: string;
-        categories?: Category | Category[] | null;
+        categories?: Category | null;
         points: number;
     };
 }
