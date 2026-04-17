@@ -31,6 +31,29 @@ export const HabitLogRepository = {
         return { habitLogs: data, error: null };
     },
 
+    getHabitsCompleted: async (): Promise<{habitLogs: HabitLog[] | null, error: ErrorMessage | null}> => {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+    
+            const { data, error } = await supabase
+                .from('habit_logs')
+                .select(`
+                    *,
+                    habits:habit_id (
+                    *,
+                    categories:category_id (*)
+                    )
+                `)
+                .gte('completed_at', firstDay)
+                .lte('completed_at', lastDay);
+    
+            if (error) {
+                return { habitLogs: null, error: { message: 'No se pudieron obtener los registros del hábito' } };
+            }
+            return { habitLogs: data, error: null };
+    },
+
     create: async (habitId: string, userId: string, date: string): Promise<{ habitLog: HabitLog | null; error: ErrorMessage | null }> => {
         
         const { data, error } = await supabase

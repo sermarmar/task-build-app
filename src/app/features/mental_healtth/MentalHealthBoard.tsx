@@ -1,7 +1,37 @@
+
 import { Leaf } from "lucide-react";
 import { Card, CardBody, CardTitle } from "../../components/ux/Card";
+import { CategoryService } from '../../core/service/categories/CategoryService';
+import { useEffect, useState } from 'react';
+import type { Category } from '../../core/models/Category';
+import { RadarChart } from '../../components/ux/RadarChart';
+import { MetalHealthService } from "./services/MetalHealthService";
+
+
 
 export const MentalHealthBoard: React.FC = () => {
+
+    const [pointsData, setPointsData] = useState<{ [key: string]: number }>({});
+
+    useEffect(() => {
+        Promise.all([
+            CategoryService.getAllCategories(),
+            MetalHealthService.getMentalHealthData()
+        ]).then(([{ categories }, { points, error }]) => {
+            if (error) {
+                console.error('Error fetching mental health data:', error);
+                return;
+            }
+            if (categories && points) {
+                const filtered = categories.reduce((acc: { [key: string]: number }, category: Category) => {
+                    acc[category.name] = points[category.name] ?? 0;  // si no existe, 0
+                    return acc;
+                }, {});
+                setPointsData(filtered);
+            }
+        });
+    }, []);
+
     return (
         <Card className="h-full flex flex-col">
             <CardTitle className="flex justify-between items-center">
@@ -11,7 +41,7 @@ export const MentalHealthBoard: React.FC = () => {
                 </div>
             </CardTitle>
             <CardBody className="mt-5">
-                <p>CLorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creació</p>
+                <RadarChart data={pointsData} />
             </CardBody>
         </Card>
     );
