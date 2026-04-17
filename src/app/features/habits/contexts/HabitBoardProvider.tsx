@@ -4,6 +4,7 @@ import type { Habit } from "../models/Habit";
 import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
 import type { HabitLog } from "../models/HabitLog";
 import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
+import { ModalFormHabit } from "../components/ModalFormHabit";
 
 export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [habits, setHabits] = useState<Habit[]>([]);
@@ -12,6 +13,9 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
 
     useEffect(() => {
         const fetchHabits = async () => {
@@ -52,5 +56,20 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setSelectedDate(date);
     };
 
-    return <HabitBoardContext.Provider value={{habits, habitLogs, error, selectedDate, refreshHabits, selectDay}}>{children}</HabitBoardContext.Provider>;
+    const openModal = (open: boolean, isEdit: boolean = false, habit?: Habit) => {
+        setIsOpenModal(open);
+        setIsEdit(isEdit);
+        if (habit) {
+            setSelectedHabit(habit);
+        } else {
+            setSelectedHabit(null);
+        }
+    }
+
+    return (
+        <HabitBoardContext.Provider value={{habits, habitLogs, error, selectedDate, refreshHabits, selectDay, openModal}}>
+            {children}
+            <ModalFormHabit show={isOpenModal} onClose={() => openModal(false)} isEdit={isEdit} habit={selectedHabit} />
+        </HabitBoardContext.Provider>
+    );
 };

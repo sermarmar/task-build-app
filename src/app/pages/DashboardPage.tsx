@@ -1,6 +1,7 @@
 
 import { Navbar } from "../components/template/Navbar";
 import { HabitsBoard } from "../features/habits/components/HabitsBoard";
+import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
 import { MentalHealthBoard } from "../features/mental_healtth/MentalHealthBoard";
 import { Pomodoro } from '../features/Pomodoro';
 import { TasksBoard } from "../features/tasks/components/TasksBoard";
@@ -22,10 +23,11 @@ export const DashboardPage: React.FC = () => {
                     <TasksBoard />
                 </div>
                 <div className="col-span-2 col-start-4 row-start-1 row-span-2 h-full">
-                    <HabitsBoard />
+                    <HabitBoardProvider>
+                        <HabitsBoard />
+                    </HabitBoardProvider>
                 </div>
             </div>
-            
         </div>
     );
 }
