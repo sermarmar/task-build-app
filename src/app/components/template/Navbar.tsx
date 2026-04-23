@@ -3,7 +3,11 @@ import { DropdownButton } from "../ux/DropdownButton";
 import { useAuth } from "../../contexts/auth/useAuth";
 import { useNavigate } from "react-router";
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+    className?: string;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ className }) => {
 
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -18,15 +22,10 @@ export const Navbar: React.FC = () => {
     ];
 
     return (
-        <nav className="bg-white w-full shadow left-0">
-            <div className="container mx-auto flex justify-between items-center py-3">
-                <div className="text-lg font-bold">Mi Aplicación</div>
-                <DropdownButton
-                    buttonText={`${user?.name ?? ""} ${user?.lastName ?? ""}`.trim()}
-                    list={dropdownItems}
-                >
-                    <User size={18} />
-                </DropdownButton>
+        <nav className={`bg-tertiary-200 shadow rounded-2xl text-primary-900 h-full flex flex-col items-center ${className}`}>
+            <div className="flex flex-col h-full items-center justify-between p-4">
+                <User size={24} className="mb-2" />
+                <LogOut size={16} className="mb-2" />
             </div>
         </nav>
     );
