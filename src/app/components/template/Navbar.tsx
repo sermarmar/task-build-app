@@ -9,7 +9,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ className }) => {
 
-    const { user, logout } = useAuth();
+    const { logout } = useAuth();
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
 
 
     return (
-        <nav className={`bg-tertiary-200 shadow rounded-l-2xl rounded-e-4xl text-primary-900 h-full flex flex-col items-center ${className}`}>
+        <nav className={`bg-tertiary-200 shadow rounded-full text-primary-900 h-full flex flex-col items-center ${className}`}>
             <div className="flex flex-col h-full items-center justify-between p-2">
                 <User size={24} className="mb-2" />
                 <div className="flex flex-col gap-8">

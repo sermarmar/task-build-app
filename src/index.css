@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Quicksand:wght@300..700&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 @theme {
   --color-background-card: #ffffff;
@@ -48,6 +49,9 @@
   --color-tertiary-950: #202c07;
 
   --color-background-DEFAULT: #F3F4EF;
+  --font-sans: 'Quicksand', sans-serif, 'Nunito', sans-serif, 'SN Pro', sans-serif;
+  --font-mono: 'SF Mono', monospace;
+  --font-heading: 'Quicksand', sans-serif, 'Nunito', sans-serif, 'SN Pro', sans-serif;
 }
 
 @layer base {
@@ -72,4 +76,9 @@
 
 @utility animate-notification-out {
     animation: notification-out 0.3s ease-in forwards;
+}
+
+@utility scrollbar-primary {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-900) transparent;
 }
