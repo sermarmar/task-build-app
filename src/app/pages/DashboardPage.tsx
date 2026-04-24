@@ -14,7 +14,7 @@ export const DashboardPage: React.FC = () => {
             <div className="flex-none m-5" >
                <Navbar /> 
             </div>
-            <div className = "grid grid-cols-5 gap-4 p-5 flex-1 overflow-hidden">
+            <div className = "grid grid-cols-5 gap-4 p-5 flex-1 overflow-scroll-auto">
                 <div className="col-start-1 row-start-1">
                     <Pomodoro />
                 </div>
