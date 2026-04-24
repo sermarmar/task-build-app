@@ -1,5 +1,6 @@
 import { Card, CardBody, CardTitle } from "../components/ux/Card";
 import { useAuth } from "../contexts/auth/useAuth";
+import { CalendarBoard } from "../features/calendar/CalendarBoard";
 import { MentalHealthBoard } from "../features/mental_healtth/MentalHealthBoard";
 import { Pomodoro } from '../features/Pomodoro';
 
@@ -30,9 +31,7 @@ export const DashboardPage: React.FC = () => {
                 <h2 className="text-sm">En desarrollo...</h2>
             </div>
             <div className="col-span-2 row-span-5 col-start-5">
-                <Card>
-                    <h2 className="text-sm">Calendario en desarrollo...</h2>
-                </Card>
+                <CalendarBoard />
             </div>
             <div className="col-span-2 row-span-2 row-start-2">
                 <Pomodoro />

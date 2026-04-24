@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import FrecuencyData from './FrecuencyData.json';
 import { Button } from '../../ux/Button';
-import { Calendar } from '../../ux/Calendar';
+import { Calendar } from '../../ux/CalendarRow';
 
 type FrecuencyData = {
     label: string;
