@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import FrecuencyData from './FrecuencyData.json';
 import { Button } from '../../ux/Button';
-import { Calendar } from '../../ux/CalendarRow';
+import { CalendarRow } from '../../ux/CalendarRow';
 
 type FrecuencyData = {
     label: string;
@@ -90,7 +90,7 @@ export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onChange }) => {
                 </div>
             )}
             {selectedFrequency === 'monthly' && (
-                <Calendar selectedDays={selectedDays} onToggleDay={handleToggleDay} />
+                <CalendarRow selectedDays={selectedDays} onToggleDay={handleToggleDay} />
             )}
         </div>
     );
