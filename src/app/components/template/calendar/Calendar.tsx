@@ -2,8 +2,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import partyDaysData from '../../../shared/diasFestivos.json';
 
+interface CalendarProps {
+    selectDate?: (date: Date) => void;
+}
 
-export const Calendar = () => {
+export const Calendar: React.FC<CalendarProps> = ({ selectDate }) => {
 
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
