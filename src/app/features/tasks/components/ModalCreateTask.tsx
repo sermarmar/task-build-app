@@ -31,18 +31,6 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
     const { notify } = useNotification();
     const { refreshTasks } = useTaskBoardContext();
 
-    useEffect(() => {
-        const fetchCategory = async () => {
-            const res = await CategoryService.getFirstCategory();
-            setCategory(res.category);
-        };
-        const fetchStatus = async () => {
-            const res = await StatusService.getFirstStatus();
-            setStatus(res.status);
-        };
-        fetchStatus();
-        fetchCategory();
-    }, []);
 
     const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<TaskResponse>({
         defaultValues: {
@@ -56,6 +44,16 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
 
     useEffect(() => {
         if (show) {
+            CategoryService.getFirstCategory().then((res) => {
+                setCategory(res.category);
+                setValue('category_id', res.category ? res.category.id : '');
+            }).catch(() => {
+                console.error("Error fetching first category");
+            });
+            StatusService.getFirstStatus().then((res) => {
+                setStatus(res.status);
+                setValue('status_id', res.status ? res.status.id : 1);
+            });
             setVisible(true);
         } else {
             const t = setTimeout(() => setVisible(false), 300);

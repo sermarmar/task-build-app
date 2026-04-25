@@ -6,6 +6,24 @@ import type { ErrorMessage } from "../../shared/Error";
 
 export const TaskRepository = {
 
+    getTasksCompleted: async (): Promise<{tasks: Task[] | null, error: ErrorMessage | null}> => {
+        const now = new Date();
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+
+        const { data, error } = await supabase
+            .from('tasks')
+            .select('*, categories:category_id (*), statuses:status_id (*)')
+            .eq('status_id', 5)
+            .gte('updated_at', firstDay)
+            .lte('updated_at', lastDay);
+
+        if (error) {
+            return { tasks: null, error: { message: 'No se pudieron obtener las tareas' } };
+        }
+        return { tasks: data, error: null };
+    },
+
     create: async (task: TaskResponse): Promise<{taskCreated: Task | null, error: ErrorMessage | null}> => {
         const {data, error} = await supabase
             .from('tasks')
