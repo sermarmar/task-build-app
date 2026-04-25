@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { Card, CardBody, CardTitle } from "../components/ux/Card";
 import { useAuth } from "../contexts/auth/useAuth";
 import { CalendarBoard } from "../features/calendar/CalendarBoard";
@@ -27,8 +28,19 @@ export const DashboardPage: React.FC = () => {
                     </svg>
                 </Card>
             </div>
-            <div className="col-start-4">
-                <h2 className="text-sm">En desarrollo...</h2>
+            <div className="col-start-4 grid grid-rows-2 gap-2">
+                <button className="w-full bg-tertiary-300 flex items-center justify-between rounded-full p-4 pl-10">
+                    <span className="text-lg text-primary-900">Nuevo hábito</span>
+                    <span className="bg-primary-900 text-tertiary-50 rounded-full p-6">
+                        <Plus />
+                    </span>
+                </button>
+                <button className="w-full bg-primary-900 flex items-center justify-between rounded-full p-4 pl-10">
+                    <span className="text-lg text-tertiary-50">Nueva tarea</span>
+                    <span className="bg-tertiary-300 text-primary-900 rounded-full p-6">
+                        <Plus />
+                    </span>
+                </button>
             </div>
             <div className="col-span-2 row-span-5 col-start-5">
                 <CalendarBoard />
