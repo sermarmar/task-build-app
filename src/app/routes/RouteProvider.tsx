@@ -10,18 +10,27 @@ export const RouterProvider: React.FC = () => {
     return (
         <AuthProvider>
             <BrowserRouter>
-                <div className="flex h-screen overflow-hidden">  {/* 👈 overflow-hidden para que nada se desborde */}
-                    <div className="flex-none m-5">
-                        <Navbar className="h-[calc(100vh-2.5rem)]" />  {/* 👈 100vh menos el margen top+bottom (2 * 1.25rem) */}
-                    </div>
-                    <div className="my-10 pr-5 overflow-y-auto scrollbar-primary">
-                        <Routes>
-                            <Route path="/" element={<LoginPage />} />
-                            <Route path="/home" element={<ProtectedRoute element={<DashboardPage />} />} />
-                            <Route path="/notes" element={<ProtectedRoute element={<TaskPage />} />} />
-                        </Routes>
-                    </div>
-                </div>
+                <Routes>
+                    {/* Ruta pública - sin navbar */}
+                    <Route path="/" element={<LoginPage />} />
+
+                    {/* Rutas privadas - con navbar */}
+                    <Route path="/*" element={
+                        <ProtectedRoute element={
+                            <div className="flex h-screen overflow-hidden">
+                                <div className="flex-none m-5">
+                                    <Navbar className="h-[calc(100vh-2.5rem)]" />
+                                </div>
+                                <div className="my-10 pr-5 overflow-y-auto scrollbar-primary">
+                                    <Routes>
+                                        <Route path="/home" element={<DashboardPage />} />
+                                        <Route path="/notes" element={<TaskPage />} />
+                                    </Routes>
+                                </div>
+                            </div>
+                        } />
+                    } />
+                </Routes>
             </BrowserRouter>
         </AuthProvider>
     );
