@@ -1,4 +1,4 @@
-import { Bolt, CircleUserRound, House, LogOut, Notebook, User } from "lucide-react";
+import { Bolt, CircleUserRound, House, ListTodo, LogOut, Notebook, User } from "lucide-react";
 import { useAuth } from "../../contexts/auth/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import { Button } from "../ux/Button";
@@ -15,7 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
 
     const navItems = [
         { icon: <House />, path: '/home' },
-        { icon: <Notebook />, path: '/notes' },
+        { icon: <ListTodo />, path: '/notes' },
         { icon: <CircleUserRound />, path: '/profile' },
         { icon: <Bolt />, path: '/settings' },
     ];
