@@ -4,6 +4,12 @@ import { useAuth } from "../contexts/auth/useAuth";
 import { CalendarBoard } from "../features/calendar/CalendarBoard";
 import { MentalHealthBoard } from "../features/mental_healtth/MentalHealthBoard";
 import { Pomodoro } from '../features/Pomodoro';
+import { Button } from "../components/ux/Button";
+import { ButtonCreateHabit } from "../features/habits/components/ButtonCreateHabit";
+import { HabitBoardContext } from "../features/habits/contexts/HabitBoardContext";
+import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
+import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask";
+import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
 
 
 export const DashboardPage: React.FC = () => {
@@ -29,18 +35,12 @@ export const DashboardPage: React.FC = () => {
                 </Card>
             </div>
             <div className="col-start-4 grid grid-rows-2 gap-2">
-                <button className="w-full bg-tertiary-300 flex items-center justify-between rounded-full p-4 pl-10">
-                    <span className="text-lg text-primary-900">Nuevo hábito</span>
-                    <span className="bg-primary-900 text-tertiary-50 rounded-full p-6">
-                        <Plus />
-                    </span>
-                </button>
-                <button className="w-full bg-primary-900 flex items-center justify-between rounded-full p-4 pl-10">
-                    <span className="text-lg text-tertiary-50">Nueva tarea</span>
-                    <span className="bg-tertiary-300 text-primary-900 rounded-full p-6">
-                        <Plus />
-                    </span>
-                </button>
+                <HabitBoardProvider>
+                    <ButtonCreateHabit />
+                </HabitBoardProvider>
+                <TaskBoardProvider>
+                    <ButtonCreateTask />
+                </TaskBoardProvider>
             </div>
             <div className="col-span-2 row-span-5 col-start-5">
                 <CalendarBoard />
