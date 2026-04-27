@@ -4,12 +4,12 @@ import type { ErrorMessage } from "../../shared/Error";
 
 export const HabitRepository = {
 
-    getHabitsByDays: async (days: string[]): Promise<{habits: Habit[], error: ErrorMessage | null}> => {
+    getHabitsByDays: async (days?: string[]): Promise<{habits: Habit[], error: ErrorMessage | null}> => {
         let query = supabase
             .from('habits')
             .select('*, categories:category_id (*)');
 
-        if (days.length > 0) {
+        if (days && days.length > 0) {
             query = query.or(`custom_days.ov.{${days.join(',')}}, frequency.eq.daily`);
         }
 

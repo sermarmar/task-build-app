@@ -7,6 +7,7 @@ import { ButtonCreateHabit } from "../features/habits/components/ButtonCreateHab
 import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
 import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask";
 import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
+import { HabitsListToday } from "../features/habits/components/HabistListToday";
 
 
 export const DashboardPage: React.FC = () => {
@@ -14,7 +15,7 @@ export const DashboardPage: React.FC = () => {
     const { user } = useAuth();
 
     return (
-        <div className="grid grid-cols-6 grid-rows-5 gap-4">
+        <div className="grid grid-cols-6 grid-rows-5 gap-4 h-[calc(100vh-80px)]">
             <div className="col-span-3">
                 <Card className="h-full bg-gradient-to-br from-secondary-600 to-secondary-800 text-tertiary-50 px-6 py-3 relative overflow-hidden">
                     <CardTitle className="text-[4.75vh] text-tertiary-50 font-medium">{`Hola ${user?.name} ${user?.lastName}!!`}</CardTitle>
@@ -46,9 +47,14 @@ export const DashboardPage: React.FC = () => {
                 <Pomodoro />
             </div>
             <div className="row-span-2 col-start-3 row-start-2">
-                <Card>
-                    <h2 className="text-sm">Hábitos de hoy en desarrollo...</h2>
-                </Card>
+                <HabitBoardProvider>
+                    <div className="max-h-full flex flex-col">
+                        <h3 className="text-lg font-medium ml-4 mb-2">Hábitos para hoy</h3>
+                        <Card className="h-full overflow-y-auto overflow-x-hidden">
+                            <HabitsListToday />
+                        </Card>
+                    </div>
+                </HabitBoardProvider>
             </div>
             <div className="row-span-2 col-start-4 row-start-2">
                 <Card>

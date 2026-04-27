@@ -1,4 +1,4 @@
-import { Bolt, CircleUserRound, House, ListTodo, LogOut, Notebook, User } from "lucide-react";
+import { Bolt, CircleUserRound, House, ListTodo, LogOut, User } from "lucide-react";
 import { useAuth } from "../../contexts/auth/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import { Button } from "../ux/Button";
@@ -9,7 +9,6 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ className }) => {
 
-    const { logout } = useAuth();
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
