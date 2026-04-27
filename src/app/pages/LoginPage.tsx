@@ -21,7 +21,6 @@ export const LoginPage: React.FC = () => {
                     <LoginForm />
                 </div>
                 
-                
             </Card>
         </div>
         

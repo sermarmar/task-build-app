@@ -10,4 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    allowedHosts: 'all', // o el array con tu dominio ngrok
+    port: 5173,
+  },
 })

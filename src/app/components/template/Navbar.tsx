@@ -22,17 +22,15 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
 
     const isActive = (path: string) => pathname === path;
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
-
-
     return (
-        <nav className={`bg-tertiary-300 shadow rounded-full text-primary-900 h-full flex flex-col items-center ${className}`}>
-            <div className="flex flex-col h-full items-center justify-between p-2">
-                <User size={24} className="mb-2" />
-                <div className="flex flex-col gap-8">
+        <nav className={`bg-tertiary-300 text-primary-900 
+        shadow md:rounded-full 
+        w-full md:h-full md:w-auto
+        fixed md:relative bottom-0 md:bottom-auto z-10
+        ${className} md:h-[calc(100vh-2.5rem)]`}>
+            <div className="flex md:flex-col md:h-full items-center justify-center md:justify-between p-2">
+                <User size={24} className="hidden md:block mb-2" />
+                <div className="flex md:flex-col justify-between md:justify-center gap-8 items-center">
                     {navItems.map(({ icon, path }) => (
                         <Button
                             key={path}
@@ -43,18 +41,34 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
                             className={`
                                 hover:bg-primary-900 hover:text-tertiary-50
                                 ${isActive(path)
-                                    ? 'bg-primary-900 text-tertiary-50' 
+                                    ? 'bg-primary-900 text-tertiary-50'
                                     : ''}
                             `}
                         >
                             {icon}
                         </Button>
-                    ))}
+                    ))}    
                 </div>
-                <Button type="button" form="pill" color="transparent" onClick={ handleLogout } className="hover:bg-primary-900 hover:text-tertiary-50">
-                    <LogOut />
-                </Button>
+                <div className="hidden md:block">
+                    <LogoutComponent />
+                </div>
             </div>
         </nav>
+    );
+}
+
+const LogoutComponent: React.FC = () => {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
+    return (
+        <Button type="button" form="pill" color="transparent" onClick={ handleLogout } className="hover:bg-primary-900 hover:text-tertiary-50">
+            <LogOut />
+        </Button>
     );
 }

@@ -18,8 +18,8 @@ export const RouterProvider: React.FC = () => {
                     <Route path="/*" element={
                         <ProtectedRoute element={
                             <div className="flex h-screen overflow-hidden">
-                                <div className="flex-none m-5">
-                                    <Navbar className="h-[calc(100vh-2.5rem)]" />
+                                <div className="flex-none md:m-5">
+                                    <Navbar className="" />
                                 </div>
                                 <div className="my-10 pr-5 overflow-y-auto scrollbar-primary">
                                     <Routes>
