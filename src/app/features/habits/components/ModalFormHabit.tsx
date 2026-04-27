@@ -12,17 +12,31 @@ import { useNotification } from "../../../contexts/notification/useNotification"
 import type { HabitRequest } from "../resources/HabitRequest";
 import { FrecuencyDays } from "../../../components/template/frecuency_days/FrecuencyDays";
 import { CreateHabitService } from "../services/CreateHabitService";
+import type { Habit } from "../models/Habit";
 
-interface ModalCreateHabitProps {
+interface ModalFormHabitProps {
     show: boolean;
+    isEdit?: boolean;
+    habit?: Habit | null;
     onClose: () => void;
 }
 
-export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClose }) => {
+export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, habit, onClose }) => {
 
     const [visible, setVisible] = useState(show);
     const [category, setCategory] = useState<Category | null>(null);
     const { notify } = useNotification();
+
+    const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm<HabitRequest>({
+        defaultValues: {
+            title: '',
+            points: 0,
+            category_id: '',
+            frecuency: '',
+            options_monthly: [],
+            options_weekly: []
+        }
+    });
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -32,16 +46,16 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
         fetchCategory();
     }, []);
 
-    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<HabitRequest>({
-        defaultValues: {
-            title: '',
-            points: 0,
-            category_id: category ? category.id : '',
-            frecuency: '',
-            options_monthly: [],
-            options_weekly: []
-        }
-    });
+    useEffect(() => {
+        reset({
+            title: habit?.title || '',
+            points: habit?.points || 0,
+            category_id: habit?.category_id || category?.id || '',
+            frecuency: habit?.frequency || '',
+            options_monthly: habit?.custom_days || [],
+            options_weekly: habit?.custom_days || []
+        });
+    }, [habit, category, reset]);
 
     useEffect(() => {
         if (show) {
@@ -103,50 +117,50 @@ export const ModalCreateHabit: React.FC<ModalCreateHabitProps> = ({ show, onClos
                 }`}/* prevent closing when clicking inside */
             >
                 <CardTitle className="flex justify-between items-center">
-                    Crear nuevo hábito
+                    { isEdit ? "Editar hábito" : "Crear nuevo hábito" }
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
                 <form onSubmit={ handleSubmit(handleCreateHabit) } className="grid grid-cols-3 gap-5 mt-4">
-                        <div>
-                            <Input 
-                                label="Nombre del hábito"
-                                type="text"
-                                placeholder="Escribe un título para un hábito"
-                                {...register("title", { required: "El título es obligatorio" })}
-                            />
-                            {errors.title && (
-                                <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+                    <div>
+                        <Input 
+                            label="Nombre del hábito"
+                            type="text"
+                            placeholder="Escribe un título para un hábito"
+                            {...register("title", { required: "El título es obligatorio" })}
+                        />
+                        {errors.title && (
+                            <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+                        )}
+                    </div>
+                    <div>
+                        <SelectCategory onChange={(c) => setValue('category_id', habit?.category_id || c.id)}/> 
+                    </div>
+                    
+                    <div className="mb-4">
+                        <Controller
+                            name="points"
+                            control={control}
+                            rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
+                            render={({ field }) => (
+                                <Stars
+                                    label="Puntos de esfuerzos"
+                                    points={field.value}
+                                    onChange={(value: number) => field.onChange(value)}
+                                />
                             )}
-                        </div>
-                        <div>
-                           <SelectCategory onChange={(c) => setValue('category_id', c.id)}/> 
-                        </div>
-                        
-                        <div className="mb-4">
-                            <Controller
-                                name="points"
-                                control={control}
-                                rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
-                                render={({ field }) => (
-                                    <Stars
-                                        points={field.value}
-                                        onChange={(value: number) => field.onChange(value)}
-                                    />
-                                )}
-                            />
-                            {errors.points && (
-                                <span className="text-red-500 text-sm">{errors.points.message}</span>
-                            )}
-                        </div>
-                        <div className="col-span-3">
-                            <FrecuencyDays onChange={handleFrecuencyClick} />
-                        </div>
-                        <div className="flex col-span-3 justify-end">
-                           <Button type="submit">
-                                Crear hábito
-                            </Button> 
-                        </div>
-                        
+                        />
+                        {errors.points && (
+                            <span className="text-red-500 text-sm">{errors.points.message}</span>
+                        )}
+                    </div>
+                    <div className="col-span-3">
+                        <FrecuencyDays onChange={handleFrecuencyClick} />
+                    </div>
+                    <div className="flex col-span-3 justify-end">
+                        <Button type="submit">
+                            { isEdit ? "Guardar cambios" : "Crear hábito" }
+                        </Button> 
+                    </div>
                 </form>
             </Card>
         </div>

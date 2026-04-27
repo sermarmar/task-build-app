@@ -1,20 +1,74 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Quicksand:wght@300..700&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 @theme {
-  --color-background-card: #ffffff;
-  --color-text-DEFAULT: #1f2937;
-  --color-text-muted: #6b7280;
-  --color-accent: #7c3aed;
-  --color-accent-from: #7c3aed;
-  --color-accent-via: #ec4899;
-  --color-accent-to: #ef4444;
-  --color-red-from: #e15268;
-  --color-red-to: #f4adb4;
+    --color-background-card: #ffffff;
+    --color-text-DEFAULT: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-accent: #7c3aed;
+    --color-accent-from: #7c3aed;
+    --color-accent-via: #ec4899;
+    --color-accent-to: #ef4444;
+    --color-red-from: #e15268;
+    --color-red-to: #f4adb4;
+    
+    --color-primary-50: #ecfffd;
+    --color-primary-100: #bdfffa;
+    --color-primary-200: #7bfff8;
+    --color-primary-300: #31fffc;
+    --color-primary-400: #00fbff;
+    --color-primary-500: #00e5ed;
+    --color-primary-600: #00b5bf;
+    --color-primary-700: #008d97;
+    --color-primary-800: #006e77;
+    --color-primary-900: #00575e;
+    --color-primary-950: #00363d;
+
+    --color-secondary-50: #f0f9f4;
+    --color-secondary-100: #daf1e3;
+    --color-secondary-200: #b8e2cb;
+    --color-secondary-300: #88cdac;
+    --color-secondary-400: #61b590;
+    --color-secondary-500: #35946d;
+    --color-secondary-600: #257657;
+    --color-secondary-700: #1d5f47;
+    --color-secondary-800: #194c3a;
+    --color-secondary-900: #163e30;
+    --color-secondary-950: #0b231b;
+
+    --color-tertiary-50: #fafde8;
+    --color-tertiary-100: #f1f9ce;
+    --color-tertiary-200: #e0f297;
+    --color-tertiary-300: #cee96d;
+    --color-tertiary-400: #b8db40;
+    --color-tertiary-500: #9ac121;
+    --color-tertiary-600: #779a16;
+    --color-tertiary-700: #5a7516;
+    --color-tertiary-800: #495d17;
+    --color-tertiary-900: #3e4f18;
+    --color-tertiary-950: #202c07;
+
+    --color-accent-blossom-50: #fcf4f6;
+    --color-accent-blossom-100: #f9eaed;
+    --color-accent-blossom-200: #f3d8df;
+    --color-accent-blossom-300: #e6adbb;
+    --color-accent-blossom-400: #dc90a4;
+    --color-accent-blossom-500: #cc6785;
+    --color-accent-blossom-600: #b6486e;
+    --color-accent-blossom-700: #98385b;
+    --color-accent-blossom-800: #803150;
+    --color-accent-blossom-900: #6e2d49;
+    --color-accent-blossom-950: #3c1525;
+
+    --color-background-DEFAULT: #F3F4EF;
+    --font-sans: 'Quicksand', sans-serif, 'Nunito', sans-serif, 'SN Pro', sans-serif;
+    --font-mono: 'SF Mono', monospace;
+    --font-heading: 'Quicksand', sans-serif, 'Nunito', sans-serif, 'SN Pro', sans-serif;
 }
 
 @layer base {
   body {
-    @apply min-h-screen bg-linear-to-br from-accent-from via-accent-via to-accent-to;
+    @apply min-h-screen bg-background-DEFAULT text-text-DEFAULT;
   }
 }
 
@@ -34,4 +88,9 @@
 
 @utility animate-notification-out {
     animation: notification-out 0.3s ease-in forwards;
+}
+
+@utility scrollbar-primary {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-900) transparent;
 }

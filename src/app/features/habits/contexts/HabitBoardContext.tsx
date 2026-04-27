@@ -9,6 +9,7 @@ export interface HabitBoardContextType {
     selectedDate: Date;
     selectDay: (day: string[], date: Date) => void;
     refreshHabits: (cleanStorage?: boolean) => void;
+    openModal: (open: boolean, isEdit?: boolean, habit?: Habit) => void;
 }
 
 export const HabitBoardContext = createContext<HabitBoardContextType | null>(null);

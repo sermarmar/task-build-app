@@ -1,11 +1,11 @@
 import { twMerge } from "tailwind-merge";
 
-interface CalendarProps {
+interface CalendarRowProps {
     selectedDays: string[];
     onToggleDay: (day: string) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ selectedDays, onToggleDay }) => {
+export const CalendarRow: React.FC<CalendarRowProps> = ({ selectedDays, onToggleDay }) => {
     return (
         <div className="grid grid-cols-7 gap-2">
             {

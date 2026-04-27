@@ -11,13 +11,13 @@ interface HabitDateProps {
 
 export const HabitDate: React.FC<HabitDateProps> = ({ day, numDay, isActive, isToday, onClick }) => {
 
-    let activeClass = 'bg-gray-100';
+    let activeClass = 'bg-secondary-400 text-tertiary-50 hover:bg-tertiary-900 hover:text-tertiary-50';
     if( isActive ) {
-        activeClass = 'bg-gradient-to-r from-accent-from to-accent-to text-white';
+        activeClass = 'bg-primary-900 text-tertiary-50';
     } else if( isToday ) {
-        activeClass = 'bg-gradient-to-r from-red-from to-red-to text-white';
+        activeClass = 'bg-tertiary-300 text-primary-900';
     }
-    const activeTitleClass = isActive ? 'text-white' : 'text-black';
+    const activeTitleClass = isActive ? 'text-tertiary-50' : 'text-primary-900';
 
     return (
         <div onClick={ onClick }>

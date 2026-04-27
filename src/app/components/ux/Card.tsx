@@ -15,7 +15,7 @@ interface CardProps {
 export const Card: React.FC<CardProps> = ({ children, className = "", color = "bg-white", withPadding = true }) => {
     // Expect the full bg- utility to avoid Tailwind purge issues with dynamic values.
     const paddingClass = withPadding ? "p-6" : "";
-    const classes = twMerge(color, 'rounded-3xl shadow-lg', paddingClass, className);
+    const classes = twMerge(color, 'rounded-3xl shadow', paddingClass, className);
 
     return (
         <div className={classes}>
@@ -56,7 +56,7 @@ export const CardImage: React.FC<{ src: string, alt?: string, className?: string
 
 export const CardTitle: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
     return (
-        <h2 className={`text-2xl font-bold text-gray-800 ${className}`}>
+        <h2 className={twMerge('text-2xl font-bold text-gray-800', className)}>
             { children }
         </h2>
     )
@@ -64,7 +64,7 @@ export const CardTitle: React.FC<{ children: React.ReactNode, className?: string
 
 export const CardText: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
     return (
-        <div className={`text-gray-600 mt-2 ${className}`}>
+        <div className={twMerge('text-gray-600 mt-2', className)}>
             { children }
         </div>
     )
