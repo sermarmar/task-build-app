@@ -3,11 +3,11 @@ interface CircularProgressProps {
     value: number; // Expected to be between 0 and 100
     size?: number; // Diameter of the circular progress in pixels
     strokeWidth?: number; // Thickness of the progress stroke
-    color?: 'primary' | 'secondary' | 'tertiary'; // Color of the progress stroke
+    color?: string; 
 }
 
 
-export const CircularProgress: React.FC<CircularProgressProps> = ({ text, value = 0, size = 120, strokeWidth = 10, color = "secondary" }) => {
+export const CircularProgress: React.FC<CircularProgressProps> = ({ text, value = 0, size = 120, strokeWidth = 10, color = "var(--color-primary-900)" }) => {
 
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
@@ -31,7 +31,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = ({ text, value 
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke={color === "primary" ? "#00575e" : color === "secondary" ? "#35946d" : "#cee96d"}
+            stroke={color}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={circumference}
