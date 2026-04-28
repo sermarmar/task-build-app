@@ -6,7 +6,7 @@ interface CalendarProps {
     selectDate?: (date: Date) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ selectDate }) => {
+export const Calendar: React.FC<CalendarProps> = () => {
 
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());

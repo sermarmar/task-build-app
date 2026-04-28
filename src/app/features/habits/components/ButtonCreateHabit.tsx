@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
+import { ButtonWithIcon } from "../../../components/ux/ButtonWithIcon";
 
 export const ButtonCreateHabit: React.FC = () => {
 
@@ -7,14 +8,15 @@ export const ButtonCreateHabit: React.FC = () => {
 
     return (
         <>
-            <button 
-            className="w-full bg-tertiary-300 flex items-center justify-between rounded-full p-2 pl-10"
-            onClick={() => openModal(true)}>
-                <span className="text-lg text-primary-900 font-semibold">Nuevo hábito</span>
-                <span className="bg-primary-900 text-tertiary-50 rounded-full p-5 cursor-pointer">
-                    <Plus />
-                </span>
-            </button>
+            <ButtonWithIcon 
+                onClick={() => openModal(true)}
+                bgColor="bg-tertiary-300"
+                buttonText="Nuevo hábito"
+                textColor="text-primary-900"
+                iconColor="text-tertiary-50"
+                buttonColor="bg-primary-900"
+                icon={<Plus />}
+            />
         </>
     );
 }
