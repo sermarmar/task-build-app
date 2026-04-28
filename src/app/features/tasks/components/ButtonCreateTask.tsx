@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
-import { ModalCreateTask } from "./ModalCreateTask";
 import { useState } from "react";
+import { ButtonWithIcon } from "../../../components/ux/ButtonWithIcon";
+import { ModalCreateTask } from "./ModalCreateTask";
 
 export const ButtonCreateTask: React.FC = () => {
 
@@ -8,15 +9,16 @@ export const ButtonCreateTask: React.FC = () => {
 
     return (
         <>
-            <button 
-            className="w-full bg-primary-900 flex items-center justify-between rounded-full p-2 pl-10"
-            onClick={() => setOpenModal(true)}>
-                <span className="text-lg text-tertiary-50 font-semibold">Nueva tarea</span>
-                <span className="bg-tertiary-300 text-primary-900 rounded-full p-5 cursor-pointer">
-                    <Plus />
-                </span>
-            </button>
-            <ModalCreateTask show={openModal} onClose={() => setOpenModal(false)}/>
+            <ButtonWithIcon 
+                onClick={() => setOpenModal(true)}
+                bgColor="primary-900"
+                buttonText="Nueva tarea"
+                textColor="tertiary-50"
+                iconColor="primary-900"
+                buttonColor="tertiary-300"
+                icon={<Plus />}
+            />
+            <ModalCreateTask show={openModal} onClose={() => setOpenModal(false)} />
         </>
     );
 }
