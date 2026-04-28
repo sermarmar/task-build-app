@@ -11,11 +11,11 @@ export const ButtonCreateTask: React.FC = () => {
         <>
             <ButtonWithIcon 
                 onClick={() => setOpenModal(true)}
-                bgColor="primary-900"
+                bgColor="bg-primary-900"
                 buttonText="Nueva tarea"
-                textColor="tertiary-50"
-                iconColor="primary-900"
-                buttonColor="tertiary-300"
+                textColor="text-tertiary-50"
+                iconColor="text-primary-900"
+                buttonColor="bg-tertiary-300"
                 icon={<Plus />}
             />
             <ModalCreateTask show={openModal} onClose={() => setOpenModal(false)} />
