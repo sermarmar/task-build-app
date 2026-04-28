@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { HabitCard } from "./HabitCard";
 import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
 import { Bike } from "lucide-react";
 import type { Habit } from "../models/Habit";

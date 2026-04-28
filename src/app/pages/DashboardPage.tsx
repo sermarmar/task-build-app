@@ -6,7 +6,7 @@ import { ButtonCreateHabit } from "../features/habits/components/ButtonCreateHab
 import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
 import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask";
 import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
-import { HabitsListToday } from "../features/habits/components/HabistListToday";
+import { HabitsListToday } from "../features/habits/components/HabitsListToday";
 import { Pomodoro } from "../features/pomodoro/Pomodoro";
 
 
