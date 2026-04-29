@@ -2,15 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Quicksand:wght@300..700&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 @theme {
-    --color-background-card: #ffffff;
-    --color-text-DEFAULT: #1f2937;
-    --color-text-muted: #6b7280;
-    --color-accent: #7c3aed;
-    --color-accent-from: #7c3aed;
-    --color-accent-via: #ec4899;
-    --color-accent-to: #ef4444;
-    --color-red-from: #e15268;
-    --color-red-to: #f4adb4;
+    --color-text-DEFAULT: #00363d;
     
     --color-primary-50: #ecfffd;
     --color-primary-100: #bdfffa;
