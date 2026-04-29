@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
-import { Bike } from "lucide-react";
 import type { Habit } from "../models/Habit";
+import { DynamicIcon } from "../../../components/ux/DynamicIcon";
+import { useColorAlpha } from "../../../hooks/useColorAlpha";
 
 export const HabitsListToday: React.FC = () => {
 
@@ -29,9 +30,16 @@ export const HabitsListToday: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
                 {habits
                 .map(habit => (
-                    <div className="flex gap-4 items-center p-4 rounded-md border-l-5 border-tertiary-200 bg-tertiary-600/45 w-full">
-                        <span className="bg-tertiary-300 text-primary-900 w-10 h-10 flex items-center justify-center rounded-full">
-                            <Bike />
+                    <div className="flex gap-4 items-center p-4 rounded-md border-l-5 border-tertiary-200 bg-tertiary-600/45 w-full"
+                        style={{
+                            backgroundColor: useColorAlpha(habit.categories?.color, 0.2),
+                            borderColor: habit.categories?.color,
+                        }}>
+                        <span className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
+                            style={{
+                                backgroundColor: habit.categories?.color,
+                            }}>
+                            <DynamicIcon name={habit.categories?.icon} />
                         </span>
                         <h3 className="text-md font-medium">{habit.title}</h3>
                     </div>

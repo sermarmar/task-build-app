@@ -7,7 +7,7 @@ export interface Habit {
     title: string;
     description?: string;
     category_id?: string | null;
-    categories?: Category | Category[] | null;
+    categories?: Category | null;
     points: number;
     frequency: string;
     custom_days?: string[];
