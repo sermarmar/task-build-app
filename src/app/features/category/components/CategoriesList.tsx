@@ -47,7 +47,6 @@ export const CategoriesList: React.FC = () => {
                                     <h3 className="text-md font-bold">{category.name}</h3>
                                     <h5 className="text-sm text-secondary-800">{category.description}</h5>
                                 </div>
-                                
                             </div>
                         )
                     }

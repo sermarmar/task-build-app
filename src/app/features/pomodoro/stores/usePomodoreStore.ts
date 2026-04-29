@@ -91,8 +91,8 @@ export const usePomodoroStore = create<PomodoroState>()(
                 });
 
                 // Reproducir alarma via singleton
-                alarmService.play();
-
+                alarmService.play().catch((err) => console.error('[Alarm] Error:', err));
+                
                 // Notificación del navegador
                 if (Notification.permission === 'granted') {
                     new Notification('⏰ Pomodoro', {
