@@ -10,19 +10,23 @@ const MINUTES: Record<Mode, number> = {
     longBreak: 15,
 };
 
+const LONG_BREAK_EVERY = 4; // cada 4 pomodoros de trabajo → descanso largo
+
 interface PomodoroState {
     minutes: number;
     seconds: number;
     isActive: boolean;
     mode: Mode;
-    completedCycles: number;
+    // Contadores por tipo
+    completedWork: number;
+    completedShortBreaks: number;
+    completedLongBreaks: number;
     startedAt: number | null;
     // Acciones
     setMinutes: (m: number) => void;
     setSeconds: (s: number) => void;
     setIsActive: (v: boolean | ((prev: boolean) => boolean)) => void;
     setMode: (m: Mode) => void;
-    setCompletedCycles: (fn: (prev: number) => number) => void;
     setStartedAt: (t: number | null) => void;
     reset: (mode: Mode) => void;
     tick: () => void;
@@ -35,18 +39,17 @@ export const usePomodoroStore = create<PomodoroState>()(
             seconds: 0,
             isActive: false,
             mode: 'work',
-            completedCycles: 0,
+            completedWork: 0,
+            completedShortBreaks: 0,
+            completedLongBreaks: 0,
             startedAt: null,
 
             setMinutes: (m) => set({ minutes: m }),
             setSeconds: (s) => set({ seconds: s }),
             setIsActive: (v) => set((state) => ({
-                isActive: typeof v === 'function' ? v(state.isActive) : v
+                isActive: typeof v === 'function' ? v(state.isActive) : v,
             })),
             setMode: (m) => set({ mode: m }),
-            setCompletedCycles: (fn) => set((state) => ({
-                completedCycles: fn(state.completedCycles)
-            })),
             setStartedAt: (t) => set({ startedAt: t }),
             reset: (mode) => set({
                 minutes: MINUTES[mode],
@@ -56,28 +59,31 @@ export const usePomodoroStore = create<PomodoroState>()(
             }),
 
             tick: () => {
-                const { isActive, minutes, seconds, mode, completedCycles } = get();
+                const {
+                    isActive, minutes, seconds, mode,
+                    completedWork, completedShortBreaks, completedLongBreaks,
+                } = get();
                 if (!isActive) return;
 
                 // Cuenta atrás normal
-                if (seconds > 0) {
-                    set({ seconds: seconds - 1 });
-                    return;
-                }
+                if (seconds > 0) { set({ seconds: seconds - 1 }); return; }
+                if (minutes > 0) { set({ minutes: minutes - 1, seconds: 59 }); return; }
 
-                if (minutes > 0) {
-                    set({ minutes: minutes - 1, seconds: 59 });
-                    return;
-                }
-
-                // Timer completado — calcular siguiente modo
-                let nextMode: Mode = 'work';
-                let nextCycles = completedCycles;
+                // ── Timer completado ──────────────────────────────────────
+                let nextMode: Mode;
+                let newWork = completedWork;
+                let newShort = completedShortBreaks;
+                let newLong = completedLongBreaks;
 
                 if (mode === 'work') {
-                    nextMode = 'shortBreak';
-                    nextCycles = completedCycles < 8 ? completedCycles + 1 : completedCycles;
+                    newWork = completedWork + 1;
+                    // Cada LONG_BREAK_EVERY trabajos → descanso largo
+                    nextMode = newWork % LONG_BREAK_EVERY === 0 ? 'longBreak' : 'shortBreak';
+                } else if (mode === 'shortBreak') {
+                    newShort = completedShortBreaks + 1;
+                    nextMode = 'work';
                 } else {
+                    newLong = completedLongBreaks + 1;
                     nextMode = 'work';
                 }
 
@@ -87,13 +93,13 @@ export const usePomodoroStore = create<PomodoroState>()(
                     mode: nextMode,
                     minutes: MINUTES[nextMode],
                     seconds: 0,
-                    completedCycles: nextCycles,
+                    completedWork: newWork,
+                    completedShortBreaks: newShort,
+                    completedLongBreaks: newLong,
                 });
 
-                // Reproducir alarma via singleton
-                alarmService.play();
+                alarmService.play().catch((err) => console.error('[Alarm] Error:', err));
 
-                // Notificación del navegador
                 if (Notification.permission === 'granted') {
                     new Notification('⏰ Pomodoro', {
                         body: mode === 'work'
@@ -110,7 +116,9 @@ export const usePomodoroStore = create<PomodoroState>()(
                 minutes: state.minutes,
                 seconds: state.seconds,
                 mode: state.mode,
-                completedCycles: state.completedCycles,
+                completedWork: state.completedWork,
+                completedShortBreaks: state.completedShortBreaks,
+                completedLongBreaks: state.completedLongBreaks,
                 isActive: state.isActive,
                 startedAt: state.startedAt,
             }),
@@ -118,7 +126,7 @@ export const usePomodoroStore = create<PomodoroState>()(
     )
 );
 
-// ─── Intervalo global — vive fuera del componente ────────────────────────────
+// ─── Intervalo global ─────────────────────────────────────────────────────────
 
 let intervalId: number | null = null;
 

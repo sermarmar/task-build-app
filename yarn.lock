@@ -580,6 +580,14 @@
   resolved "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.60.0.tgz"
   integrity sha512-PrsWNQ8BuE00O3Xsx3ALh2Df8fAj9+cvvX9AIA6o4KpATR98c9mud4XtDWVvsEuyia5U4tVSTKygawyJkjm60w==
 
+"@sglara/cn@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@sglara/cn/-/cn-1.0.0.tgz"
+  integrity sha512-uo5RMzXVhS2XdsPYajVH349/eBxhLEoJOmScUuX0V5kesB8DueofOh64kgVR4v3/uZWJBpMYy5Eh9aIG+qG34Q==
+  dependencies:
+    clsx "^1.2.1"
+    tailwind-merge "^1.12.0"
+
 "@supabase/auth-js@2.98.0":
   version "2.98.0"
   resolved "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.98.0.tgz"
@@ -1031,6 +1039,11 @@ chart.js@^4.1.1, chart.js@^4.5.1:
   integrity sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==
   dependencies:
     "@kurkle/color" "^0.3.0"
+
+clsx@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -1794,6 +1807,11 @@ supports-color@^7.1.0:
   integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
   dependencies:
     has-flag "^4.0.0"
+
+tailwind-merge@^1.12.0:
+  version "1.14.0"
+  resolved "https://registry.npmjs.org/tailwind-merge/-/tailwind-merge-1.14.0.tgz"
+  integrity sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==
 
 tailwind-merge@^3.5.0:
   version "3.5.0"

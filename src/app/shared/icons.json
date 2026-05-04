@@ -1,0 +1,440 @@
+[
+  {
+    "key": "Dumbbell",
+    "label": "Ejercicio",
+    "icon": "Dumbbell",
+    "group": "salud"
+  },
+  {
+    "key": "Footprints",
+    "label": "Correr",
+    "icon": "Footprints",
+    "group": "salud"
+  },
+  {
+    "key": "Apple",
+    "label": "Alimentación",
+    "icon": "Apple",
+    "group": "salud"
+  },
+  {
+    "key": "Droplets",
+    "label": "Hidratación",
+    "icon": "Droplets",
+    "group": "salud"
+  },
+  {
+    "key": "BedDouble",
+    "label": "Sueño",
+    "icon": "BedDouble",
+    "group": "salud"
+  },
+  {
+    "key": "Heart",
+    "label": "Salud",
+    "icon": "Heart",
+    "group": "salud"
+  },
+  {
+    "key": "Pill",
+    "label": "Medicación",
+    "icon": "Pill",
+    "group": "salud"
+  },
+  {
+    "key": "PersonStanding",
+    "label": "Yoga",
+    "icon": "PersonStanding",
+    "group": "salud"
+  },
+  {
+    "key": "Bike",
+    "label": "Ciclismo",
+    "icon": "Bike",
+    "group": "salud"
+  },
+  {
+    "key": "Waves",
+    "label": "Natación",
+    "icon": "Waves",
+    "group": "salud"
+  },
+  {
+    "key": "Flame",
+    "label": "Calorías",
+    "icon": "Flame",
+    "group": "salud"
+  },
+  {
+    "key": "Activity",
+    "label": "Actividad",
+    "icon": "Activity",
+    "group": "salud"
+  },
+  {
+    "key": "Stethoscope",
+    "label": "Médico",
+    "icon": "Stethoscope",
+    "group": "salud"
+  },
+  {
+    "key": "Weight",
+    "label": "Peso",
+    "icon": "Weight",
+    "group": "salud"
+  },
+  {
+    "key": "Laptop",
+    "label": "Trabajo",
+    "icon": "Laptop",
+    "group": "productividad"
+  },
+  {
+    "key": "CheckSquare",
+    "label": "Tareas",
+    "icon": "CheckSquare",
+    "group": "productividad"
+  },
+  {
+    "key": "CalendarCheck",
+    "label": "Agenda",
+    "icon": "CalendarCheck",
+    "group": "productividad"
+  },
+  {
+    "key": "AlarmClock",
+    "label": "Tiempo",
+    "icon": "AlarmClock",
+    "group": "productividad"
+  },
+  {
+    "key": "Target",
+    "label": "Metas",
+    "icon": "Target",
+    "group": "productividad"
+  },
+  {
+    "key": "Inbox",
+    "label": "Inbox",
+    "icon": "Inbox",
+    "group": "productividad"
+  },
+  {
+    "key": "PenLine",
+    "label": "Escribir",
+    "icon": "PenLine",
+    "group": "productividad"
+  },
+  {
+    "key": "Focus",
+    "label": "Foco",
+    "icon": "Focus",
+    "group": "productividad"
+  },
+  {
+    "key": "Rocket",
+    "label": "Proyectos",
+    "icon": "Rocket",
+    "group": "productividad"
+  },
+  {
+    "key": "TrendingUp",
+    "label": "Progreso",
+    "icon": "TrendingUp",
+    "group": "productividad"
+  },
+  {
+    "key": "ListTodo",
+    "label": "Lista",
+    "icon": "ListTodo",
+    "group": "productividad"
+  },
+  {
+    "key": "Timer",
+    "label": "Pomodoro",
+    "icon": "Timer",
+    "group": "productividad"
+  },
+  {
+    "key": "Kanban",
+    "label": "Kanban",
+    "icon": "Kanban",
+    "group": "productividad"
+  },
+  {
+    "key": "Briefcase",
+    "label": "Oficina",
+    "icon": "Briefcase",
+    "group": "productividad"
+  },
+  {
+    "key": "Brain",
+    "label": "Meditación",
+    "icon": "Brain",
+    "group": "bienestar"
+  },
+  {
+    "key": "BookHeart",
+    "label": "Diario",
+    "icon": "BookHeart",
+    "group": "bienestar"
+  },
+  {
+    "key": "HandHeart",
+    "label": "Gratitud",
+    "icon": "HandHeart",
+    "group": "bienestar"
+  },
+  {
+    "key": "Sun",
+    "label": "Naturaleza",
+    "icon": "Sun",
+    "group": "bienestar"
+  },
+  {
+    "key": "Music",
+    "label": "Música",
+    "icon": "Music",
+    "group": "bienestar"
+  },
+  {
+    "key": "Palette",
+    "label": "Arte",
+    "icon": "Palette",
+    "group": "bienestar"
+  },
+  {
+    "key": "Footprints",
+    "label": "Paseo",
+    "icon": "Footprints",
+    "group": "bienestar"
+  },
+  {
+    "key": "Wind",
+    "label": "Respiración",
+    "icon": "Wind",
+    "group": "bienestar"
+  },
+  {
+    "key": "Bath",
+    "label": "Autocuidado",
+    "icon": "Bath",
+    "group": "bienestar"
+  },
+  {
+    "key": "Smile",
+    "label": "Estado ánimo",
+    "icon": "Smile",
+    "group": "bienestar"
+  },
+  {
+    "key": "Sparkles",
+    "label": "Mindfulness",
+    "icon": "Sparkles",
+    "group": "bienestar"
+  },
+  {
+    "key": "Coffee",
+    "label": "Descanso",
+    "icon": "Coffee",
+    "group": "bienestar"
+  },
+  {
+    "key": "Brush",
+    "label": "Limpieza",
+    "icon": "Brush",
+    "group": "hogar"
+  },
+  {
+    "key": "ChefHat",
+    "label": "Cocinar",
+    "icon": "ChefHat",
+    "group": "hogar"
+  },
+  {
+    "key": "Sprout",
+    "label": "Plantas",
+    "icon": "Sprout",
+    "group": "hogar"
+  },
+  {
+    "key": "ShoppingCart",
+    "label": "Compras",
+    "icon": "ShoppingCart",
+    "group": "hogar"
+  },
+  {
+    "key": "Wrench",
+    "label": "Mantenimiento",
+    "icon": "Wrench",
+    "group": "hogar"
+  },
+  {
+    "key": "Trash2",
+    "label": "Residuos",
+    "icon": "Trash2",
+    "group": "hogar"
+  },
+  {
+    "key": "PawPrint",
+    "label": "Mascotas",
+    "icon": "PawPrint",
+    "group": "hogar"
+  },
+  {
+    "key": "Home",
+    "label": "Hogar",
+    "icon": "Home",
+    "group": "hogar"
+  },
+  {
+    "key": "Shirt",
+    "label": "Ropa",
+    "icon": "Shirt",
+    "group": "hogar"
+  },
+  {
+    "key": "Wallet",
+    "label": "Gastos",
+    "icon": "Wallet",
+    "group": "finanzas"
+  },
+  {
+    "key": "PiggyBank",
+    "label": "Ahorros",
+    "icon": "PiggyBank",
+    "group": "finanzas"
+  },
+  {
+    "key": "BarChart2",
+    "label": "Inversión",
+    "icon": "BarChart2",
+    "group": "finanzas"
+  },
+  {
+    "key": "Calculator",
+    "label": "Presupuesto",
+    "icon": "Calculator",
+    "group": "finanzas"
+  },
+  {
+    "key": "Receipt",
+    "label": "Facturas",
+    "icon": "Receipt",
+    "group": "finanzas"
+  },
+  {
+    "key": "Bitcoin",
+    "label": "Crypto",
+    "icon": "Bitcoin",
+    "group": "finanzas"
+  },
+  {
+    "key": "CreditCard",
+    "label": "Pagos",
+    "icon": "CreditCard",
+    "group": "finanzas"
+  },
+  {
+    "key": "DollarSign",
+    "label": "Dinero",
+    "icon": "DollarSign",
+    "group": "finanzas"
+  },
+  {
+    "key": "Users",
+    "label": "Familia",
+    "icon": "Users",
+    "group": "social"
+  },
+  {
+    "key": "Handshake",
+    "label": "Amigos",
+    "icon": "Handshake",
+    "group": "social"
+  },
+  {
+    "key": "Phone",
+    "label": "Llamadas",
+    "icon": "Phone",
+    "group": "social"
+  },
+  {
+    "key": "MessageCircle",
+    "label": "Mensajes",
+    "icon": "MessageCircle",
+    "group": "social"
+  },
+  {
+    "key": "HeartHandshake",
+    "label": "Voluntariado",
+    "icon": "HeartHandshake",
+    "group": "social"
+  },
+  {
+    "key": "CalendarHeart",
+    "label": "Citas",
+    "icon": "CalendarHeart",
+    "group": "social"
+  },
+  {
+    "key": "UserPlus",
+    "label": "Networking",
+    "icon": "UserPlus",
+    "group": "social"
+  },
+  {
+    "key": "BookOpen",
+    "label": "Leer",
+    "icon": "BookOpen",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "GraduationCap",
+    "label": "Estudiar",
+    "icon": "GraduationCap",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "Mic",
+    "label": "Podcast",
+    "icon": "Mic",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "Globe",
+    "label": "Idiomas",
+    "icon": "Globe",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "Code2",
+    "label": "Programar",
+    "icon": "Code2",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "MonitorPlay",
+    "label": "Cursos",
+    "icon": "MonitorPlay",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "NotebookPen",
+    "label": "Notas",
+    "icon": "NotebookPen",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "Lightbulb",
+    "label": "Ideas",
+    "icon": "Lightbulb",
+    "group": "aprendizaje"
+  },
+  {
+    "key": "FlaskConical",
+    "label": "Ciencia",
+    "icon": "FlaskConical",
+    "group": "aprendizaje"
+  }
+]

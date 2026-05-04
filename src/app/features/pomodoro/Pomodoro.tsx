@@ -37,7 +37,9 @@ type ModeType = typeof MODES.WORK.name | typeof MODES.SHORT_BREAK.name | typeof 
 
 export const Pomodoro: React.FC = () => {
     const {
-        minutes, seconds, isActive, mode, completedCycles, startedAt,
+        minutes, seconds, isActive, mode,
+        completedWork, completedShortBreaks, completedLongBreaks,
+        startedAt,
         setMinutes, setSeconds, setIsActive, setMode, setStartedAt, reset
     } = usePomodoroStore();
 
@@ -59,14 +61,12 @@ export const Pomodoro: React.FC = () => {
         setSeconds(0);
     }, [setMinutes, setSeconds]);
 
-    // Pedir permiso de notificaciones al montar
     useEffect(() => {
         if (Notification.permission === 'default') {
             Notification.requestPermission();
         }
     }, []);
 
-    // Al montar, recalcula el tiempo perdido si el timer estaba activo
     useEffect(() => {
         if (isActive && startedAt) {
             const elapsed = Math.floor((Date.now() - startedAt) / 1000);
@@ -81,7 +81,7 @@ export const Pomodoro: React.FC = () => {
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // solo al montar
+    }, []);
 
     const handleChangeMode = (newMode: ModeType) => {
         setMode(newMode);
@@ -167,18 +167,45 @@ export const Pomodoro: React.FC = () => {
                         </Button>
                     </div>
                     <div className="text-sm text-primary-900/80 mt-4 text-center">
-                        Ciclos completados: {completedCycles}
+                        Ciclos completados: {completedWork}
                     </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                    {Array.from({ length: 8 }).map((_, i) => (
-                        <span
-                            key={i}
-                            className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
-                                i < completedCycles ? "bg-primary-900" : "bg-primary-950/30"
-                            }`}
-                        />
-                    ))}
+
+                {/* Columnas de tomates */}
+                <div className="flex flex-row gap-2">
+                    {/* Trabajo */}
+                    <div className="flex flex-col gap-2">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <span
+                                key={i}
+                                className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
+                                    i < completedWork ? "bg-primary-900" : "bg-primary-950/30"
+                                }`}
+                            />
+                        ))}
+                    </div>
+                    {/* Descanso corto */}
+                    <div className="flex flex-col gap-2">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <span
+                                key={i}
+                                className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
+                                    i < completedShortBreaks ? "bg-secondary-500" : "bg-primary-950/30"
+                                }`}
+                            />
+                        ))}
+                    </div>
+                    {/* Descanso largo */}
+                    <div className="flex flex-col gap-2">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <span
+                                key={i}
+                                className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
+                                    i < completedLongBreaks ? "bg-tertiary-300" : "bg-primary-950/30"
+                                }`}
+                            />
+                        ))}
+                    </div>
                 </div>
             </Card>
         </>

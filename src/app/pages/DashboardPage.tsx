@@ -48,12 +48,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="row-span-2 col-start-3 row-start-2">
                 <HabitBoardProvider>
-                    <div className="max-h-full flex flex-col">
-                        <h3 className="text-lg font-medium ml-4 mb-2">Hábitos para hoy</h3>
-                        <Card className="h-full overflow-y-auto overflow-x-hidden">
-                            <HabitsListToday />
-                        </Card>
-                    </div>
+                    <HabitsListToday />
                 </HabitBoardProvider>
             </div>
             <div className="row-span-2 col-start-4 row-start-2">

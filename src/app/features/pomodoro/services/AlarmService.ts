@@ -1,4 +1,3 @@
-// alarmService.ts
 class AlarmService {
     private volume: number = 1;
     private muted: boolean = false;
@@ -14,9 +13,15 @@ class AlarmService {
     setVolume(v: number) { this.volume = Math.min(1, Math.max(0, v)); }
     setMuted(m: boolean) { this.muted = m; }
 
-    play(): void {
+    async play(): Promise<void> {
         if (this.muted) return;
         const ctx = this.getCtx();
+
+        // ✅ Desbloquea el contexto si el navegador lo suspendió
+        if (ctx.state === 'suspended') {
+            await ctx.resume();
+        }
+
         const gain = ctx.createGain();
         gain.connect(ctx.destination);
         const now = ctx.currentTime;

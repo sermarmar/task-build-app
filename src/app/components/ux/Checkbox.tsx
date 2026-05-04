@@ -1,269 +1,144 @@
-import { useState, useId } from "react";
- 
-// ─── Types ────────────────────────────────────────────────────────────────────
- 
+import React, { useRef, useEffect, useState } from "react";
+
 type CheckboxSize = "sm" | "md" | "lg";
 type CheckboxVariant = "default" | "teal" | "coral";
- 
+
 interface CheckboxProps {
-  /** Label text shown next to the box */
-  label: string;
+  label?: string;
   value?: string | number;
-  /** Optional description shown below the label (card style) */
   description?: string;
-  /** Controlled checked state */
   checked?: boolean;
-  /** Indeterminate state (overrides checked visually) */
   indeterminate?: boolean;
-  /** Disable interaction */
   disabled?: boolean;
-  /** Visual size */
   size?: CheckboxSize;
-  /** Color variant */
   variant?: CheckboxVariant;
-  /** onChange handler */
   onChange?: (checked: boolean) => void;
-  /** Additional class names on the root element */
   className?: string;
 }
- 
-// ─── Variant maps ─────────────────────────────────────────────────────────────
- 
-const variantBox: Record<CheckboxVariant, string> = {
-  default: "border-violet-400 bg-violet-600 group-hover:border-violet-500",
-  teal:    "border-teal-400  bg-teal-600  group-hover:border-teal-500",
-  coral:   "border-orange-400 bg-orange-600 group-hover:border-orange-500",
+
+const sizeConfig = {
+  sm: { box: "w-4 h-4 rounded-[4px]", label: "text-[13px]", desc: "text-[12px]", gap: "gap-[9px]" },
+  md: { box: "w-5 h-5 rounded-[5px]", label: "text-[14px]", desc: "text-[13px]", gap: "gap-[10px]" },
+  lg: { box: "w-6 h-6 rounded-[6px]", label: "text-[15px]", desc: "text-[13px]", gap: "gap-[11px]" },
 };
- 
-const variantHoverBorder: Record<CheckboxVariant, string> = {
-  default: "group-hover:border-violet-400",
-  teal:    "group-hover:border-teal-400",
-  coral:   "group-hover:border-orange-400",
+
+const variantConfig = {
+  default: { bg: "bg-gray-700",   border: "border-gray-700" },
+  teal:    { bg: "bg-teal-700",   border: "border-teal-700" },
+  coral:   { bg: "bg-orange-700", border: "border-orange-700" },
 };
- 
-const variantCardBorder: Record<CheckboxVariant, string> = {
-  default: "border-violet-500",
-  teal:    "border-teal-500",
-  coral:   "border-orange-500",
-};
- 
-const variantCardBg: Record<CheckboxVariant, string> = {
-  default: "bg-violet-50/40 dark:bg-violet-950/20",
-  teal:    "bg-teal-50/40   dark:bg-teal-950/20",
-  coral:   "bg-orange-50/40 dark:bg-orange-950/20",
-};
- 
-// ─── Size maps ────────────────────────────────────────────────────────────────
- 
-const sizeBox: Record<CheckboxSize, string> = {
-  sm: "w-4 h-4 rounded-[5px]",
-  md: "w-[22px] h-[22px] rounded-[7px]",
-  lg: "w-7 h-7 rounded-[9px]",
-};
- 
-const sizeLabel: Record<CheckboxSize, string> = {
-  sm: "text-sm",
-  md: "text-[15px]",
-  lg: "text-[17px]",
-};
- 
-const sizeIcon: Record<CheckboxSize, { w: number; h: number; strokeW: string; points: string }> = {
-  sm: { w: 9,  h: 9,  strokeW: "2",   points: "1.5,5 4.5,8 10.5,1.5" },
-  md: { w: 12, h: 12, strokeW: "2.2", points: "1.5,5 4.5,8 10.5,1.5" },
-  lg: { w: 15, h: 15, strokeW: "2.4", points: "1.5,5 4.5,8 10.5,1.5" },
-};
- 
-// ─── Keyframe injection (once) ────────────────────────────────────────────────
- 
-const STYLE_ID = "cb-keyframes";
-if (typeof document !== "undefined" && !document.getElementById(STYLE_ID)) {
-  const s = document.createElement("style");
-  s.id = STYLE_ID;
-  s.textContent = `
-    @keyframes cb-pop {
-      0%   { transform: scale(1); }
-      40%  { transform: scale(1.18); }
-      70%  { transform: scale(0.93); }
-      100% { transform: scale(1); }
-    }
-    @keyframes cb-tick {
-      from { stroke-dashoffset: 16; }
-      to   { stroke-dashoffset: 0; }
-    }
-    @keyframes cb-dash {
-      from { stroke-dashoffset: 8; }
-      to   { stroke-dashoffset: 0; }
-    }
-    .cb-pop    { animation: cb-pop  0.25s cubic-bezier(.36,.07,.19,.97) both; }
-    .cb-tick   { stroke-dasharray: 16; stroke-dashoffset: 0;
-                 animation: cb-tick 0.28s cubic-bezier(0.6,0.04,0.98,0.335) both; }
-    .cb-dash   { stroke-dasharray: 8;  stroke-dashoffset: 0;
-                 animation: cb-dash 0.22s ease both; }
-    .cb-unchecked { stroke-dasharray: 16; stroke-dashoffset: 16; }
-    .cb-undash    { stroke-dasharray: 8;  stroke-dashoffset: 8; }
-  `;
-  document.head.appendChild(s);
-}
- 
-// ─── Tick / Dash SVG icons ────────────────────────────────────────────────────
- 
-interface TickProps { size: CheckboxSize; animate: boolean }
- 
-function Tick({ size, animate }: TickProps) {
-  const { w, h, strokeW, points } = sizeIcon[size];
+
+const CheckIcon = ({ size }: { size: CheckboxSize }) => {
+  const dims = { sm: [10, 8], md: [12, 9], lg: [14, 11] }[size];
+  const path = { sm: "M1 4L3.5 6.5L9 1", md: "M1 4.5L4 7.5L11 1", lg: "M1 5.5L5 9.5L13 1" }[size];
   return (
-    <svg width={w} height={h} viewBox="0 0 12 10" fill="none" aria-hidden>
-      <polyline
-        points={points}
-        stroke="white"
-        strokeWidth={strokeW}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={animate ? "cb-tick" : "cb-unchecked"}
-        key={animate ? "checked" : "unchecked"}
-      />
+    <svg width={dims[0]} height={dims[1]} viewBox={`0 0 ${dims[0]} ${dims[1]}`} fill="none">
+      <path d={path} stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
-}
- 
-function Dash({ size, animate }: { size: CheckboxSize; animate: boolean }) {
-  const { w, h, strokeW } = sizeIcon[size];
-  return (
-    <svg width={w} height={h} viewBox="0 0 12 10" fill="none" aria-hidden>
-      <line
-        x1="2" y1="5" x2="10" y2="5"
-        stroke="white"
-        strokeWidth={strokeW}
-        strokeLinecap="round"
-        className={animate ? "cb-dash" : "cb-undash"}
-        key={animate ? "indeterminate" : "idle"}
-      />
-    </svg>
-  );
-}
- 
-// ─── Main Checkbox component ──────────────────────────────────────────────────
- 
-export function Checkbox({
+};
+
+const IndeterminateIcon = () => (
+  <svg width="12" height="2" viewBox="0 0 12 2" fill="none">
+    <path d="M1 1H11" stroke="white" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+export const Checkbox: React.FC<CheckboxProps> = ({
   label,
   value,
   description,
-  checked = false,
+  checked: checkedProp,
   indeterminate = false,
   disabled = false,
   size = "md",
   variant = "default",
   onChange,
   className = "",
-}: CheckboxProps) {
-  const id = useId();
-  const [animKey, setAnimKey] = useState(0);
-  const hasDesc = Boolean(description);
- 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    if (disabled) return;
-    setAnimKey((k) => k + 1);
-    onChange?.(e.target.checked);
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const s = sizeConfig[size];
+  const v = variantConfig[variant];
+
+  // Estado interno — se usa si no se pasa checked desde fuera (uncontrolled)
+  const isControlled = checkedProp !== undefined;
+  const [internalChecked, setInternalChecked] = useState(false);
+  const checked = isControlled ? checkedProp : internalChecked;
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.indeterminate = indeterminate;
+    }
+  }, [indeterminate]);
+
+  const handleClick = (e: React.MouseEvent<HTMLLabelElement>) => {
+      e.preventDefault(); // evita que el label dispare doble evento
+      if (disabled) {
+        return;
+      }
+      const next = !checked;
+      if (!isControlled) {
+        setInternalChecked(next);
+      }
+      onChange?.(next);
   };
- 
-  // Visual states
-  const isChecked = !indeterminate && checked;
-  const isIndet   = indeterminate;
-  const isActive  = isChecked || isIndet;
- 
-  // Box classes
-  const boxBase =
-    "relative flex items-center justify-center flex-shrink-0 border-[1.5px] transition-all duration-200 select-none";
-  const boxColor = isActive
-    ? `${variantBox[variant]} border-transparent`
-    : `border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 ${variantHoverBorder[variant]}`;
-  const boxHover = !disabled ? "group-hover:scale-105" : "";
-  const boxActive = !disabled ? "group-active:scale-95" : "";
-  //const boxDisabled = disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer";
- 
-  // Card wrapper (when description exists)
-  const cardBase =
-    "flex items-start gap-3 rounded-xl border p-3 transition-all duration-200";
-  const cardColor = isActive
-    ? `${variantCardBorder[variant]} ${variantCardBg[variant]}`
-    : `border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 ${
-        !disabled ? `hover:${variantCardBorder[variant]}` : ""
-      }`;
- 
-  const rootTag = hasDesc ? (
+
+  const isActive = indeterminate || checked;
+
+  return (
     <label
-      htmlFor={id}
-      className={`group flex ${hasDesc ? cardBase + " " + cardColor : "items-center gap-3"} ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} ${className}`}
+      onClick={(e) => handleClick(e)}
+      className={[
+        "inline-flex items-start cursor-pointer select-none group",
+        label ? s.gap : "",
+        disabled ? "opacity-45 cursor-not-allowed pointer-events-none" : "",
+        className,
+      ].join(" ")}
     >
-      {/* Box */}
-      <div
-        key={animKey}
-        className={[boxBase, sizeBox[size], boxColor, boxHover, boxActive, isActive ? "cb-pop" : "", "mt-0.5"].join(" ")}
-        aria-hidden
+      {/* Input oculto */}
+      <input
+        ref={inputRef}
+        type="checkbox"
+        value={value}
+        checked={checked}
+        disabled={disabled}
+        onChange={() => {}} // controlado por handleClick
+        className="absolute opacity-0 w-0 h-0 pointer-events-none"
+      />
+
+      {/* Caja visual */}
+      <span
+        className={[
+          "flex-shrink-0 flex items-center justify-center border-[1.5px] mt-px",
+          "transition-all duration-150 ease-out",
+          "group-hover:shadow-[0_0_0_3px_theme(colors.gray.100)]",
+          "group-active:scale-90",
+          s.box,
+          isActive
+            ? `${v.bg} ${v.border} border-transparent`
+            : "bg-white border-gray-300 group-hover:border-gray-400",
+        ].join(" ")}
       >
-        {isIndet
-          ? <Dash  size={size} animate={isIndet}  key={`d-${animKey}`} />
-          : <Tick  size={size} animate={isChecked} key={`t-${animKey}`} />
-        }
-      </div>
- 
-      {/* Text */}
-      <div className="flex flex-col gap-0.5">
-        <span className={`font-medium ${sizeLabel[size]} text-gray-800 dark:text-gray-100 transition-colors duration-200`}>
-          {label}
+        <span
+          className={[
+            "transition-all duration-200",
+            isActive ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-50 -rotate-12",
+          ].join(" ")}
+          style={{ transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)" }}
+        >
+          {indeterminate ? <IndeterminateIcon /> : <CheckIcon size={size} />}
         </span>
-        {description && (
-          <span className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            {description}
-          </span>
-        )}
-      </div>
- 
-      {/* Hidden native input for a11y */}
-      <input
-        id={id}
-        type="checkbox"
-        checked={checked}
-        disabled={disabled}
-        onChange={handleChange}
-        className="sr-only"
-        value={value}
-        aria-checked={isIndet ? "mixed" : checked}
-      />
-    </label>
-  ) : (
-    <label
-      htmlFor={id}
-      className={`group inline-flex items-center gap-3 ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"} ${className}`}
-    >
-      <div
-        key={animKey}
-        className={[boxBase, sizeBox[size], boxColor, boxHover, boxActive, isActive ? "cb-pop" : ""].join(" ")}
-        aria-hidden
-      >
-        {isIndet
-          ? <Dash size={size} animate={isIndet}  key={`d-${animKey}`} />
-          : <Tick size={size} animate={isChecked} key={`t-${animKey}`} />
-        }
-      </div>
- 
-      <span className={`${sizeLabel[size]} text-gray-700 dark:text-gray-300 transition-colors duration-200 ${isChecked ? "text-gray-900 dark:text-gray-100" : ""}`}>
-        {label}
       </span>
- 
-      <input
-        id={id}
-        type="checkbox"
-        checked={checked}
-        disabled={disabled}
-        onChange={handleChange}
-        className="sr-only"
-        value={value}
-        aria-checked={isIndet ? "mixed" : checked}
-      />
+
+      {/* Texto — solo si hay label */}
+      {label && (
+        <span className="flex flex-col gap-0.5">
+          <span className={`leading-snug text-gray-900 ${s.label}`}>{label}</span>
+          {description && (
+            <span className={`leading-snug text-gray-500 ${s.desc}`}>{description}</span>
+          )}
+        </span>
+      )}
     </label>
   );
- 
-  return rootTag;
-}
+};

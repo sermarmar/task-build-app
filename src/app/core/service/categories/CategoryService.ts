@@ -20,6 +20,7 @@ export const CategoryService = {
                 name: category.name,
                 description: category.description,
                 color: category.color,
+                icon: category.icon, // Aquí deberías convertir el valor de icon a un ReactNode si es necesario
                 created_at: category.created_at
             }));
 
