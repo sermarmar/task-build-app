@@ -1,28 +1,21 @@
-import { useEffect, useState } from "react";
-import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
-import type { Habit } from "../models/Habit";
-import { DynamicIcon } from "../../../components/ux/DynamicIcon";
-import { useColorAlpha } from "../../../hooks/useColorAlpha";
 import { Card } from "../../../components/ux/Card";
+import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
+import { HabitCard } from "./HabitCard";
 
 export const HabitsListToday: React.FC = () => {
 
-    const [habits, setHabits] = useState<Habit[]>([]);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        RetrieveHabitsService.getHabits(new Date().toLocaleString().split(',')[0].split('/').reverse().join('-').split('-').slice(1)).then(({ habits, error }) => {
-            if(error) {
-                setError(error.message);
-                return;
-            }
-            setHabits(habits);
+    const { habits, habitLogs, error, selectedDate } = useHabitBoardContext();
+    
+    const isHabitCompleted = (habitId: string): boolean => {
+        const selectedDateStr = selectedDate.toISOString().split('T')[0];
+        return habitLogs.some(log => {
+            const logDateStr = new Date(log.completed_at).toISOString().split('T')[0];
+            return log.habit_id === habitId && logDateStr === selectedDateStr;
         });
-    }, []);
+    }
 
 
     return (
-        
         <div className="max-h-full flex flex-col">
             <h3 className="text-lg font-medium ml-4 mb-2">Hábitos para hoy</h3>
             <Card>
@@ -34,19 +27,7 @@ export const HabitsListToday: React.FC = () => {
                 <div className="h-65 grid grid-cols-1 gap-4 overflow-y-auto overflow-x-hidden">
                     {habits
                     .map(habit => (
-                        <div className="flex gap-4 items-center p-4 rounded-md border-l-5 border-tertiary-200 bg-tertiary-600/45 w-full"
-                            style={{
-                                backgroundColor: useColorAlpha(habit.categories?.color, 0.2),
-                                borderColor: habit.categories?.color,
-                            }}>
-                            <span className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
-                                style={{
-                                    backgroundColor: habit.categories?.color,
-                                }}>
-                                <DynamicIcon name={habit.categories?.icon} />
-                            </span>
-                            <h3 className="text-md font-medium">{habit.title}</h3>
-                        </div>
+                        <HabitCard habit={habit} isCompleted={isHabitCompleted(habit.id!)} />
                     ))}
                 </div>
             </Card>

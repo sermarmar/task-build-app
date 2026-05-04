@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { Card } from "../../../components/ux/Card";
-import { Checkbox } from "../../../components/ux/Checkbox";
 import type { Habit } from "../models/Habit";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
 import { CompleteHabitService } from "../services/CompleteHabitService";
-import { Stars } from "../../../components/ux/Stars";
-import { EllipsisVertical } from "lucide-react";
+import { Checkbox } from "../../../components/ux/Checkbox";
+import { DynamicIcon } from "../../../components/ux/DynamicIcon";
+import { useColorAlpha } from "../../../hooks/useColorAlpha";
 
 interface HabitCardProps {
     habit: Habit;
@@ -28,21 +27,22 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted }) => {
     }
 
     return (
-        <Card>
-            <div className="flex items-center justify-between">
-                <Checkbox
-                    value={habit.id}
-                    label={habit.title}
-                    checked={checked} onChange={() => handleHabitCompleted(!checked)}
-                />
-                <div className="flex items-center gap-6">
-                    <p className="text-sm text-gray-500"> { habit.categories && !Array.isArray(habit.categories) && habit.categories.name } </p>
-                    <Stars points={habit.points} disabled />
-                </div>
-                <button type="button" onClick={() => openModal(true, true, habit)}>
-                        <EllipsisVertical className="text-gray-500"/>
-                </button>
+        <div className="flex gap-4 items-center justify-between p-2 rounded-md border-l-5 border-tertiary-200 bg-tertiary-600/45 w-full"
+            style={{
+                backgroundColor: useColorAlpha(habit.categories?.color, 0.2),
+                borderColor: habit.categories?.color,
+            }}>
+            <div className="flex gap-4 items-center">
+                <span className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
+                    style={{
+                        backgroundColor: habit.categories?.color,
+                    }}>
+                    <DynamicIcon name={habit.categories?.icon} />
+                </span>
+                <h3 className="text-sm font-medium">{habit.title}</h3>
             </div>
-        </Card>
+            
+            <Checkbox value={habit.id} onChange={(isChecked) => handleHabitCompleted(isChecked)} checked={checked} />
+        </div>
     );
 }
