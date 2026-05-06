@@ -4,7 +4,7 @@ Aplicación personal de productividad y bienestar. Combina gestión de tareas, h
 
 ## Stack
 
-- **Frontend**: React 18 + TypeScript + Tailwind CSS v4 + Vite
+- **Frontend**: React 19 + TypeScript + Tailwind CSS v4 + Vite
 - **Backend**: Supabase (PostgreSQL + Auth + PostgREST)
 - **Deploy**: Vercel (rama `master`)
 - **Utilidades**: `clsx`, `twMerge`, React Hook Form, Path aliases con `@/`
