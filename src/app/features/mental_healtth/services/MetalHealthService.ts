@@ -3,16 +3,19 @@ import { TaskRepository } from "../../../infra/repositories/TaskRepository";
 
 export const MetalHealthService = {
 
-    getMentalHealthData: async (): Promise<{ points: { [key: string]: number } | null, error: { message: string } | null }> => {
+    getMentalHealthData: async (totalCategories: number): Promise<{
+        points: { [key: string]: number } | null,
+        balance: number,
+        error: { message: string } | null
+    }> => {
         const { tasks, error: taskError } = await TaskRepository.getTasksCompleted();
         const { habitLogs, error: habitLogError } = await HabitLogRepository.getHabitsCompleted();
 
         if (taskError || habitLogError) {
             console.error('Error fetching completed tasks or habit logs:', taskError || habitLogError);
-            return { points: null, error: { message: 'No se pudieron obtener los datos de salud mental' } };
+            return { points: null, balance: 0, error: { message: 'No se pudieron obtener los datos de salud mental' } };
         }
 
-        // Acumular puntos brutos por categoría
         const rawPoints: { [key: string]: number } = {};
 
         tasks?.forEach(task => {
@@ -27,17 +30,26 @@ export const MetalHealthService = {
             rawPoints[categoryName] = (rawPoints[categoryName] || 0) + log.habits.points;
         });
 
-        // Convertir a porcentajes (0–100)
         const total = Object.values(rawPoints).reduce((sum, val) => sum + val, 0);
 
-        if (total === 0) return { points: null, error: null };
+        if (total === 0) return { points: null, balance: 0, error: null };
 
-        const pointsByCategory: { [key: string]: number } = {};
+        // Cuota ideal sobre el total de categorías existentes, no solo las activas
+        const idealShare = total / totalCategories;
+
+        // Cada categoría se topa en su cuota justa — las dominantes no se inflan
+        const cappedPoints: { [key: string]: number } = {};
+        let earnedTotal = 0;
         for (const [category, value] of Object.entries(rawPoints)) {
-            pointsByCategory[category] = Math.round((value / total) * 100);
+            const capped = Math.min(value, idealShare);
+            cappedPoints[category] = capped;
+            earnedTotal += capped;
         }
 
-        return { points: pointsByCategory, error: null };
+        // Balance global: qué porcentaje del total "justo" se ha conseguido
+        const balance = Math.round((earnedTotal / total) * 100);
+
+        return { points: cappedPoints, balance, error: null };
     }
 
 };

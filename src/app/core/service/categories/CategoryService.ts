@@ -9,7 +9,7 @@ export const CategoryService = {
         if(sessionStorage.getItem('categories')) {
             return { categories: JSON.parse(sessionStorage.getItem('categories')!), error: null };
         } else {
-            const { data, error } = await supabase.from('categories').select('*');
+            const { data, error } = await supabase.from('categories').select('*, groups(name, color)');
 
             if (error) {
                 return { categories: null, error: { message: "No se ha recuperado la lista de categorías." } };
@@ -19,8 +19,9 @@ export const CategoryService = {
                 id: category.id,
                 name: category.name,
                 description: category.description,
-                color: category.color,
-                icon: category.icon, // Aquí deberías convertir el valor de icon a un ReactNode si es necesario
+                icon: category.icon,
+                group_id: category.group_id,
+                group: category.groups ?? undefined,
                 created_at: category.created_at
             }));
 
@@ -29,6 +30,10 @@ export const CategoryService = {
             return { categories, error: null };
         }
         
+    },
+
+    clearCache: () => {
+        sessionStorage.removeItem('categories');
     },
 
     getFirstCategory: async (): Promise<{ category: Category | null, error: any }> => {

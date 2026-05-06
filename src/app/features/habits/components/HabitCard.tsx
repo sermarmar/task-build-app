@@ -30,13 +30,13 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted }) => {
     return (
         <div className="flex gap-4 items-center justify-between p-2 rounded-md border-l-5 border-tertiary-200 bg-tertiary-600/45 w-full"
             style={{
-                backgroundColor: useColorAlpha(habit.categories?.color ?? '#1d5f47', 0.2),
-                borderColor: habit.categories?.color ?? '#1d5f47',
+                backgroundColor: useColorAlpha(habit.categories?.group?.color ?? '#1d5f47', 0.2),
+                borderColor: habit.categories?.group?.color ?? '#1d5f47',
             }}>
             <div className="flex gap-4 items-center">
                 <span className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
                     style={{
-                        backgroundColor: habit.categories?.color ?? '#1d5f47',
+                        backgroundColor: habit.categories?.group?.color ?? '#1d5f47',
                     }}>
                     <DynamicIcon name={habit.categories?.icon ?? 'Star'} />
                 </span>

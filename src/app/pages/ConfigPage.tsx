@@ -1,23 +1,16 @@
 import { Card, CardTitle, CardBody } from '../components/ux/Card';
 import { CategoryBoard } from '../features/category/components/CategoryBoard';
+import { GroupBoard } from '../features/group/components/GroupBoard';
 
 export const ConfigPage: React.FC = () => {
 
     
 
     const menuOptions = [
-        {
-            label: "Categorias", 
-            value: "categories"
-        }, 
-        {
-            label: "Estados", 
-            value: "states"
-        },
-        {
-            label: "General", 
-            value: "general"
-        }
+        { label: "Grupos",      value: "groups"      },
+        { label: "Categorias",  value: "categories"  },
+        { label: "Estados",     value: "states"      },
+        { label: "General",     value: "general"     },
     ];
 
     return (
@@ -36,6 +29,7 @@ export const ConfigPage: React.FC = () => {
                     </ul>
                 </div>
                 <div className="flex flex-col gap-5 items-start justify-start flex-1">
+                    <GroupBoard />
                     <CategoryBoard />
                     <Card className='w-full'>
                         <CardTitle>Estados</CardTitle>
