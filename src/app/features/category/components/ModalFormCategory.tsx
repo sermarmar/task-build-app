@@ -72,7 +72,7 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
 
     if (!visible) return null;
 
-    const handleCreateCategory = async (form: CategoryRequest) => {
+    const handleCreateCategory = async (_form: CategoryRequest) => {
         notify(isEdit ? "Categoría editada correctamente" : "Categoría creada correctamente");
         onClose();
     };
