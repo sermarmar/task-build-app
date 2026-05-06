@@ -5,6 +5,14 @@ import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
 import type { HabitLog } from "../models/HabitLog";
 import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
 import { ModalFormHabit } from "../components/ModalFormHabit";
+import { DAY_NAMES } from "../helpers/daysHelpers";
+
+const getTodayDays = (): string[] => {
+    const today = new Date();
+    const weekday = today.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    const dayName = DAY_NAMES.find(d => d.value === weekday)?.value ?? weekday;
+    return [dayName, today.getDate().toString()];
+};
 
 export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [habits, setHabits] = useState<Habit[]>([]);
@@ -12,10 +20,14 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const [error, setError] = useState<string>('');
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [selectedDays, setSelectedDays] = useState<string[]>([]);
+    const [selectedDays, setSelectedDays] = useState<string[]>(getTodayDays);
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
+
+    useEffect(() => {
+        RetrieveHabitsService.removeHabitsFromStorage();
+    }, []);
 
     useEffect(() => {
         const fetchHabits = async () => {

@@ -27,7 +27,7 @@ export const HabitsListToday: React.FC = () => {
                 <div className="h-65 grid grid-cols-1 gap-4 overflow-y-auto overflow-x-hidden">
                     {habits
                     .map(habit => (
-                        <HabitCard habit={habit} isCompleted={isHabitCompleted(habit.id!)} />
+                        <HabitCard habit={habit} isCompleted={isHabitCompleted(habit.id!)} showButton={false}/>
                     ))}
                 </div>
             </Card>
