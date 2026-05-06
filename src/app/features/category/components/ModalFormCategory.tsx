@@ -71,13 +71,23 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
         setPreviewColor(group.color);
     };
 
-    const handleCreateCategory = async (form: CategoryRequest) => {
-        const { error } = await CategoryService.createCategory(form);
-        if (error) {
-            notifyMessage("danger", "Ha fallado al crear la categoría. Contactá con el administrador.", <X />);
+    const handleSubmitForm = async (form: CategoryRequest) => {
+        if (isEdit && category) {
+            const { error } = await CategoryService.updateCategory(category.id, form);
+            if (error) {
+                notifyMessage("danger", "Ha fallado al actualizar la categoría. Contactá con el administrador.", <X />);
+            } else {
+                notifyMessage("success", "Categoría actualizada correctamente.", <Check />);
+                onClose();
+            }
         } else {
-            notifyMessage("success", "Categoría creada correctamente.", <Check />);
-            onClose();
+            const { error } = await CategoryService.createCategory(form);
+            if (error) {
+                notifyMessage("danger", "Ha fallado al crear la categoría. Contactá con el administrador.", <X />);
+            } else {
+                notifyMessage("success", "Categoría creada correctamente.", <Check />);
+                onClose();
+            }
         }
     };
 
@@ -108,7 +118,7 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                     {isEdit ? "Editar categoría" : "Crear nueva categoría"}
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form onSubmit={handleSubmit(handleCreateCategory)} className="grid grid-cols-3 gap-5 mt-4">
+                <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-3 gap-5 mt-4">
                     <div>
                         <Input
                             label="Nombre de la categoría"

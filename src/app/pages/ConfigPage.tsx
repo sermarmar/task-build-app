@@ -1,5 +1,6 @@
 import { Card, CardTitle, CardBody } from '../components/ux/Card';
 import { CategoryBoard } from '../features/category/components/CategoryBoard';
+import { CategoryBoardProvider } from '../features/category/contexts/CategoryBoardProvider';
 import { GroupBoard } from '../features/group/components/GroupBoard';
 
 export const ConfigPage: React.FC = () => {
@@ -30,7 +31,9 @@ export const ConfigPage: React.FC = () => {
                 </div>
                 <div className="flex flex-col gap-5 items-start justify-start flex-1">
                     <GroupBoard />
-                    <CategoryBoard />
+                    <CategoryBoardProvider>
+                        <CategoryBoard />
+                    </CategoryBoardProvider>
                     <Card className='w-full'>
                         <CardTitle>Estados</CardTitle>
                         <CardBody>

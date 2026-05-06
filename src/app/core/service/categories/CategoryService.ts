@@ -34,6 +34,42 @@ export const CategoryService = {
         
     },
 
+    updateCategory: async (id: string, request: CategoryRequest): Promise<{ error: ErrorMessage | null }> => {
+        const { error } = await supabase.from('categories').update({
+            name: request.name,
+            description: request.description,
+            icon: request.icon,
+            group_id: request.group_id || null
+        }).eq('id', id);
+
+        if (error) return { error: { message: "No se pudo actualizar la categoría." } };
+
+        const cached = sessionStorage.getItem('categories');
+        if (cached) {
+            const { groups } = await GroupService.getAllGroups();
+            const group = groups?.find(g => g.id === request.group_id);
+            const items: Category[] = JSON.parse(cached);
+            const updated = items.map(c =>
+                c.id === id
+                    ? { ...c, name: request.name, description: request.description, icon: request.icon, group_id: request.group_id || null, group: group ? { name: group.name, color: group.color } : undefined }
+                    : c
+            );
+            sessionStorage.setItem('categories', JSON.stringify(updated));
+        }
+
+        return { error: null };
+    },
+
+    deleteCategory: async (id: string): Promise<{ error: ErrorMessage | null }> => {
+        const { error } = await supabase.from('categories').delete().eq('id', id);
+
+        if (error) return { error: { message: "No se pudo eliminar la categoría." } };
+
+        CategoryService.clearCache();
+        GroupService.clearCache();
+        return { error: null };
+    },
+
     createCategory: async (request: CategoryRequest): Promise<{ error: ErrorMessage | null }> => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return { error: { message: "Usuario no autenticado." } };

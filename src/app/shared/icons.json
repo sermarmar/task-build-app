@@ -294,54 +294,6 @@
     "group": "hogar"
   },
   {
-    "key": "Wallet",
-    "label": "Gastos",
-    "icon": "Wallet",
-    "group": "finanzas"
-  },
-  {
-    "key": "PiggyBank",
-    "label": "Ahorros",
-    "icon": "PiggyBank",
-    "group": "finanzas"
-  },
-  {
-    "key": "BarChart2",
-    "label": "Inversión",
-    "icon": "BarChart2",
-    "group": "finanzas"
-  },
-  {
-    "key": "Calculator",
-    "label": "Presupuesto",
-    "icon": "Calculator",
-    "group": "finanzas"
-  },
-  {
-    "key": "Receipt",
-    "label": "Facturas",
-    "icon": "Receipt",
-    "group": "finanzas"
-  },
-  {
-    "key": "Bitcoin",
-    "label": "Crypto",
-    "icon": "Bitcoin",
-    "group": "finanzas"
-  },
-  {
-    "key": "CreditCard",
-    "label": "Pagos",
-    "icon": "CreditCard",
-    "group": "finanzas"
-  },
-  {
-    "key": "DollarSign",
-    "label": "Dinero",
-    "icon": "DollarSign",
-    "group": "finanzas"
-  },
-  {
     "key": "Users",
     "label": "Familia",
     "icon": "Users",

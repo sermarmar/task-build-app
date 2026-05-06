@@ -44,7 +44,7 @@ export const GroupBoard: React.FC = () => {
 
     return (
         <Card className="w-full">
-            <CardTitle>Grupos</CardTitle>
+            <CardTitle className="mb-5">Grupos</CardTitle>
             <CardBody>
                 {groups.length === 0 ? (
                     <p>No hay grupos disponibles.</p>
