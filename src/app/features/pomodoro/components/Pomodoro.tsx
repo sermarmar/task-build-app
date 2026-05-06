@@ -1,10 +1,10 @@
 import { Bed, GlassWater, Laptop, Pause, Play, RotateCcw } from "lucide-react";
 import React, { useEffect, useCallback } from "react";
-import { Card } from '../../components/ux/Card';
-import { Button } from '../../components/ux/Button';
-import { CircularProgress } from "../../components/ux/CircularProgress";
-import { ButtonWithIcon } from '../../components/ux/ButtonWithIcon';
-import { usePomodoroStore } from "./stores/usePomodoreStore";
+import { usePomodoroStore } from "../stores/usePomodoreStore";
+import { Card } from "@/app/components/ux/Card";
+import { ButtonWithIcon } from "@/app/components/ux/ButtonWithIcon";
+import { CircularProgress } from "@/app/components/ux/CircularProgress";
+import { Button } from "@/app/components/ux/Button";
 
 const MODES = {
     WORK: {

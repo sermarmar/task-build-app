@@ -6,8 +6,8 @@ import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvid
 import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask";
 import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
 import { HabitsListToday } from "../features/habits/components/HabitsListToday";
-import { Pomodoro } from "../features/pomodoro/Pomodoro";
 import { MentalHealthBoard } from "../features/mental_healtth/components/MentalHealthBoard";
+import { Pomodoro } from "../features/pomodoro/components/Pomodoro";
 
 
 export const DashboardPage: React.FC = () => {
