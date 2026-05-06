@@ -9,7 +9,7 @@ export const RetrieveHabitsService = {
             const habitsRetrieving: Habit[] = JSON.parse(sessionStorage.getItem('habits')!);
             return { habits: habitsRetrieving, error: null}
         } else {
-            const { habits, error } = await HabitRepository.getHabitsByDays(days);
+            const { habits, error } = await HabitRepository.getHabitsByDays(days.map(Number));
 
             if(error) {
                 return { habits: [], error };

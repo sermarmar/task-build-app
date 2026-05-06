@@ -52,8 +52,8 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
             points: habit?.points || 0,
             category_id: habit?.category_id || category?.id || '',
             frecuency: habit?.frequency || '',
-            options_monthly: habit?.custom_days || [],
-            options_weekly: habit?.custom_days || []
+            options_monthly: habit?.custom_days?.map(String) || [],
+            options_weekly: habit?.custom_days?.map(String) || []
         });
     }, [habit, category, reset]);
 

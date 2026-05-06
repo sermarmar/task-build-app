@@ -1,4 +1,4 @@
-import { CategoryService } from "@/app/core/service/categories/CategoryService";
+import { GroupService } from "@/app/core/service/groups/GroupService";
 import { Leaf } from "lucide-react";
 import { useEffect, useState } from 'react';
 import { MetalHealthService } from "../services/MetalHealthService";
@@ -18,47 +18,20 @@ export const MentalHealthBoard: React.FC = () => {
 
     useEffect(() => {
         const load = async () => {
-            const { categories } = await CategoryService.getAllCategories();
-            if (!categories) return;
+            const { groups, error: groupError } = await GroupService.getAllGroups();
+            if (groupError || !groups || groups.length === 0) return;
 
-            // Mapa categoría → grupo
-            const categoryToGroup: Record<string, { name: string; color: string }> = {};
-            const groupsMap: Record<string, { name: string; color: string }> = {};
+            const { groupPoints, balance: bal, error } = await MetalHealthService.getMentalHealthData(groups);
+            if (error) return;
 
-            categories.forEach(cat => {
-                if (cat.group) {
-                    categoryToGroup[cat.name] = cat.group;
-                    groupsMap[cat.group.name] = cat.group;
-                }
-            });
+            const mapped: Item[] = groups.map(group => ({
+                label: group.name.charAt(0).toUpperCase() + group.name.slice(1),
+                value: groupPoints[group.name] ?? 0,
+                color: group.color,
+            }));
 
-            const totalGroups = Object.keys(groupsMap).length;
-
-            const { points, balance: bal, error } = await MetalHealthService.getMentalHealthData(totalGroups);
-            if (error) {
-                console.error('Error fetching mental health data:', error);
-                return;
-            }
-
-            if (points) {
-                // Agregar puntos por grupo
-                const groupPoints: Record<string, number> = {};
-                Object.entries(points).forEach(([catName, value]) => {
-                    const group = categoryToGroup[catName];
-                    if (group) {
-                        groupPoints[group.name] = (groupPoints[group.name] ?? 0) + value;
-                    }
-                });
-
-                const mapped: Item[] = Object.entries(groupsMap).map(([groupName, group]) => ({
-                    label: groupName.charAt(0).toUpperCase() + groupName.slice(1),
-                    value: groupPoints[groupName] ?? 0,
-                    color: group.color,
-                }));
-
-                setItems(mapped);
-                setBalance(bal);
-            }
+            setItems(mapped);
+            setBalance(bal);
         };
         load();
     }, []);
