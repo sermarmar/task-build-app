@@ -8,9 +8,11 @@ import { Button } from "../../../components/ux/Button";
 import { Input } from "../../../components/ux/Input";
 import { X } from "lucide-react";
 import { IconsList } from "./IconsList";
-import { ColorPicker } from "../../../components/ux/ColorPicker";
 import { useColorAlpha } from "../../../hooks/useColorAlpha";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
+import { GroupService } from "../../../core/service/groups/GroupService";
+import { CategoryService } from "../../../core/service/categories/CategoryService";
+import type { Group } from "../../group/models/Group";
 
 interface ModalFormCategoryProps {
     show: boolean;
@@ -22,25 +24,32 @@ interface ModalFormCategoryProps {
 export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEdit, category, onClose }) => {
 
     const [visible, setVisible] = useState(show);
+    const [groups, setGroups] = useState<Pick<Group, 'id' | 'name' | 'color'>[]>([]);
     const { notify } = useNotification();
 
-    const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<CategoryRequest>({
+    const { register, handleSubmit, watch, setValue, reset } = useForm<CategoryRequest>({
         defaultValues: {
             name: '',
             description: '',
-            color: '#1d5f47',
-            icon: 'Star'
+            icon: 'Star',
+            group_id: '',
         }
     });
 
-    // 👇 watch para sincronizar la preview en tiempo real
     const watchedName = watch("name");
     const watchedDescription = watch("description");
     const watchedIcon = watch("icon");
-    const watchedColor = watch("color");
+    const watchedGroupId = watch("group_id");
 
-    // 👇 useColorAlpha ahora en el cuerpo del componente, no dentro del JSX
-    const previewBg = useColorAlpha(watchedColor, 0.2);
+    const selectedGroup = groups.find(g => g.id === watchedGroupId);
+    const previewColor = selectedGroup?.color ?? '#6b7280';
+    const previewBg = useColorAlpha(previewColor, 0.2);
+
+    useEffect(() => {
+        GroupService.getGroupsForSelect().then(({ groups }) => {
+            if (groups) setGroups(groups);
+        });
+    }, []);
 
     useEffect(() => {
         if (show) {
@@ -51,28 +60,23 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
         }
     }, [show]);
 
-    // 👇 Si es edición, precarga los valores de la categoría
     useEffect(() => {
         if (isEdit && category) {
             reset({
                 name: category.name ?? '',
                 description: category.description ?? '',
-                color: category.color ?? '#1d5f47',
                 icon: category.icon ?? 'Star',
+                group_id: category.group_id ?? '',
             });
         } else {
-            reset({
-                name: '',
-                description: '',
-                color: '#1d5f47',
-                icon: 'Star',
-            });
+            reset({ name: '', description: '', icon: 'Star', group_id: '' });
         }
     }, [isEdit, category, reset]);
 
     if (!visible) return null;
 
     const handleCreateCategory = async (_form: CategoryRequest) => {
+        CategoryService.clearCache();
         notify(isEdit ? "Categoría editada correctamente" : "Categoría creada correctamente");
         onClose();
     };
@@ -102,9 +106,6 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                             placeholder="Escribe un nombre para la categoría"
                             {...register("name", { required: "El nombre es obligatorio" })}
                         />
-                        {errors.name && (
-                            <span className="text-red-500 text-sm mt-1">{errors.name.message}</span>
-                        )}
                     </div>
                     <div>
                         <Input
@@ -115,43 +116,38 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                         />
                     </div>
                     <div className="flex items-center">
-                        {/* 👇 IconsList necesita notificar al form cuando el usuario elige un icono */}
                         <IconsList
                             selected={watchedIcon}
                             onSelect={(iconName) => setValue("icon", iconName)}
                         />
                     </div>
-                    <div>
-                        <Button type="button">Escoge un color</Button>
-                        {/* 👇 ColorPicker necesita notificar al form cuando cambia el color */}
-                        <ColorPicker
-                            showHslValues={false}
-                            value={watchedColor}
-                            onChange={(newColor) => setValue("color", newColor)}
-                        />
+                    <div className="flex flex-col gap-1">
+                        <label className="text-sm font-medium text-primary-900">Grupo</label>
+                        <select
+                            className="border border-tertiary-300 rounded-md px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-primary-400"
+                            {...register("group_id", { required: "El grupo es obligatorio" })}
+                        >
+                            <option value="">Selecciona un grupo</option>
+                            {groups.map(g => (
+                                <option key={g.id} value={g.id}>{g.name}</option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Preview en tiempo real */}
                     <div
                         className="flex gap-4 items-center p-4 rounded-md border-l-5 w-full"
-                        style={{
-                            backgroundColor: previewBg,
-                            borderColor: watchedColor,
-                        }}
+                        style={{ backgroundColor: previewBg, borderColor: previewColor }}
                     >
                         <span
                             className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
-                            style={{ backgroundColor: watchedColor }}
+                            style={{ backgroundColor: previewColor }}
                         >
                             <DynamicIcon name={watchedIcon} />
                         </span>
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-md font-bold">
-                                {watchedName || "Nombre de categoría"}
-                            </h3>
-                            <h5 className="text-sm text-secondary-800">
-                                {watchedDescription || "Descripción de la categoría"}
-                            </h5>
+                            <h3 className="text-md font-bold">{watchedName || "Nombre de categoría"}</h3>
+                            <h5 className="text-sm text-secondary-800">{watchedDescription || "Descripción de la categoría"}</h5>
                         </div>
                     </div>
 

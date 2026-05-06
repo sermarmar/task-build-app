@@ -33,14 +33,16 @@ export const CategoriesList: React.FC = () => {
             ) : (
                 <div className="grid grid-cols-3 gap-4 w-full">
                     {
-                        categories.map((category: Category) => 
+                        categories.map((category: Category) => {
+                            const color = category.group?.color ?? '#6b7280';
+                            return (
                             <div key={category.id} className="flex gap-4 items-center p-4 rounded-md border-l-5 border-tertiary-200 w-full"
                                 style={{
-                                    backgroundColor: hexToRgba(category.color, 0.2),
-                                    borderColor: category.color,
+                                    backgroundColor: hexToRgba(color, 0.2),
+                                    borderColor: color,
                                 }}>
                                 <span className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
-                                    style={{ backgroundColor: category.color }}>
+                                    style={{ backgroundColor: color }}>
                                     <DynamicIcon name={category.icon} />
                                 </span>
                                 <div className="flex flex-col gap-2">
@@ -48,7 +50,8 @@ export const CategoriesList: React.FC = () => {
                                     <h5 className="text-sm text-secondary-800">{category.description}</h5>
                                 </div>
                             </div>
-                        )
+                            );
+                        })
                     }
                 </div>
             )}
