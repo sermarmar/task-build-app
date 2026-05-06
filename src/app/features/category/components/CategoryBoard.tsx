@@ -4,10 +4,39 @@ import { Card, CardBody, CardTitle } from "../../../components/ux/Card";
 import { CategoriesList } from "./CategoriesList";
 import { ModalFormCategory } from "./ModalFormCategory";
 import { useState } from "react";
+import type { Category } from "../../../core/models/Category";
+import { CategoryService } from "../../../core/service/categories/CategoryService";
+import { useNotification } from "../../../contexts/notification/useNotification";
+import { Check, X } from "lucide-react";
+import { useCategoryBoardContext } from "../contexts/useCategoryBoardContext";
 
 export const CategoryBoard: React.FC = () => {
 
+    const { notify } = useNotification();
+    const { refreshCategories } = useCategoryBoardContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
+    const handleEdit = (category: Category) => {
+        setSelectedCategory(category);
+        setIsModalOpen(true);
+    };
+
+    const handleClose = () => {
+        setIsModalOpen(false);
+        setSelectedCategory(null);
+        refreshCategories();
+    };
+
+    const handleDelete = async (category: Category) => {
+        const { error } = await CategoryService.deleteCategory(category.id);
+        if (error) {
+            notify(<><X /><span>No se pudo eliminar la categoría.</span></>, "danger");
+        } else {
+            notify(<><Check /><span>Categoría eliminada correctamente.</span></>, "success");
+            refreshCategories();
+        }
+    };
 
     return(
         <>
@@ -19,12 +48,16 @@ export const CategoryBoard: React.FC = () => {
                     </Button>
                 </CardTitle>
                 <CardBody>
-                    <CategoriesList />
+                    <CategoriesList onEdit={handleEdit} onDelete={handleDelete} />
                 </CardBody>
             </Card>
-            <ModalFormCategory show={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <ModalFormCategory
+                show={isModalOpen}
+                isEdit={!!selectedCategory}
+                category={selectedCategory}
+                onClose={handleClose}
+            />
         </>
-        
     );
 
 }

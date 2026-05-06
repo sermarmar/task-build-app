@@ -72,3 +72,4 @@ Ver detalles en:
 - @.claude/rules/react.md
 - @.claude/rules/tailwind.md
 - @.claude/rules/git.md
+- @.claude/rules/session-storage.md

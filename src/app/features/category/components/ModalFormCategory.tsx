@@ -6,11 +6,10 @@ import type { CategoryRequest } from "../resources/CategoryRequest";
 import { Card, CardTitle } from "../../../components/ux/Card";
 import { Button } from "../../../components/ux/Button";
 import { Input } from "../../../components/ux/Input";
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { IconsList } from "./IconsList";
 import { useColorAlpha } from "../../../hooks/useColorAlpha";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
-import { GroupService } from "../../../core/service/groups/GroupService";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
 import type { Group } from "../../group/models/Group";
 
@@ -24,7 +23,7 @@ interface ModalFormCategoryProps {
 export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEdit, category, onClose }) => {
 
     const [visible, setVisible] = useState(show);
-    const [groups, setGroups] = useState<Pick<Group, 'id' | 'name' | 'color'>[]>([]);
+    const [previewColor, setPreviewColor] = useState('#6b7280');
     const { notify } = useNotification();
 
     const { register, handleSubmit, watch, setValue, reset } = useForm<CategoryRequest>({
@@ -41,15 +40,7 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
     const watchedIcon = watch("icon");
     const watchedGroupId = watch("group_id");
 
-    const selectedGroup = groups.find(g => g.id === watchedGroupId);
-    const previewColor = selectedGroup?.color ?? '#6b7280';
     const previewBg = useColorAlpha(previewColor, 0.2);
-
-    useEffect(() => {
-        GroupService.getGroupsForSelect().then(({ groups }) => {
-            if (groups) setGroups(groups);
-        });
-    }, []);
 
     useEffect(() => {
         if (show) {
@@ -75,11 +66,40 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
 
     if (!visible) return null;
 
-    const handleCreateCategory = async (_form: CategoryRequest) => {
-        CategoryService.clearCache();
-        notify(isEdit ? "Categoría editada correctamente" : "Categoría creada correctamente");
-        onClose();
+    const handleGroupSelect = (group: Pick<Group, 'id' | 'name' | 'color'>) => {
+        setValue("group_id", group.id);
+        setPreviewColor(group.color);
     };
+
+    const handleSubmitForm = async (form: CategoryRequest) => {
+        if (isEdit && category) {
+            const { error } = await CategoryService.updateCategory(category.id, form);
+            if (error) {
+                notifyMessage("danger", "Ha fallado al actualizar la categoría. Contactá con el administrador.", <X />);
+            } else {
+                notifyMessage("success", "Categoría actualizada correctamente.", <Check />);
+                onClose();
+            }
+        } else {
+            const { error } = await CategoryService.createCategory(form);
+            if (error) {
+                notifyMessage("danger", "Ha fallado al crear la categoría. Contactá con el administrador.", <X />);
+            } else {
+                notifyMessage("success", "Categoría creada correctamente.", <Check />);
+                onClose();
+            }
+        }
+    };
+
+    const notifyMessage = (type: "success" | "danger", message: string, icon?: React.ReactElement) => {
+        notify(
+            <>
+                { icon }
+                <span>{ message }</span>
+            </>,
+            type
+        )
+    }
 
     return (
         <div
@@ -98,7 +118,7 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                     {isEdit ? "Editar categoría" : "Crear nueva categoría"}
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form onSubmit={handleSubmit(handleCreateCategory)} className="grid grid-cols-3 gap-5 mt-4">
+                <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-3 gap-5 mt-4">
                     <div>
                         <Input
                             label="Nombre de la categoría"
@@ -118,25 +138,15 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                     <div className="flex items-center">
                         <IconsList
                             selected={watchedIcon}
+                            selectedGroupId={watchedGroupId}
                             onSelect={(iconName) => setValue("icon", iconName)}
+                            onSelectGroup={handleGroupSelect}
                         />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm font-medium text-primary-900">Grupo</label>
-                        <select
-                            className="border border-tertiary-300 rounded-md px-3 py-2 text-sm text-primary-900 bg-white focus:outline-none focus:ring-2 focus:ring-primary-400"
-                            {...register("group_id", { required: "El grupo es obligatorio" })}
-                        >
-                            <option value="">Selecciona un grupo</option>
-                            {groups.map(g => (
-                                <option key={g.id} value={g.id}>{g.name}</option>
-                            ))}
-                        </select>
                     </div>
 
                     {/* Preview en tiempo real */}
                     <div
-                        className="flex gap-4 items-center p-4 rounded-md border-l-5 w-full"
+                        className="flex gap-4 items-center p-4 rounded-md border-l-5 w-full col-span-2"
                         style={{ backgroundColor: previewBg, borderColor: previewColor }}
                     >
                         <span

@@ -1,5 +1,6 @@
 import { cn } from '@sglara/cn';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { Card } from '@/app/components/ux/Card';
 
 
 export interface ColorPickerProps {
@@ -146,26 +147,26 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     maxWidth = 340
 }) => {
     const isControlled = controlledValue !== undefined;
- 
+
     const parseInitial = (hex: string): [number, number, number] =>
         isValidHex(hex) ? hexToHsl(hex) : [220, 75, 55];
-    
-    const [H, setH] = useState<number>(() => parseInitial(isControlled ? controlledValue! : defaultValue)[0]);
-    const [S, setS] = useState<number>(() => parseInitial(isControlled ? controlledValue! : defaultValue)[1]);
-    const [L, setL] = useState<number>(() => parseInitial(isControlled ? controlledValue! : defaultValue)[2]);
-    const [hexInput, setHexInput] = useState<string>(isControlled ? controlledValue! : defaultValue);
+
+    const [localH, setH] = useState<number>(() => parseInitial(defaultValue)[0]);
+    const [localS, setS] = useState<number>(() => parseInitial(defaultValue)[1]);
+    const [localL, setL] = useState<number>(() => parseInitial(defaultValue)[2]);
+    const [hexInput, setHexInput] = useState<string>(defaultValue.toUpperCase());
     const [toastVisible, setToastVisible] = useState(false);
-    
-    // Sync when controlledValue changes externally
-    useEffect(() => {
+
+    // When controlled, derive H/S/L from prop instead of internal state
+    const [H, S, L] = useMemo<[number, number, number]>(() => {
         if (isControlled && controlledValue && isValidHex(controlledValue)) {
-        const [nh, ns, nl] = hexToHsl(controlledValue);
-        setH(nh); setS(ns); setL(nl);
-        setHexInput(controlledValue.toUpperCase());
+            return hexToHsl(controlledValue);
         }
-    }, [controlledValue, isControlled]);
-    
+        return [localH, localS, localL];
+    }, [isControlled, controlledValue, localH, localS, localL]);
+
     const currentHex = hslToHex(H, S, L);
+    const effectiveHexInput = isControlled && controlledValue ? controlledValue.toUpperCase() : hexInput;
     
     const emitChange = useCallback(
         (h: number, s: number, l: number) => {
@@ -216,8 +217,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         className={cn("font-sans relative", className)}
         style={{ maxWidth }}
         >
-        <div className="rounded-xl border border-border bg-background overflow-hidden">
-    
+        <Card withPadding={false} className="overflow-hidden">
+
             {/* Preview */}
             {showPreview && (
             <div
@@ -225,7 +226,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 style={{ background: currentHex }}
             />
             )}
-    
+
             <div className="p-4">
     
             {/* Quick palette */}
@@ -286,7 +287,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 />
                 <input
                 type="text"
-                value={hexInput}
+                value={effectiveHexInput}
                 onChange={(e) => handleHexInput(e.target.value)}
                 maxLength={7}
                 className="flex-1 h-9 rounded-md border border-input bg-background px-3 font-mono text-sm tracking-widest uppercase focus:outline-none focus:ring-2 focus:ring-ring"
@@ -321,8 +322,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             )}
     
             </div>
-        </div>
-    
+        </Card>
+
         {/* Toast */}
         <div
             className={cn(
