@@ -1,13 +1,13 @@
 import { Card, CardBody, CardTitle } from "../components/ux/Card";
 import { useAuth } from "../contexts/auth/useAuth";
 import { CalendarBoard } from "../features/calendar/components/CalendarBoard";
-import { MentalHealthBoard } from "../features/mental_healtth/MentalHealthBoard";
 import { ButtonCreateHabit } from "../features/habits/components/ButtonCreateHabit";
 import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
 import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask";
 import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
 import { HabitsListToday } from "../features/habits/components/HabitsListToday";
 import { Pomodoro } from "../features/pomodoro/Pomodoro";
+import { MentalHealthBoard } from "../features/mental_healtth/components/MentalHealthBoard";
 
 
 export const DashboardPage: React.FC = () => {
