@@ -6,7 +6,7 @@ import type { ErrorMessage } from "../../shared/Error";
 
 export const HabitRepository = {
 
-    getHabitsByDays: async (days?: number[]): Promise<{ habits: Habit[]; error: ErrorMessage | null }> => {
+    getHabitsByDays: async (days?: string[]): Promise<{ habits: Habit[]; error: ErrorMessage | null }> => {
         let query = supabase
             .from('habits')
             .select('*, categories:category_id (*, group:group_id (*))');
