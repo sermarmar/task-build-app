@@ -1,13 +1,11 @@
 
+import { CategoryService } from "@/app/core/service/categories/CategoryService";
 import { Leaf } from "lucide-react";
-import { Card, CardBody, CardTitle } from "../../components/ux/Card";
-import { CategoryService } from '../../core/service/categories/CategoryService';
 import { useEffect, useState } from 'react';
-import type { Category } from '../../core/models/Category';
-import { RadarChart } from '../../components/ux/RadarChart';
-import { MetalHealthService } from "./services/MetalHealthService";
-
-
+import { MetalHealthService } from "../services/MetalHealthService";
+import { Card, CardBody, CardTitle } from "@/app/components/ux/Card";
+import { RadarChart } from "@/app/components/ux/RadarChart";
+import { Category } from "@/app/core/models/Category";
 
 export const MentalHealthBoard: React.FC = () => {
 
