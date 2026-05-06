@@ -1,6 +1,6 @@
 import { Pill } from "lucide-react";
-import { Calendar } from "../../components/template/calendar/Calendar";
-import { Card, CardBody } from "../../components/ux/Card";
+import { Card, CardBody } from "../../../components/ux/Card";
+import { Calendar } from "../../../components/template/calendar/Calendar";
 
 export const CalendarBoard: React.FC = () => {
     return (
