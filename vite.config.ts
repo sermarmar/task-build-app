@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: 'all', // o el array con tu dominio ngrok
+    host: '0.0.0.0', // Permite conexiones desde cualquier host
     port: 5173,
   },
 })

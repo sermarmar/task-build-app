@@ -1,6 +1,6 @@
 import { Card, CardBody, CardTitle } from "../components/ux/Card";
 import { useAuth } from "../contexts/auth/useAuth";
-import { CalendarBoard } from "../features/calendar/CalendarBoard";
+import { CalendarBoard } from "../features/calendar/components/CalendarBoard";
 import { MentalHealthBoard } from "../features/mental_healtth/MentalHealthBoard";
 import { ButtonCreateHabit } from "../features/habits/components/ButtonCreateHabit";
 import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
