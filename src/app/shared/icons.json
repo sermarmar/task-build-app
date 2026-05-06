@@ -436,5 +436,17 @@
     "label": "Ciencia",
     "icon": "FlaskConical",
     "group": "aprendizaje"
+  },
+  {
+    "key": "Gamepad2",
+    "label": "Videojuegos",
+    "icon": "Gamepad2",
+    "group": "bienestar"
+  },
+  {
+    "key": "Film",
+    "label": "Películas",
+    "icon": "Film",
+    "group": "bienestar"
   }
 ]

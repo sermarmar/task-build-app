@@ -1,6 +1,8 @@
 import { supabase } from "../../../../config/Database";
 import type { ErrorMessage } from "../../../shared/Error";
 import type { Category } from "../../models/Category";
+import type { CategoryRequest } from "../../../features/category/resources/CategoryRequest";
+import { GroupService } from "../groups/GroupService";
 
 export const CategoryService = {
 
@@ -32,6 +34,24 @@ export const CategoryService = {
         
     },
 
+    createCategory: async (request: CategoryRequest): Promise<{ error: ErrorMessage | null }> => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { error: { message: "Usuario no autenticado." } };
+
+        const { error } = await supabase.from('categories').insert({
+            name: request.name,
+            description: request.description,
+            icon: request.icon,
+            group_id: request.group_id || null
+        });
+
+        if (error) return { error: { message: "No se pudo crear la categoría." } };
+
+        CategoryService.clearCache();
+        GroupService.clearCache();
+        return { error: null };
+    },
+
     clearCache: () => {
         sessionStorage.removeItem('categories');
     },
@@ -43,5 +63,7 @@ export const CategoryService = {
         }
         return { category: null, error: null };
     }
+
+    
 
 }
