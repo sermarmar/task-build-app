@@ -1,8 +1,8 @@
 import { GroupService } from "@/app/core/service/groups/GroupService";
-import { Leaf } from "lucide-react";
+import { Sprout } from "lucide-react";
 import { useEffect, useState } from 'react';
 import { MetalHealthService } from "../services/MetalHealthService";
-import { Card, CardBody, CardTitle } from "@/app/components/ux/Card";
+import { Card, CardBody } from "@/app/components/ux/Card";
 import { DonutChart } from "@/app/components/ux/DonutChart";
 
 interface Item {
@@ -36,14 +36,15 @@ export const MentalHealthBoard: React.FC = () => {
         load();
     }, []);
 
+    const tabTitle = (
+        <div className="flex gap-2">
+            <Sprout />
+            Salud mental
+        </div>
+    );
+
     return (
-        <Card className="h-full flex flex-col">
-            <CardTitle className="flex justify-between items-center">
-                <div className="flex gap-2 items-center">
-                    <Leaf />
-                    Salud mental
-                </div>
-            </CardTitle>
+        <Card tabTitle={tabTitle} className="h-full flex flex-col">
             <CardBody className="mt-5">
                 <DonutChart items={items} centerText={`${balance}%`} gap={20}/>
             </CardBody>

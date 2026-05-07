@@ -116,95 +116,96 @@ export const Pomodoro: React.FC = () => {
 
     return (
         <>
-            <h3 className="text-lg font-medium ml-4 mb-2">Pomodoro</h3>
-            <Card className="flex items-center justify-center gap-20">
-                <div className="flex flex-col gap-5">
-                    <ButtonWithIcon
-                        onClick={() => handleChangeMode(MODES.WORK.name)}
-                        bgColor={mode === MODES.WORK.name ? "bg-primary-900" : "bg-primary-700/60"}
-                        buttonText={MODES.WORK.label}
-                        textColor={mode === MODES.WORK.name ? "text-tertiary-50" : "text-primary-900/80"}
-                        iconColor={mode === MODES.WORK.name ? "text-primary-900" : "text-secondary-500"}
-                        buttonColor={mode === MODES.WORK.name ? "bg-tertiary-300" : "bg-transparent"}
-                        icon={MODE_ICONS.work}
-                        size="small"
-                    />
-                    <ButtonWithIcon
-                        onClick={() => handleChangeMode(MODES.SHORT_BREAK.name)}
-                        bgColor={mode === MODES.SHORT_BREAK.name ? "bg-secondary-500" : "bg-secondary-200"}
-                        buttonText={MODES.SHORT_BREAK.label}
-                        textColor={mode === MODES.SHORT_BREAK.name ? "text-tertiary-50" : "text-primary-900/80"}
-                        iconColor={mode === MODES.SHORT_BREAK.name ? "text-tertiary-50" : "text-secondary-500"}
-                        buttonColor={mode === MODES.SHORT_BREAK.name ? "bg-secondary-700" : "bg-transparent"}
-                        icon={MODE_ICONS.shortBreak}
-                        size="small"
-                    />
-                    <ButtonWithIcon
-                        onClick={() => handleChangeMode(MODES.LONG_BREAK.name)}
-                        bgColor={mode === MODES.LONG_BREAK.name ? "bg-tertiary-300" : "bg-tertiary-100"}
-                        buttonText={MODES.LONG_BREAK.label}
-                        textColor={mode === MODES.LONG_BREAK.name ? "text-primary-900" : "text-primary-900/80"}
-                        iconColor={mode === MODES.LONG_BREAK.name ? "text-tertiary-50" : "text-secondary-500"}
-                        buttonColor={mode === MODES.LONG_BREAK.name ? "bg-primary-900" : "bg-transparent"}
-                        icon={MODE_ICONS.longBreak}
-                        size="small"
-                    />
-                </div>
-                <div className="flex flex-col items-center">
-                    <CircularProgress
-                        value={progress}
-                        text={`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}
-                        size={150}
-                        strokeWidth={5}
-                        color={currentMode.strokeColor}
-                    />
-                    <div className="flex gap-6 justify-center mt-4">
-                        <Button type="button" color="primary" form="pill" onClick={handleToggle}>
-                            {isActive ? <Pause /> : <Play />}
-                        </Button>
-                        <Button type="button" color="secondary" form="pill" onClick={handleReset}>
-                            <RotateCcw />
-                        </Button>
+            <Card tabTitle="Pomodoro" className="flex flex-col gap-4 overflow-hidden">
+                <div className="flex items-center justify-center gap-20 flex-1 min-h-0">
+                    <div className="flex flex-col gap-5">
+                        <ButtonWithIcon
+                            onClick={() => handleChangeMode(MODES.WORK.name)}
+                            bgColor={mode === MODES.WORK.name ? "bg-primary-900" : "bg-primary-700/60"}
+                            buttonText={MODES.WORK.label}
+                            textColor={mode === MODES.WORK.name ? "text-tertiary-50" : "text-primary-900/80"}
+                            iconColor={mode === MODES.WORK.name ? "text-primary-900" : "text-secondary-500"}
+                            buttonColor={mode === MODES.WORK.name ? "bg-tertiary-300" : "bg-transparent"}
+                            icon={MODE_ICONS.work}
+                            size="small"
+                        />
+                        <ButtonWithIcon
+                            onClick={() => handleChangeMode(MODES.SHORT_BREAK.name)}
+                            bgColor={mode === MODES.SHORT_BREAK.name ? "bg-secondary-500" : "bg-secondary-200"}
+                            buttonText={MODES.SHORT_BREAK.label}
+                            textColor={mode === MODES.SHORT_BREAK.name ? "text-tertiary-50" : "text-primary-900/80"}
+                            iconColor={mode === MODES.SHORT_BREAK.name ? "text-tertiary-50" : "text-secondary-500"}
+                            buttonColor={mode === MODES.SHORT_BREAK.name ? "bg-secondary-700" : "bg-transparent"}
+                            icon={MODE_ICONS.shortBreak}
+                            size="small"
+                        />
+                        <ButtonWithIcon
+                            onClick={() => handleChangeMode(MODES.LONG_BREAK.name)}
+                            bgColor={mode === MODES.LONG_BREAK.name ? "bg-tertiary-300" : "bg-tertiary-100"}
+                            buttonText={MODES.LONG_BREAK.label}
+                            textColor={mode === MODES.LONG_BREAK.name ? "text-primary-900" : "text-primary-900/80"}
+                            iconColor={mode === MODES.LONG_BREAK.name ? "text-tertiary-50" : "text-secondary-500"}
+                            buttonColor={mode === MODES.LONG_BREAK.name ? "bg-primary-900" : "bg-transparent"}
+                            icon={MODE_ICONS.longBreak}
+                            size="small"
+                        />
                     </div>
-                    <div className="text-sm text-primary-900/80 mt-4 text-center">
-                        Ciclos completados: {completedWork}
+                    <div className="flex flex-col items-center">
+                        <CircularProgress
+                            value={progress}
+                            text={`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}
+                            size={150}
+                            strokeWidth={5}
+                            color={currentMode.strokeColor}
+                        />
+                        <div className="flex gap-6 justify-center mt-4">
+                            <Button type="button" color="primary" form="pill" onClick={handleToggle}>
+                                {isActive ? <Pause /> : <Play />}
+                            </Button>
+                            <Button type="button" color="secondary" form="pill" onClick={handleReset}>
+                                <RotateCcw />
+                            </Button>
+                        </div>
+                        <div className="text-sm text-primary-900/80 mt-4 text-center">
+                            Ciclos completados: {completedWork}
+                        </div>
                     </div>
-                </div>
 
-                {/* Columnas de tomates */}
-                <div className="flex flex-row gap-2">
-                    {/* Trabajo */}
-                    <div className="flex flex-col gap-2">
-                        {Array.from({ length: 8 }).map((_, i) => (
-                            <span
-                                key={i}
-                                className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
-                                    i < completedWork ? "bg-primary-900" : "bg-primary-950/30"
-                                }`}
-                            />
-                        ))}
-                    </div>
-                    {/* Descanso corto */}
-                    <div className="flex flex-col gap-2">
-                        {Array.from({ length: 8 }).map((_, i) => (
-                            <span
-                                key={i}
-                                className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
-                                    i < completedShortBreaks ? "bg-secondary-500" : "bg-primary-950/30"
-                                }`}
-                            />
-                        ))}
-                    </div>
-                    {/* Descanso largo */}
-                    <div className="flex flex-col gap-2">
-                        {Array.from({ length: 8 }).map((_, i) => (
-                            <span
-                                key={i}
-                                className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
-                                    i < completedLongBreaks ? "bg-tertiary-300" : "bg-primary-950/30"
-                                }`}
-                            />
-                        ))}
+                    {/* Columnas de tomates */}
+                    <div className="flex flex-row gap-2">
+                        {/* Trabajo */}
+                        <div className="flex flex-col gap-2">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                                <span
+                                    key={i}
+                                    className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
+                                        i < completedWork ? "bg-primary-900" : "bg-primary-950/30"
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                        {/* Descanso corto */}
+                        <div className="flex flex-col gap-2">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                                <span
+                                    key={i}
+                                    className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
+                                        i < completedShortBreaks ? "bg-secondary-500" : "bg-primary-950/30"
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                        {/* Descanso largo */}
+                        <div className="flex flex-col gap-2">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                                <span
+                                    key={i}
+                                    className={`block w-4 h-4 rounded-sm transition-all duration-300 ${
+                                        i < completedLongBreaks ? "bg-tertiary-300" : "bg-primary-950/30"
+                                    }`}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </Card>
