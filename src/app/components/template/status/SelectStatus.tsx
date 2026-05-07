@@ -23,7 +23,7 @@ export const SelectStatus = ({ onChange, value }: SelectStatusProps) => {
             name="status"
             label="Estado"
             list={ status }
-            value={ value }
+            value={ value?.toString() }
             onChange={(e) => {
                 const selected = status.find(s => s.id === Number(e.target.value));
                 if (selected) onChange(selected);

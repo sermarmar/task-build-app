@@ -1,15 +1,22 @@
-import { useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import { TEXT_COLORS } from "../../shared/constants";
 
 interface TextareaDynamicProps {
     label?: string;
+    defaultValue?: string;
     onChange?: (value: string) => void;
 }
 
-export const TextareaDynamic: React.FC<TextareaDynamicProps> = ({ label, onChange }) => {
+export const TextareaDynamic: React.FC<TextareaDynamicProps> = ({ label, defaultValue, onChange }) => {
 
     const editorRef  = useRef<HTMLDivElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (editorRef.current && defaultValue) {
+            editorRef.current.innerText = defaultValue;
+        }
+    }, [defaultValue]);
 
     let labelElement: ReactElement = <></>;
 
