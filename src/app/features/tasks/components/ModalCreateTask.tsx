@@ -12,8 +12,6 @@ import { EditTaskService } from "../services/EditTaskService";
 import { Controller, useForm } from "react-hook-form";
 import type { TaskResponse } from "../resource/TaskResponse";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
-import type { Category } from "../../../core/models/Category";
-import type { Status } from "../../../core/models/Status";
 import { StatusService } from "../../../core/service/status/StatusService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
@@ -29,14 +27,15 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
 
     const isEditMode = !!task;
     const [visible, setVisible] = useState(show);
-    const [category, setCategory] = useState<Category | null>(null);
-    const [status, setStatus] = useState<Status | null>(null);
     const { notify } = useNotification();
     const { refreshTasks } = useTaskBoardContext();
 
-    const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm<TaskResponse>({
+    const { register, handleSubmit, control, setValue, reset, watch, formState: { errors } } = useForm<TaskResponse>({
         defaultValues: { title: '', description: '', points: 0, category_id: '', status_id: undefined }
     });
+
+    const watchedCategoryId = watch('category_id');
+    const watchedStatusId = watch('status_id');
 
     useEffect(() => {
         if (!show) {
@@ -58,11 +57,9 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
         }
 
         CategoryService.getFirstCategory().then((res) => {
-            setCategory(res.category);
             setValue('category_id', res.category?.id ?? '');
         });
         StatusService.getFirstStatus().then((res) => {
-            setStatus(res.status);
             setValue('status_id', res.status?.id ?? 1);
         });
     }, [show]);
@@ -150,11 +147,11 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
                         </div>
 
                         <SelectCategory
-                            value={isEditMode ? task.category?.id : category?.id}
+                            value={watchedCategoryId}
                             onChange={(c) => setValue('category_id', c.id)}
                         />
                         <SelectStatus
-                            value={isEditMode ? task.status?.id : status?.id}
+                            value={watchedStatusId}
                             onChange={(s) => setValue('status_id', s.id)}
                         />
                         <div className="flex justify-end items-end h-53">
