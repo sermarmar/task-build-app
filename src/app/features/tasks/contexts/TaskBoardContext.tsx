@@ -4,8 +4,11 @@ import type { ErrorMessage } from "../../../shared/Error";
 
 interface TaskBoardContextType {
     tasks: Task[];
-    error: ErrorMessage | null;  
+    error: ErrorMessage | null;
     refreshTasks: (cleanStorage?: boolean) => void;
+    openEditModal: (task: Task) => void;
+    closeEditModal: () => void;
+    editingTask: Task | null;
 }
 
 export const TaskBoardContext = createContext<TaskBoardContextType | null>(null);

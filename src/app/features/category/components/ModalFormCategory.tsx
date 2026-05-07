@@ -7,7 +7,7 @@ import { Card, CardTitle } from "../../../components/ux/Card";
 import { Button } from "../../../components/ux/Button";
 import { Input } from "../../../components/ux/Input";
 import { Check, X } from "lucide-react";
-import { IconsList } from "./IconsList";
+import { IconsList } from "../../../components/template/IconsList";
 import { useColorAlpha } from "../../../hooks/useColorAlpha";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
@@ -141,6 +141,7 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                             selectedGroupId={watchedGroupId}
                             onSelect={(iconName) => setValue("icon", iconName)}
                             onSelectGroup={handleGroupSelect}
+                            size="md"
                         />
                     </div>
 

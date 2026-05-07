@@ -8,6 +8,7 @@ interface CardProps {
     withPadding?: boolean;
     tabTitle?: React.ReactNode;
     tabOuterBg?: string;
+    tabActions?: React.ReactNode;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -16,7 +17,8 @@ export const Card: React.FC<CardProps> = ({
     color = "bg-white",
     withPadding = true,
     tabTitle,
-    tabOuterBg = '#eceee6'
+    tabOuterBg = '#eceee6',
+    tabActions,
 }) => {
     const paddingClass = withPadding ? "p-6" : "";
 
@@ -24,7 +26,7 @@ export const Card: React.FC<CardProps> = ({
         return (
             <div className="flex flex-col h-full">
                 {/* Fila del tab + esquina cóncava como elementos hermanos en flex */}
-                <div className="flex items-end">
+                <div className="flex items-end w-full">
                     {/* Tab */}
                     <div className={twMerge(color, "relative px-6 py-2 rounded-t-2xl text-xl font-semibold flex-shrink-0 z-10")}>
                         {tabTitle}
@@ -38,6 +40,11 @@ export const Card: React.FC<CardProps> = ({
                             boxShadow: `-5px 5px 0 0 white`,
                         }}
                     />
+                    {tabActions && (
+                        <div className="ml-auto flex items-center gap-2 pb-2 pr-5">
+                            {tabActions}
+                        </div>
+                    )}
                 </div>
                 {/* Card body — sin rounded arriba-izquierda */}
                 <div className={twMerge(color, "rounded-tr-3xl rounded-b-3xl flex-1 min-h-0", paddingClass, className)}>

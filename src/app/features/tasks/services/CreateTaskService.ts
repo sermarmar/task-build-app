@@ -6,21 +6,20 @@ import { TaskFactory } from "./factory/TaskFactory";
 
 export const CreateTaskService = {
 
-    create: async (task: TaskResponse): Promise<{taskCreated: Task | null, error: ErrorMessage | null}> => {
-        const { taskCreated, error } = await TaskRepository.create(task);
+    create: async (task: TaskResponse): Promise<{ taskCreated: Task | null; error: ErrorMessage | null }> => {
+        const { data, error } = await TaskRepository.create(task);
 
-        if (error) {
-            return { taskCreated: null, error };
-        }
+        if (error) return { taskCreated: null, error };
+
+        const taskCreated = TaskFactory(data!);
 
         if (sessionStorage.getItem('tasks')) {
             const tasks: Task[] = JSON.parse(sessionStorage.getItem('tasks')!);
-            tasks.push(TaskFactory(taskCreated!));
+            tasks.push(taskCreated);
             sessionStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
         return { taskCreated, error: null };
-        
     }
 
 }

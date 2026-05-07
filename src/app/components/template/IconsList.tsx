@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Button } from "../../../components/ux/Button";
-import { Card, CardBody } from "../../../components/ux/Card";
-import { DynamicIcon } from "../../../components/ux/DynamicIcon";
-import { GroupService } from "../../../core/service/groups/GroupService";
-import type { Group } from "../../group/models/Group";
-import icons from '../../../shared/icons.json';
+import { useEffect, useRef, useState } from "react";
+import { Button, type ButtonSize } from "../ux/Button";
+import { Card, CardBody } from "../ux/Card";
+import { DynamicIcon } from "../ux/DynamicIcon";
+import { GroupService } from "../../core/service/groups/GroupService";
+import type { Group } from "../../features/group/models/Group";
+import icons from '../../shared/icons.json';
 
 interface Icon {
     key: string;
@@ -13,16 +13,35 @@ interface Icon {
     group: string;
 }
 
+const sizeConfig: Record<ButtonSize, { iconSize: number; className: string }> = {
+    sm: { iconSize: 20, className: 'p-2' },
+    md: { iconSize: 24, className: 'p-4' },
+    lg: { iconSize: 32, className: 'p-6' },
+};
+
 interface IconsListProps {
     selected?: string;
     selectedGroupId?: string;
+    size?: ButtonSize;
     onSelect?: (icon: string) => void;
     onSelectGroup?: (group: Pick<Group, 'id' | 'name' | 'color'>) => void;
 }
 
-export const IconsList: React.FC<IconsListProps> = ({ selected, selectedGroupId, onSelect, onSelectGroup }) => {
+export const IconsList: React.FC<IconsListProps> = ({ selected, selectedGroupId, size = 'md', onSelect, onSelectGroup }) => {
+    const { iconSize, className: triggerClass } = sizeConfig[size];
 
     const [open, setOpen] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
     const [groups, setGroups] = useState<Pick<Group, 'id' | 'name' | 'color'>[]>([]);
     const [activeGroupId, setActiveGroupId] = useState<string>('');
 
@@ -48,24 +67,25 @@ export const IconsList: React.FC<IconsListProps> = ({ selected, selectedGroupId,
 
     const activeGroup = groups.find(g => g.id === activeGroupId);
     const filteredIcons = activeGroup
-        ? iconsList.filter(icon => icon.group === activeGroup.name.toLowerCase())
-        : iconsList;
+        ? iconsList.filter(icon => icon.group === activeGroup.name)
+        : [];
 
     const displayIcon = selected ?? "Smile";
 
     return (
-        <>
+        <div className="relative" ref={containerRef}>
             <Button
                 type='button'
                 form="pill"
                 color="tertiary"
-                className="p-3"
+                style={activeGroup ? { backgroundColor: activeGroup.color } : undefined}
+                className={triggerClass}
                 onClick={() => setOpen(!open)}
             >
-                <DynamicIcon name={displayIcon} />
+                <DynamicIcon name={displayIcon} size={iconSize} />
             </Button>
 
-            <Card className={`fixed top-35 right-60 w-80 ${open ? 'block' : 'hidden'}`}>
+            <Card className={`absolute top-full left-1/2 -translate-x-1/2 mt-1 z-50 w-80 ${open ? 'block' : 'hidden'}`}>
 
                 <div className="flex overflow-x-auto gap-1 p-2 border-b border-gray-200">
                     {groups.map((group) => (
@@ -91,13 +111,14 @@ export const IconsList: React.FC<IconsListProps> = ({ selected, selectedGroupId,
                 <CardBody className="grid grid-cols-5 gap-2 overflow-y-auto h-64 p-3">
                     {filteredIcons.map((icon) => (
                         <div
-                            key={icon.key}
+                            key={`${icon.key}-${icon.group}`}
                             className="flex flex-col gap-1 justify-center items-center"
                         >
                             <Button
                                 type="button"
                                 form="pill"
-                                color={selected === icon.icon ? "primary" : "tertiary"}
+                                color="tertiary"
+                                style={activeGroup ? { backgroundColor: activeGroup.color } : undefined}
                                 className="flex flex-col items-center justify-center w-10 h-10"
                                 onClick={() => {
                                     onSelect?.(icon.icon);
@@ -113,6 +134,6 @@ export const IconsList: React.FC<IconsListProps> = ({ selected, selectedGroupId,
                     ))}
                 </CardBody>
             </Card>
-        </>
+        </div>
     );
 };

@@ -1,45 +1,41 @@
 import type { Task } from "../models/Task";
-import { supabase } from "../../../../config/Database";
+import { TaskRepository } from "../../../infra/repositories/TaskRepository";
 import { TaskFactory } from './factory/TaskFactory';
 import type { ErrorMessage } from "../../../shared/Error";
 
 export const RetrieveTaskService = () => {
     return {
         getAllTasks: async (): Promise<{ tasks: Task[]; error: ErrorMessage | null }> => {
-            const { data, error } = await supabase.from('tasks').select('*, categories:category_id (*), statuses:status_id (*)');
+            const { data, error } = await TaskRepository.getAll();
 
-            if (error) {
-                return { tasks: [], error: { message: 'No se pudieron recuperar las tareas' } };
-            }
+            if (error) return { tasks: [], error };
 
-            return { tasks: data, error: null };
+            return { tasks: data!.map(TaskFactory), error: null };
         },
 
         getTasks: async (isClosed: boolean): Promise<{ tasks: Task[]; error: ErrorMessage | null }> => {
-
             const VALID_STATUS_IDS = new Set([1, 2, 3, 4]);
 
-            if(sessionStorage.getItem('tasks')) {
-                const tasksRetrieving: Task[] = JSON.parse(sessionStorage.getItem('tasks')!);
-                const taskFilter = tasksRetrieving.filter(task => VALID_STATUS_IDS.has(task.status.id!));
-                return { tasks: taskFilter, error: null}
-            } else {
-                const { data, error } = await supabase
-                    .from('tasks')
-                    .select('*, categories:category_id (*), statuses:status_id (*)')
-                    .in('status_id', isClosed ? [5, 6] : [1, 2, 3, 4]);
-
-                if (error) {
-                    return { tasks: [], error: { message: 'No se pudieron recuperar las tareas' } };
+            const cached = sessionStorage.getItem('tasks');
+            if (cached) {
+                const tasksRetrieving: Task[] = JSON.parse(cached);
+                const hasGroupData = tasksRetrieving.length === 0 || tasksRetrieving[0]?.category?.group !== undefined;
+                if (hasGroupData) {
+                    const taskFilter = tasksRetrieving.filter(task => VALID_STATUS_IDS.has(task.status.id!));
+                    return { tasks: taskFilter, error: null };
                 }
-
-                const tasks: Task[] =data.map(TaskFactory);
-
-                sessionStorage.setItem('tasks', JSON.stringify(tasks));
-
-                return { tasks: tasks, error: null };
+                sessionStorage.removeItem('tasks');
             }
-            
+
+            const statusIds = isClosed ? [5, 6] : [1, 2, 3, 4];
+            const { data, error } = await TaskRepository.getByStatuses(statusIds);
+
+            if (error) return { tasks: [], error };
+
+            const tasks: Task[] = data!.map(TaskFactory);
+            sessionStorage.setItem('tasks', JSON.stringify(tasks));
+
+            return { tasks, error: null };
         },
 
         removeTasksFromStorage: () => {

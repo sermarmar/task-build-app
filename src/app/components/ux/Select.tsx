@@ -30,7 +30,7 @@ export const Select = <T,>({ name, label, value, onChange, required, className, 
                 value={ value }
                 name={ name }
                 onChange={ onChange }
-                className={`w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition ${className || ''}`}
+                className={`w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary-500 focus:border-transparent outline-none transition ${className || ''}`}
                 required ={ required }
             >
                 {
