@@ -16,7 +16,7 @@ export const Card: React.FC<CardProps> = ({
     color = "bg-white",
     withPadding = true,
     tabTitle,
-    tabOuterBg = '#F3F4EF'
+    tabOuterBg = '#eceee6'
 }) => {
     const paddingClass = withPadding ? "p-6" : "";
 

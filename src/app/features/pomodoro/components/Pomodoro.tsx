@@ -1,4 +1,4 @@
-import { Bed, GlassWater, Laptop, Pause, Play, RotateCcw } from "lucide-react";
+import { Bed, GlassWater, Laptop, Pause, Play, RotateCcw, Timer } from "lucide-react";
 import React, { useEffect, useCallback } from "react";
 import { usePomodoroStore } from "../stores/usePomodoreStore";
 import { Card } from "@/app/components/ux/Card";
@@ -114,9 +114,16 @@ export const Pomodoro: React.FC = () => {
             ? MODES.SHORT_BREAK
             : MODES.LONG_BREAK;
 
+    const tabTitle = (
+        <div className="flex gap-2">
+            <Timer />
+            Pomodoro
+        </div>
+    )
+
     return (
         <>
-            <Card tabTitle="Pomodoro" className="flex flex-col gap-4 overflow-hidden">
+            <Card tabTitle={tabTitle} className="flex flex-col gap-4 overflow-hidden">
                 <div className="flex items-center justify-center gap-20 flex-1 min-h-0">
                     <div className="flex flex-col gap-5">
                         <ButtonWithIcon

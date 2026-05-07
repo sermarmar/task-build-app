@@ -1,3 +1,4 @@
+import { Award } from "lucide-react";
 import { Card } from "../../../components/ux/Card";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
 import { HabitCard } from "./HabitCard";
@@ -14,10 +15,16 @@ export const HabitsListToday: React.FC = () => {
         });
     }
 
+    const tabTitle = (
+        <div className="flex gap-2">
+            <Award />
+            Hábitos para hoy
+        </div>
+    );
 
     return (
         <div className="h-full flex flex-col min-h-0">
-            <Card tabTitle="Hábitos para hoy" className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            <Card tabTitle={tabTitle} className="flex-1 flex flex-col min-h-0 overflow-hidden">
                 {error && <div className="error">{error}</div>}
                 {
                     habits.length === 0 && !error &&
