@@ -12,6 +12,8 @@ import { useNotification } from "../../../contexts/notification/useNotification"
 import type { HabitRequest } from "../resources/HabitRequest";
 import { FrecuencyDays } from "../../../components/template/frecuency_days/FrecuencyDays";
 import { CreateHabitService } from "../services/CreateHabitService";
+import { UpdateHabitService } from "../services/UpdateHabitService";
+import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
 import type { Habit } from "../models/Habit";
 
 interface ModalFormHabitProps {
@@ -26,6 +28,7 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
     const [visible, setVisible] = useState(show);
     const [category, setCategory] = useState<Category | null>(null);
     const { notify } = useNotification();
+    const { refreshHabits } = useHabitBoardContext();
 
     const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm<HabitRequest>({
         defaultValues: {
@@ -69,12 +72,15 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
     if (!visible) return null;
 
     const handleCreateHabit = async (form: HabitRequest) => {
-        const response = await CreateHabitService.create(form);
+        const response = isEdit && habit
+            ? await UpdateHabitService.update(habit.id!, form)
+            : await CreateHabitService.create(form);
 
         if (response.error) {
-            notifyMessage("danger", "Ha fallado al crear un hábito. Contactá con el administrador.", <X />);
+            notifyMessage("danger", isEdit ? "Ha fallado al editar el hábito." : "Ha fallado al crear un hábito.", <X />);
         } else {
-            notifyMessage("success", "Se ha creado nuevo hábito correctamente.", <Check />);
+            notifyMessage("success", isEdit ? "Hábito editado correctamente." : "Hábito creado correctamente.", <Check />);
+            refreshHabits(true);
             onClose();
         }
     }
@@ -133,7 +139,7 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
                         )}
                     </div>
                     <div>
-                        <SelectCategory onChange={(c) => setValue('category_id', habit?.category_id || c.id)}/> 
+                        <SelectCategory value={habit?.category_id ?? undefined} onChange={(c) => setValue('category_id', c.id)} />
                     </div>
                     
                     <div className="mb-4">
@@ -154,7 +160,13 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
                         )}
                     </div>
                     <div className="col-span-3">
-                        <FrecuencyDays onChange={handleFrecuencyClick} />
+                        <FrecuencyDays
+                            key={habit?.id ?? 'new'}
+                            onChange={handleFrecuencyClick}
+                            initialFrequency={habit?.frequency ?? ''}
+                            initialOptions={habit?.frequency === 'weekly' ? (habit.custom_days ?? []) : []}
+                            initialDays={habit?.frequency === 'custom' ? (habit.custom_days ?? []) : []}
+                        />
                     </div>
                     <div className="flex col-span-3 justify-end">
                         <Button type="submit">

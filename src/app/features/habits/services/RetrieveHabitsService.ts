@@ -2,27 +2,33 @@ import { HabitRepository } from "../../../infra/repositories/HabitRepository";
 import type { ErrorMessage } from "../../../shared/Error";
 import type { Habit } from "../models/Habit";
 
+const HABITS_CACHE_PREFIX = 'habits_';
+
 export const RetrieveHabitsService = {
 
     getHabits: async (days: string[]): Promise<{habits: Habit[], error: ErrorMessage | null}> => {
-        if(sessionStorage.getItem('habits') && sessionStorage.getItem('habits') !== '[]') {
-            const habitsRetrieving: Habit[] = JSON.parse(sessionStorage.getItem('habits')!);
-            return { habits: habitsRetrieving, error: null}
-        } else {
-            const { habits, error } = await HabitRepository.getHabitsByDays(days.map(Number));
+        const weekday = days[0];
+        const cacheKey = `${HABITS_CACHE_PREFIX}${weekday}`;
+        const cached = sessionStorage.getItem(cacheKey);
 
-            if(error) {
-                return { habits: [], error };
-            }
-
-            sessionStorage.setItem('habits', JSON.stringify(habits));
-
-            return { habits: habits, error: null };
+        if (cached) {
+            return { habits: JSON.parse(cached), error: null };
         }
+
+        const { habits, error } = await HabitRepository.getHabitsByDays(days);
+
+        if (error) {
+            return { habits: [], error };
+        }
+
+        sessionStorage.setItem(cacheKey, JSON.stringify(habits));
+        return { habits, error: null };
     },
 
     removeHabitsFromStorage: () => {
-        sessionStorage.removeItem('habits');
+        Object.keys(sessionStorage)
+            .filter(key => key.startsWith(HABITS_CACHE_PREFIX))
+            .forEach(key => sessionStorage.removeItem(key));
     }
 
 };

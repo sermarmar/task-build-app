@@ -2,29 +2,37 @@ import { useEffect, useState } from "react";
 import type { Habit } from "../models/Habit";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
 import { CompleteHabitService } from "../services/CompleteHabitService";
+import { DeleteHabitService } from "../services/DeleteHabitService";
 import { Checkbox } from "../../../components/ux/Checkbox";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
 import { useColorAlpha } from "../../../hooks/useColorAlpha";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface HabitCardProps {
     habit: Habit;
     isCompleted: boolean;
+    showButton?: boolean;
 }
 
-export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted }) => {
+export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted, showButton = true }) => {
 
     const [checked, setChecked] = useState<boolean>(isCompleted);
-    const { selectedDate } = useHabitBoardContext();
+    const { selectedDate, openModal, refreshHabits } = useHabitBoardContext();
 
     useEffect(() => {
         setChecked(isCompleted);
     }, [isCompleted]);
 
     const handleHabitCompleted = (isChecked: boolean) => {
-        // Aquí puedes agregar la lógica para marcar el hábito como completado o no
         setChecked(isChecked);
-        // habit.id siempre existe cuando llega desde la base de datos
         CompleteHabitService.execute(habit.id!, selectedDate.toISOString().split('T')[0], isChecked);
+    }
+
+    const handleDelete = async () => {
+        const { error } = await DeleteHabitService.delete(habit.id!);
+        if (!error) {
+            refreshHabits(true);
+        }
     }
 
     return (
@@ -42,8 +50,20 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted }) => {
                 </span>
                 <h3 className="text-sm font-medium">{habit.title}</h3>
             </div>
-            
-            <Checkbox value={habit.id} onChange={(isChecked) => handleHabitCompleted(isChecked)} checked={checked} />
+
+            <div className="flex gap-4 items-center">
+                <Checkbox value={habit.id} onChange={(isChecked) => handleHabitCompleted(isChecked)} checked={checked} />
+                {showButton && (
+                    <>
+                        <button className="text-secondary-700 cursor-pointer hover:text-secondary-500 transition-colors" onClick={() => openModal(true, true, habit)}>
+                            <Pencil size={16} />
+                        </button>
+                        <button className="text-secondary-700 cursor-pointer hover:text-red-400 transition-colors" onClick={handleDelete}>
+                            <Trash2 size={16} />
+                        </button>
+                    </>
+                )}
+            </div>
         </div>
     );
 }

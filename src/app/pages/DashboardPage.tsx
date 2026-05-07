@@ -6,8 +6,8 @@ import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvid
 import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask";
 import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
 import { HabitsListToday } from "../features/habits/components/HabitsListToday";
-import { Pomodoro } from "../features/pomodoro/Pomodoro";
 import { MentalHealthBoard } from "../features/mental_healtth/components/MentalHealthBoard";
+import { Pomodoro } from "../features/pomodoro/components/Pomodoro";
 
 
 export const DashboardPage: React.FC = () => {
@@ -41,7 +41,9 @@ export const DashboardPage: React.FC = () => {
                 </TaskBoardProvider>
             </div>
             <div className="col-span-2 row-span-5 col-start-5">
-                <CalendarBoard />
+                <HabitBoardProvider>
+                    <CalendarBoard />
+                </HabitBoardProvider>
             </div>
             <div className="col-span-2 row-span-2 row-start-2">
                 <Pomodoro />
@@ -52,7 +54,7 @@ export const DashboardPage: React.FC = () => {
                 </HabitBoardProvider>
             </div>
             <div className="row-span-2 col-start-4 row-start-2">
-                <Card>
+                <Card className="h-full">
                     <h2 className="text-sm">Tareas pendientes en desarrollo...</h2>
                 </Card>
             </div>
@@ -60,7 +62,7 @@ export const DashboardPage: React.FC = () => {
                 <MentalHealthBoard />
             </div>
             <div className="col-span-3 row-span-2 row-start-4">
-                <Card>
+                <Card className="h-full">
                     <h2 className="text-sm">Mapa de actividad en desarrollo...</h2>
                 </Card>
             </div>

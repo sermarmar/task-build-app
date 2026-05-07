@@ -6,11 +6,13 @@ interface CalendarProps {
     selectDate?: (date: Date) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = () => {
+export const Calendar: React.FC<CalendarProps> = ({ selectDate }) => {
 
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
+    const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate());
+    const [selectedMonthYear, setSelectedMonthYear] = useState<string>(`${today.getFullYear()}-${today.getMonth()}`);
     const days = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 
     // Día de la semana en que empieza el mes (0=Dom → convertimos a lun-based)
@@ -56,6 +58,16 @@ export const Calendar: React.FC<CalendarProps> = () => {
         }
     };
 
+    const handleDayClick = (dayNum: number) => {
+        const date = new Date(currentYear, currentMonth, dayNum);
+        setSelectedDay(dayNum);
+        setSelectedMonthYear(`${currentYear}-${currentMonth}`);
+        selectDate?.(date);
+    };
+
+    const isSelected = (dayNum: number): boolean =>
+        selectedDay === dayNum && selectedMonthYear === `${currentYear}-${currentMonth}`;
+
 
     return (
         <>
@@ -88,16 +100,21 @@ export const Calendar: React.FC<CalendarProps> = () => {
                         const dayNum = i + 1;
                         const isToday = new Date(currentYear, currentMonth, dayNum).toDateString() === today.toDateString();
                         const festivo = isFestivo(currentYear, currentMonth, dayNum);
+                        const selected = isSelected(dayNum);
 
                         return (
                             <div key={i} className="flex items-center justify-center text-sm relative">
-                                <span className={`
-                                    flex items-center justify-center w-10 h-10 rounded-full
-                                    ${isToday
-                                        ? 'bg-secondary-600 text-tertiary-50 font-bold'
-                                        : festivo
-                                            ? 'bg-accent-blossom-400 text-accent-blossom-900 cursor-pointer hover:brightness-110'
-                                            : 'bg-primary-300/10 hover:bg-secondary-200 hover:text-primary-950 cursor-pointer'
+                                <span
+                                    onClick={() => handleDayClick(dayNum)}
+                                    className={`
+                                    flex items-center justify-center w-10 h-10 rounded-full cursor-pointer
+                                    ${selected && !isToday
+                                        ? 'ring-2 ring-secondary-400 bg-primary-300/20'
+                                        : isToday
+                                            ? 'bg-secondary-600 text-tertiary-50 font-bold'
+                                            : festivo
+                                                ? 'bg-accent-blossom-400 text-accent-blossom-900 hover:brightness-110'
+                                                : 'bg-primary-300/10 hover:bg-secondary-200 hover:text-primary-950'
                                     }
                                 `}>
                                     {dayNum}

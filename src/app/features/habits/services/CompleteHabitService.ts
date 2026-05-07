@@ -1,4 +1,5 @@
 import { HabitLogRepository } from "../../../infra/repositories/HabitLogRepository"
+import { RetrieveHabitLogsService } from "./RetrieveHabitLogsService";
 
 export const CompleteHabitService = {
 
@@ -20,6 +21,8 @@ export const CompleteHabitService = {
         if (errorMessage) {
             throw new Error(errorMessage);
         }
+
+        RetrieveHabitLogsService.removeLogsFromStorage(date);
     }
 
 }
