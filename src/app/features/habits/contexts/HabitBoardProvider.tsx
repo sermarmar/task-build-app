@@ -63,7 +63,6 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     const selectDay = (day: string[], date: Date) => {
-        refreshHabits(true);
         setSelectedDays(day);
         setSelectedDate(date);
     };
