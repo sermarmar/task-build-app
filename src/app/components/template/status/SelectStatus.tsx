@@ -5,9 +5,10 @@ import { Select } from "../../ux/Select";
 
 interface SelectStatusProps {
     onChange: (status: Status) => void;
+    value?: number;
 }
 
-export const SelectStatus = ({ onChange }: SelectStatusProps) => {
+export const SelectStatus = ({ onChange, value }: SelectStatusProps) => {
 
     const [status, setStatus] = useState<Status[]>([]);
 
@@ -18,10 +19,11 @@ export const SelectStatus = ({ onChange }: SelectStatusProps) => {
     }, []);
 
     return (
-        <Select 
-            name="status" 
-            label="Estado" 
-            list={ status } 
+        <Select
+            name="status"
+            label="Estado"
+            list={ status }
+            value={ value }
             onChange={(e) => {
                 const selected = status.find(s => s.id === Number(e.target.value));
                 if (selected) onChange(selected);

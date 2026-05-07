@@ -8,6 +8,7 @@ import { Stars } from "../../../components/ux/Stars";
 import { SelectCategory } from "../../../components/template/category/SelectCategory";
 import { SelectStatus } from "../../../components/template/status/SelectStatus";
 import { CreateTaskService } from "../services/CreateTaskService";
+import { EditTaskService } from "../services/EditTaskService";
 import { Controller, useForm } from "react-hook-form";
 import type { TaskResponse } from "../resource/TaskResponse";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
@@ -16,74 +17,83 @@ import type { Status } from "../../../core/models/Status";
 import { StatusService } from "../../../core/service/status/StatusService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
+import type { Task } from "../models/Task";
 
 interface ModalCreateTaskProps {
     show: boolean;
     onClose: () => void;
+    task?: Task | null;
 }
 
-export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose }) => {
+export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose, task }) => {
 
-    // keep mounted to allow exit animation
+    const isEditMode = !!task;
     const [visible, setVisible] = useState(show);
     const [category, setCategory] = useState<Category | null>(null);
     const [status, setStatus] = useState<Status | null>(null);
     const { notify } = useNotification();
     const { refreshTasks } = useTaskBoardContext();
 
-
-    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<TaskResponse>({
-        defaultValues: {
-            title: '',
-            description: '',
-            points: 0,
-            category_id: category ? category.id : '',
-            status_id: status ? status.id : undefined
-        }
+    const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm<TaskResponse>({
+        defaultValues: { title: '', description: '', points: 0, category_id: '', status_id: undefined }
     });
 
     useEffect(() => {
-        if (show) {
-            CategoryService.getFirstCategory().then((res) => {
-                setCategory(res.category);
-                setValue('category_id', res.category ? res.category.id : '');
-            }).catch(() => {
-                console.error("Error fetching first category");
-            });
-            StatusService.getFirstStatus().then((res) => {
-                setStatus(res.status);
-                setValue('status_id', res.status ? res.status.id : 1);
-            });
-            setVisible(true);
-        } else {
+        if (!show) {
             const t = setTimeout(() => setVisible(false), 300);
             return () => clearTimeout(t);
         }
+
+        setVisible(true);
+
+        if (isEditMode) {
+            reset({
+                title: task.title,
+                description: task.description,
+                points: task.points,
+                category_id: task.category?.id ?? '',
+                status_id: task.status?.id,
+            });
+            return;
+        }
+
+        CategoryService.getFirstCategory().then((res) => {
+            setCategory(res.category);
+            setValue('category_id', res.category?.id ?? '');
+        });
+        StatusService.getFirstStatus().then((res) => {
+            setStatus(res.status);
+            setValue('status_id', res.status?.id ?? 1);
+        });
     }, [show]);
 
     if (!visible) return null;
 
-    const handleCreateTask = async (form: TaskResponse) => {
-        const response = await CreateTaskService.create(form);
-
-        if (response.error) {
-            notifyMessage("danger", "Ha fallado al crear una tarea. Contactá con el administrador.", <X />);
+    const handleSubmitForm = async (form: TaskResponse) => {
+        if (isEditMode) {
+            const { error } = await EditTaskService.update(task.id!, form);
+            if (error) {
+                notifyMessage("danger", "Ha fallado al editar la tarea.", <X />);
+            } else {
+                notifyMessage("success", "Tarea editada correctamente.", <Check />);
+                refreshTasks(true);
+                onClose();
+            }
         } else {
-            notifyMessage("success", "Se ha creado la tarea correctamente.", <Check />);
-            refreshTasks(true);
-            onClose();
+            const { error } = await CreateTaskService.create(form);
+            if (error) {
+                notifyMessage("danger", "Ha fallado al crear la tarea.", <X />);
+            } else {
+                notifyMessage("success", "Tarea creada correctamente.", <Check />);
+                refreshTasks(true);
+                onClose();
+            }
         }
-    }
+    };
 
     const notifyMessage = (type: "success" | "danger", message: string, icon?: React.ReactElement) => {
-        notify(
-            <>
-                { icon }
-                <span>{ message }</span>
-            </>,
-            type
-        )
-    }
+        notify(<>{ icon }<span>{ message }</span></>, type);
+    };
 
     return (
         <div
@@ -96,13 +106,13 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
             <Card
                 className={`relative p-4 w-300 mx-auto mt-20 transform transition-all duration-300 ${
                     show ? "scale-100 opacity-100" : "scale-95 opacity-0"
-                }`}/* prevent closing when clicking inside */
+                }`}
             >
                 <CardTitle className="flex justify-between items-center">
-                    Crear nueva tarea
+                    {isEditMode ? 'Editar tarea' : 'Crear nueva tarea'}
                     <X className="cursor-pointer" onClick={onClose} />
                 </CardTitle>
-                <form onSubmit={ handleSubmit(handleCreateTask) } className="grid grid-cols-3 gap-5 mt-4">
+                <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-3 gap-5 mt-4">
                     <div className="col-span-3 mb-4">
                         <Input
                             type="text"
@@ -117,6 +127,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                     <div className="col-span-2">
                         <TextareaDynamic
                             label="Descripción"
+                            value={isEditMode ? task.description : undefined}
                             onChange={(value) => setValue('description', value)}
                         />
                     </div>
@@ -137,11 +148,19 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose 
                                 <span className="text-red-500 text-sm">{errors.points.message}</span>
                             )}
                         </div>
-                        
-                        <SelectCategory onChange={(c) => setValue('category_id', c.id)}/>
-                        <SelectStatus onChange={(s) => setValue('status_id', s.id)}/>
+
+                        <SelectCategory
+                            value={isEditMode ? task.category?.id : category?.id}
+                            onChange={(c) => setValue('category_id', c.id)}
+                        />
+                        <SelectStatus
+                            value={isEditMode ? task.status?.id : status?.id}
+                            onChange={(s) => setValue('status_id', s.id)}
+                        />
                         <div className="flex justify-end items-end h-53">
-                            <Button type="submit" color="primary" className="justify-center">Crear tarea</Button>
+                            <Button type="submit" color="primary" className="justify-center">
+                                {isEditMode ? 'Guardar cambios' : 'Crear tarea'}
+                            </Button>
                         </div>
                     </div>
                 </form>

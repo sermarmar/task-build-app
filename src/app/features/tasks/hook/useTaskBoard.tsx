@@ -7,6 +7,7 @@ export const useTaskBoard = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [error, setError] = useState<ErrorMessage | null>(null);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -22,11 +23,14 @@ export const useTaskBoard = () => {
     }, [refreshTrigger]);
 
     const refreshTasks = (cleanStorage?: boolean) => {
-        if(cleanStorage) {
+        if (cleanStorage) {
             RetrieveTaskService().removeTasksFromStorage();
         }
         setRefreshTrigger(prev => prev + 1);
     };
 
-    return { tasks, error, refreshTasks };
+    const openEditModal = (task: Task) => setEditingTask(task);
+    const closeEditModal = () => setEditingTask(null);
+
+    return { tasks, error, refreshTasks, editingTask, openEditModal, closeEditModal };
 };
