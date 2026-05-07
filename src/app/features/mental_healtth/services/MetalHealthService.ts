@@ -9,8 +9,8 @@ export const MetalHealthService = {
         balance: number,
         error: { message: string } | null
     }> => {
-        const [{ tasks, error: taskError }, { habitLogs, error: habitLogError }] = await Promise.all([
-            TaskRepository.getTasksCompleted(),
+        const [{ data: tasks, error: taskError }, { habitLogs, error: habitLogError }] = await Promise.all([
+            TaskRepository.getCompletedInCurrentMonth(),
             HabitLogRepository.getHabitsCompleted(),
         ]);
 

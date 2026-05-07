@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Card, CardBody, CardTitle } from "@/app/components/ux/Card";
 import { DynamicIcon } from "@/app/components/ux/DynamicIcon";
-import { ColorPicker } from "@/app/components/ux/ColorPicker";
+import { ColorPicker } from "@/app/components/template/ColorPicker";
 import { GroupService } from "@/app/core/service/groups/GroupService";
 import type { Group } from "../models/Group";
 import { EllipsisVertical } from "lucide-react";

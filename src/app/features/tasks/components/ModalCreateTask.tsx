@@ -127,7 +127,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
                     <div className="col-span-2">
                         <TextareaDynamic
                             label="Descripción"
-                            value={isEditMode ? task.description : undefined}
+                            defaultValue={isEditMode ? task.description : undefined}
                             onChange={(value) => setValue('description', value)}
                         />
                     </div>

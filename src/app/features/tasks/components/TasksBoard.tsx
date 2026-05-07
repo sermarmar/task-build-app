@@ -7,6 +7,7 @@ import { TasksList } from "./TasksList";
 import { TaskBoardProvider } from "../contexts/TaskBoardProvider";
 import { Input } from "@/app/components/ux/Input";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
+import { IconsList } from "@/app/components/template/IconsList";
 
 const TasksBoardInner: React.FC = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -22,10 +23,12 @@ const TasksBoardInner: React.FC = () => {
     const tabActions = (
         <div className="flex gap-2 items-center">
             <Input name="Buscar" type="text" size="sm" placeholder="Buscar tareas..." />
+            <IconsList size="sm" />
             <Button
                 type="button"
                 color="primary"
                 form="pill"
+                size="sm"
                 className="text-sm"
                 onClick={() => setIsCreateModalOpen(true)}
             >
