@@ -1,6 +1,13 @@
 import { HabitRepository } from "../../../infra/repositories/HabitRepository";
 import type { ErrorMessage } from "../../../shared/Error";
-import type { Habit } from "../models/Habit";
+import type { Habit, HabitFilters } from "../models/Habit";
+
+export const filterHabits = (habits: Habit[], filters: HabitFilters): Habit[] =>
+    habits.filter(habit => {
+        if (filters.text && !habit.title.toLowerCase().includes(filters.text.toLowerCase())) return false;
+        if (filters.categoryId !== null && habit.category_id !== filters.categoryId) return false;
+        return true;
+    });
 
 const HABITS_CACHE_PREFIX = 'habits_';
 
