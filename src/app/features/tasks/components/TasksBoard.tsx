@@ -1,13 +1,11 @@
-import { ClipboardList, Plus } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { ModalCreateTask } from "./ModalCreateTask";
 import { useState } from "react";
 import { Card, CardBody } from "../../../components/ux/Card";
-import { Button } from "../../../components/ux/Button";
 import { TasksList } from "./TasksList";
 import { TaskBoardProvider } from "../contexts/TaskBoardProvider";
-import { Input } from "@/app/components/ux/Input";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
-import { IconsList } from "@/app/components/template/IconsList";
+import { TabActionsTask } from "./TabActionsTask";
 
 const TasksBoardInner: React.FC = () => {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -20,22 +18,7 @@ const TasksBoardInner: React.FC = () => {
         </div>
     );
 
-    const tabActions = (
-        <div className="flex gap-2 items-center">
-            <Input name="Buscar" type="text" size="sm" placeholder="Buscar tareas..." />
-            <IconsList size="sm" />
-            <Button
-                type="button"
-                color="primary"
-                form="pill"
-                size="sm"
-                className="text-sm"
-                onClick={() => setIsCreateModalOpen(true)}
-            >
-                <Plus />
-            </Button>
-        </div>
-    );
+    const tabActions = <TabActionsTask onCreateClick={() => setIsCreateModalOpen(true)} />;
 
     return (
         <>

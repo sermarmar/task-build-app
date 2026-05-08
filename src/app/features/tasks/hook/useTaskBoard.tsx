@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
-import { RetrieveTaskService } from "../services/RetrieveTaskService";
-import type { Task } from "../models/Task";
+import { useEffect, useMemo, useState } from "react";
+import { filterTasks, RetrieveTaskService } from "../services/RetrieveTaskService";
+import type { Task, TaskFilters } from "../models/Task";
+import { DEFAULT_TASK_FILTERS } from "../models/Task";
 import type { ErrorMessage } from "../../../shared/Error";
 
 export const useTaskBoard = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [allTasks, setAllTasks] = useState<Task[]>([]);
     const [error, setError] = useState<ErrorMessage | null>(null);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [filters, setFilters] = useState<TaskFilters>(DEFAULT_TASK_FILTERS);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -15,12 +17,14 @@ export const useTaskBoard = () => {
             if (result.error) {
                 setError(result.error);
             } else {
-                setTasks(result.tasks);
+                setAllTasks(result.tasks);
             }
         };
 
         fetchTasks();
     }, [refreshTrigger]);
+
+    const tasks = useMemo(() => filterTasks(allTasks, filters), [allTasks, filters]);
 
     const refreshTasks = (cleanStorage?: boolean) => {
         if (cleanStorage) {
@@ -32,5 +36,5 @@ export const useTaskBoard = () => {
     const openEditModal = (task: Task) => setEditingTask(task);
     const closeEditModal = () => setEditingTask(null);
 
-    return { tasks, error, refreshTasks, editingTask, openEditModal, closeEditModal };
+    return { tasks, error, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
 };
