@@ -1,3 +1,4 @@
+import { twMerge } from "tailwind-merge";
 
 
 interface BadgeProps {
@@ -7,6 +8,7 @@ interface BadgeProps {
 }
 
 const colorMap: Record<string, { bg: string; text: string }> = {
+    'primary-900':  { bg: 'bg-primary-900',   text: 'text-tertiary-50' },
     'amber-200':    { bg: 'bg-amber-200',   text: 'text-amber-700' },
     'yellow':       { bg: 'bg-yellow-400',  text: 'text-black' },
     'lime':         { bg: 'bg-lime-400',    text: 'text-black' },
@@ -27,7 +29,7 @@ export const Badge: React.FC<BadgeProps> = ({ color, text, onClick }) => {
     const { bg, text: textColor } = colorMap[color] ?? { bg: 'bg-gray-300', text: 'text-black' };
 
     return (
-        <span className={`px-2 py-1 rounded text-xs font-bold ${bg} ${textColor}`} onClick={onClick}>
+        <span className={twMerge('px-2 py-1 rounded text-xs font-bold', bg, textColor)} onClick={onClick}>
             {text}
         </span>
     );
