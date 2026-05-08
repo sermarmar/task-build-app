@@ -139,7 +139,7 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
                         )}
                     </div>
                     <div>
-                        <SelectCategory value={habit?.category_id ?? undefined} onChange={(c) => setValue('category_id', c.id)} />
+                        <SelectCategory value={habit?.category_id ?? undefined} onChange={(c) => c && setValue('category_id', c.id)} />
                     </div>
                     
                     <div className="mb-4">

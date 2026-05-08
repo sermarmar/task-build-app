@@ -1,7 +1,15 @@
-import type { Task } from "../models/Task";
+import type { Task, TaskFilters } from "../models/Task";
 import { TaskRepository } from "../../../infra/repositories/TaskRepository";
 import { TaskFactory } from './factory/TaskFactory';
 import type { ErrorMessage } from "../../../shared/Error";
+
+export const filterTasks = (tasks: Task[], filters: TaskFilters): Task[] =>
+    tasks.filter(task => {
+        if (filters.text && !task.title.toLowerCase().includes(filters.text.toLowerCase())) return false;
+        if (filters.statusId !== null && task.status?.id !== filters.statusId) return false;
+        if (filters.categoryId !== null && task.category?.id !== filters.categoryId) return false;
+        return true;
+    });
 
 export const RetrieveTaskService = () => {
     return {

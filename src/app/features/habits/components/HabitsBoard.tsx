@@ -1,9 +1,9 @@
-import { Award, Plus } from "lucide-react";
-import { Button } from "../../../components/ux/Button";
+import { Award } from "lucide-react";
 import { Card, CardBody } from "../../../components/ux/Card"
 import { HabitsCalendar } from "./HabitsCalendar";
 import { HabitsList } from "./HabitsList";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
+import { TabActionsHabit } from "./TabActionsHabit";
 
 export const HabitsBoard: React.FC = () => {
     const { openModal } = useHabitBoardContext();
@@ -15,19 +15,7 @@ export const HabitsBoard: React.FC = () => {
         </div>
     );
 
-    const tabActions = (
-        <>
-            <Button
-                type="button"
-                color="primary"
-                className="text-sm"
-                form="pill"
-                onClick={() => openModal(true)}
-            >
-                <Plus />
-            </Button>
-        </>
-    );
+    const tabActions = <TabActionsHabit onCreateClick={() => openModal(true)} />;
 
     return (
         <Card className="h-full flex flex-col" tabTitle={tabTitle} tabActions={tabActions}>

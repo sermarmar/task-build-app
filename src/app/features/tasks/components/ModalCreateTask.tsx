@@ -148,7 +148,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
 
                         <SelectCategory
                             value={watchedCategoryId}
-                            onChange={(c) => setValue('category_id', c.id)}
+                            onChange={(c) => c && setValue('category_id', c.id)}
                         />
                         <SelectStatus
                             value={watchedStatusId}

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { HabitBoardContext } from "./HabitBoardContext";
-import type { Habit } from "../models/Habit";
-import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
+import type { Habit, HabitFilters } from "../models/Habit";
+import { DEFAULT_HABIT_FILTERS } from "../models/Habit";
+import { filterHabits, RetrieveHabitsService } from "../services/RetrieveHabitsService";
 import type { HabitLog } from "../models/HabitLog";
 import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
 import { ModalFormHabit } from "../components/ModalFormHabit";
@@ -15,7 +16,8 @@ const getTodayDays = (): string[] => {
 };
 
 export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [habits, setHabits] = useState<Habit[]>([]);
+    const [allHabits, setAllHabits] = useState<Habit[]>([]);
+    const [filters, setFilters] = useState<HabitFilters>(DEFAULT_HABIT_FILTERS);
     const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
     const [error, setError] = useState<string>('');
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -38,7 +40,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 return;
             }
 
-            setHabits(result.habits);
+            setAllHabits(result.habits);
 
             const habitLogsResult = await RetrieveHabitLogsService.getHabitLogs(
                 selectedDate.toISOString().split('T')[0]
@@ -67,6 +69,8 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setSelectedDate(date);
     };
 
+    const habits = useMemo(() => filterHabits(allHabits, filters), [allHabits, filters]);
+
     const openModal = (open: boolean, isEdit: boolean = false, habit?: Habit) => {
         setIsOpenModal(open);
         setIsEdit(isEdit);
@@ -78,7 +82,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
 
     return (
-        <HabitBoardContext.Provider value={{habits, habitLogs, error, selectedDate, refreshHabits, selectDay, openModal}}>
+        <HabitBoardContext.Provider value={{habits, habitLogs, error, selectedDate, refreshHabits, selectDay, openModal, filters, setFilters}}>
             {children}
             <ModalFormHabit show={isOpenModal} onClose={() => openModal(false)} isEdit={isEdit} habit={selectedHabit} />
         </HabitBoardContext.Provider>

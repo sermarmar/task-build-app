@@ -1,5 +1,15 @@
 export type HabitFrequency = 'daily' | 'weekly' | 'custom';
 
+export interface HabitFilters {
+    text: string;
+    categoryId: string | null;
+}
+
+export const DEFAULT_HABIT_FILTERS: HabitFilters = {
+    text: '',
+    categoryId: null,
+};
+
 export interface Habit {
     id: string;
     user_id: string;
