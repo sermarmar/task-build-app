@@ -1,18 +1,17 @@
 import { Award } from "lucide-react";
 import { Card } from "../../../components/ux/Card";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
+import { toLocalDateString } from "../helpers/daysHelpers";
 import { HabitCard } from "./HabitCard";
+import { ScrollFadeContainer } from "../../../components/ux/ScrollFadeContainer";
 
 export const HabitsListToday: React.FC = () => {
 
     const { habits, habitLogs, error, selectedDate } = useHabitBoardContext();
     
     const isHabitCompleted = (habitId: string): boolean => {
-        const selectedDateStr = selectedDate.toISOString().split('T')[0];
-        return habitLogs.some(log => {
-            const logDateStr = new Date(log.completed_at).toISOString().split('T')[0];
-            return log.habit_id === habitId && logDateStr === selectedDateStr;
-        });
+        const selectedDateStr = toLocalDateString(selectedDate);
+        return habitLogs.some(log => log.habit_id === habitId && (log.completed_at as unknown as string) === selectedDateStr);
     }
 
     const tabTitle = (
@@ -30,12 +29,13 @@ export const HabitsListToday: React.FC = () => {
                     habits.length === 0 && !error &&
                     <div className='text-gray-400 font-bold text-5xl text-center mt-5'>No hay hábitos disponibles</div>
                 }
-                <div className="flex-1 min-h-0 grid grid-cols-1 gap-4 overflow-y-auto overflow-x-hidden">
-                    {habits
-                    .map(habit => (
-                        <HabitCard habit={habit} isCompleted={isHabitCompleted(habit.id!)} showButton={false}/>
-                    ))}
-                </div>
+                <ScrollFadeContainer className="flex-1 min-h-0">
+                    <div className="grid grid-cols-1 gap-4 overflow-x-hidden">
+                        {habits.map(habit => (
+                            <HabitCard key={habit.id} habit={habit} isCompleted={isHabitCompleted(habit.id!)} showButton={false} />
+                        ))}
+                    </div>
+                </ScrollFadeContainer>
             </Card>
         </div>
         

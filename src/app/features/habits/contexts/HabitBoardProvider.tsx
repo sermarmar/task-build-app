@@ -6,7 +6,7 @@ import { filterHabits, RetrieveHabitsService } from "../services/RetrieveHabitsS
 import type { HabitLog } from "../models/HabitLog";
 import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
 import { ModalFormHabit } from "../components/ModalFormHabit";
-import { DAY_NAMES } from "../helpers/daysHelpers";
+import { DAY_NAMES, toLocalDateString } from "../helpers/daysHelpers";
 
 const getTodayDays = (): string[] => {
     const today = new Date();
@@ -42,9 +42,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
             setAllHabits(result.habits);
 
-            const habitLogsResult = await RetrieveHabitLogsService.getHabitLogs(
-                selectedDate.toISOString().split('T')[0]
-            );
+            const habitLogsResult = await RetrieveHabitLogsService.getHabitLogs(toLocalDateString(selectedDate));
 
             if (habitLogsResult.error) {
                 setError('Error al cargar los hábitos');
