@@ -1,14 +1,25 @@
 import type React from "react";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+export interface TabItem {
+    label: React.ReactNode;
+    content: React.ReactNode;
+    actions?: React.ReactNode;
+}
+
 interface CardProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
     color?: string;
     withPadding?: boolean;
-    tabTitle?: React.ReactNode;
     tabOuterBg?: string;
+    // Single tab (legacy)
+    tabTitle?: React.ReactNode;
     tabActions?: React.ReactNode;
+    // Multiple tabs
+    tabs?: TabItem[];
+    defaultTab?: number;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -16,24 +27,63 @@ export const Card: React.FC<CardProps> = ({
     className = "",
     color = "bg-white",
     withPadding = true,
-    tabTitle,
     tabOuterBg = '#eceee6',
+    tabTitle,
     tabActions,
+    tabs,
+    defaultTab = 0,
 }) => {
+    const [activeTab, setActiveTab] = useState(defaultTab);
     const paddingClass = withPadding ? "p-6" : "";
+
+    if (tabs && tabs.length > 0) {
+        const current = tabs[activeTab] ?? tabs[0];
+        return (
+            <div className="flex flex-col h-full overflow-hidden">
+                <div className="flex items-end w-full">
+                    {tabs.map((tab, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setActiveTab(i)}
+                            className={twMerge(
+                                color,
+                                "relative px-6 py-2 rounded-t-2xl text-xl font-semibold shrink-0 transition-opacity",
+                                i === activeTab ? "z-10 opacity-100" : "opacity-50 hover:opacity-70 z-0"
+                            )}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                    <div
+                        className="w-5 h-5 shrink-0 z-0"
+                        style={{
+                            background: tabOuterBg,
+                            borderBottomLeftRadius: '100%',
+                            boxShadow: `-5px 5px 0 0 white`,
+                        }}
+                    />
+                    {current.actions && (
+                        <div className="ml-auto flex items-center gap-2 pb-2 pr-5">
+                            {current.actions}
+                        </div>
+                    )}
+                </div>
+                <div className={twMerge(color, "rounded-tr-3xl rounded-b-3xl flex-1 min-h-0", paddingClass, className)}>
+                    {current.content}
+                </div>
+            </div>
+        );
+    }
 
     if (tabTitle) {
         return (
-            <div className="flex flex-col h-full">
-                {/* Fila del tab + esquina cóncava como elementos hermanos en flex */}
+            <div className="flex flex-col h-full overflow-hidden">
                 <div className="flex items-end w-full">
-                    {/* Tab */}
                     <div className={twMerge(color, "relative px-6 py-2 rounded-t-2xl text-xl font-semibold flex-shrink-0 z-10")}>
                         {tabTitle}
                     </div>
-                    {/* Esquina cóncava — hermano del tab, alineado al fondo */}
                     <div
-                        className="w-6 h-6 flex-shrink-0 z-0"
+                        className="w-5 h-5 shrink-0 z-0"
                         style={{
                             background: tabOuterBg,
                             borderBottomLeftRadius: '100%',
@@ -46,7 +96,6 @@ export const Card: React.FC<CardProps> = ({
                         </div>
                     )}
                 </div>
-                {/* Card body — sin rounded arriba-izquierda */}
                 <div className={twMerge(color, "rounded-tr-3xl rounded-b-3xl flex-1 min-h-0", paddingClass, className)}>
                     {children}
                 </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { RetrieveMapActivitiesService } from '../services/RetrieveMapActivitiesService';
@@ -15,6 +15,10 @@ const DAYS_ES = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 export const MapActivitiesBoard: React.FC = () => {
     const [grid, setGrid] = useState<ActivityGrid | null>(null);
     const [loading, setLoading] = useState(true);
+    const [scale, setScale] = useState(1);
+    const [gridNaturalHeight, setGridNaturalHeight] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         RetrieveMapActivitiesService.getActivityGrid().then(({ grid }) => {
@@ -22,6 +26,25 @@ export const MapActivitiesBoard: React.FC = () => {
             setLoading(false);
         });
     }, []);
+
+    useEffect(() => {
+        if (!grid || !containerRef.current || !gridRef.current) return;
+
+        const update = () => {
+            const containerWidth = containerRef.current!.offsetWidth;
+            const gridWidth = gridRef.current!.scrollWidth;
+            const naturalHeight = gridRef.current!.offsetHeight;
+            const newScale = gridWidth > containerWidth ? containerWidth / gridWidth : 1;
+            setScale(newScale);
+            setGridNaturalHeight(naturalHeight);
+        };
+
+        update();
+
+        const observer = new ResizeObserver(update);
+        observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, [grid]);
 
     if (loading) {
         return (
@@ -67,8 +90,16 @@ export const MapActivitiesBoard: React.FC = () => {
                 <Legend />
             </div>
 
-            <div className="overflow-x-auto pb-1">
-                <div className="flex gap-1 min-w-max">
+            <div ref={containerRef} className="w-full">
+                <div
+                    ref={gridRef}
+                    className="flex gap-1 min-w-max"
+                    style={{
+                        transform: `scale(${scale})`,
+                        transformOrigin: 'top left',
+                        marginBottom: scale < 1 ? `${gridNaturalHeight * (scale - 1)}px` : undefined,
+                    }}
+                >
                     {/* Day labels */}
                     <div className="flex flex-col gap-1 pt-5 pr-1">
                         {DAYS_ES.map((day, i) => (

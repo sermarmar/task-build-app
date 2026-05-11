@@ -10,11 +10,11 @@ interface TaskColumnsProps {
 export const TaskColumns: React.FC<TaskColumnsProps> = ({ status, tasks }) => {
 
     const columnsNumber = `grid-cols-${status.length.toString()}`;
-    const classes = `grid gap-5 ${columnsNumber}`;
+    const classes = `grid flex-1 min-h-0 grid-rows-1 gap-5 ${columnsNumber}`;
     return (
         <div className={classes}>
             { status.map((state, index) => (
-                <TasksColumn key={index} status={state} tasks={tasks.filter(t => t.status.id === state.id)} />
+                <TasksColumn key={index} status={state} tasks={tasks.filter(t => t.status?.id === state.id)} />
             ))}
         </div>
     );
