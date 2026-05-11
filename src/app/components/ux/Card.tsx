@@ -55,7 +55,7 @@ export const Card: React.FC<CardProps> = ({
                         </button>
                     ))}
                     <div
-                        className="w-6 h-6 shrink-0 z-0"
+                        className="w-5 h-5 shrink-0 z-0"
                         style={{
                             background: tabOuterBg,
                             borderBottomLeftRadius: '100%',
@@ -83,7 +83,7 @@ export const Card: React.FC<CardProps> = ({
                         {tabTitle}
                     </div>
                     <div
-                        className="w-6 h-6 shrink-0 z-0"
+                        className="w-5 h-5 shrink-0 z-0"
                         style={{
                             background: tabOuterBg,
                             borderBottomLeftRadius: '100%',

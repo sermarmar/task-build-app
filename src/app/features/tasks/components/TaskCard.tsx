@@ -31,40 +31,43 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     };
 
     return (
-        <div
-            ref={setNodeRef}
-            {...listeners}
-            {...attributes}
-            className={`flex gap-4 items-center justify-between p-2 rounded-md border-l-5 w-full cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-40' : ''}`}
-            style={{ backgroundColor: bg, borderColor: color, transform: CSS.Translate.toString(transform) }}
-        >
-            <div className="flex gap-4 items-center">
-                <span
-                    className="text-white w-10 h-10 flex items-center justify-center rounded-full shrink-0"
-                    style={{ backgroundColor: color }}
-                >
-                    <DynamicIcon name={task.category?.icon ?? 'ClipboardList'} />
-                </span>
-                <div className="flex flex-col">
-                    <h3 className="text-sm font-medium">{task.title}</h3>
-                    <h5 className="text-[12px] text-primary-900/80">{task.category?.name}</h5>
+        <div className='bg-white rounded-md'>
+            <div
+                ref={setNodeRef}
+                {...listeners}
+                {...attributes}
+                className={`flex gap-4 items-center justify-between p-2 rounded-md border-l-5 w-full cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-40' : ''}`}
+                style={{ backgroundColor: bg, borderColor: color, transform: CSS.Translate.toString(transform) }}
+            >
+                <div className="flex gap-4 items-center">
+                    <span
+                        className="text-white w-10 h-10 flex items-center justify-center rounded-full shrink-0"
+                        style={{ backgroundColor: color }}
+                    >
+                        <DynamicIcon name={task.category?.icon ?? 'ClipboardList'} />
+                    </span>
+                    <div className="flex flex-col">
+                        <h3 className="text-sm font-medium">{task.title}</h3>
+                        <h5 className="text-[12px] text-primary-900/80">{task.category?.name}</h5>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0">
+                    <button
+                        className="text-secondary-700 cursor-pointer hover:text-secondary-500 transition-colors"
+                        onClick={() => openEditModal(task)}
+                    >
+                        <Pencil size={16} />
+                    </button>
+                    <button
+                        className="text-secondary-700 cursor-pointer hover:text-red-400 transition-colors"
+                        onClick={handleDelete}
+                    >
+                        <Trash2 size={16} />
+                    </button>
                 </div>
             </div>
-
-            <div className="flex items-center gap-3 shrink-0">
-                <button
-                    className="text-secondary-700 cursor-pointer hover:text-secondary-500 transition-colors"
-                    onClick={() => openEditModal(task)}
-                >
-                    <Pencil size={16} />
-                </button>
-                <button
-                    className="text-secondary-700 cursor-pointer hover:text-red-400 transition-colors"
-                    onClick={handleDelete}
-                >
-                    <Trash2 size={16} />
-                </button>
-            </div>
         </div>
+        
     );
 }

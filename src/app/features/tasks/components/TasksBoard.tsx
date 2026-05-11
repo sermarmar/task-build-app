@@ -43,10 +43,10 @@ export const TasksBoardContent: React.FC = () => {
         const newStatusId = over.id as number;
         const task = tasks.find(t => t.id === taskId);
         if (!task || task.status.id === newStatusId) return;
-        refreshTasks(true);
         const { error: updateError } = await UpdateTaskService.updateByStatus(taskId, newStatusId);
         if (updateError) {
             notify(<><X /><span>No se pudo mover la tarea.</span></>, 'danger');
+        } else {
             refreshTasks(true);
         }
     };
