@@ -5,6 +5,14 @@ import { HabitsList } from "./HabitsList";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
 import { TabActionsHabit } from "./TabActionsHabit";
 
+export const HabitsBoardContent: React.FC = () => (
+    <CardBody className="mt-2">
+        <HabitsCalendar />
+        <hr className="invisible my-3" />
+        <HabitsList />
+    </CardBody>
+);
+
 export const HabitsBoard: React.FC = () => {
     const { openModal } = useHabitBoardContext();
 
@@ -15,15 +23,9 @@ export const HabitsBoard: React.FC = () => {
         </div>
     );
 
-    const tabActions = <TabActionsHabit onCreateClick={() => openModal(true)} />;
-
     return (
-        <Card className="h-full flex flex-col" tabTitle={tabTitle} tabActions={tabActions}>
-            <CardBody className="mt-2">
-                <HabitsCalendar />
-                <hr className="invisible my-3"/>
-                <HabitsList />
-            </CardBody>
+        <Card className="h-full flex flex-col" tabTitle={tabTitle} tabActions={<TabActionsHabit onCreateClick={() => openModal(true)} />}>
+            <HabitsBoardContent />
         </Card>
     );
 }

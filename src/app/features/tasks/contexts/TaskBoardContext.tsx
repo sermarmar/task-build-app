@@ -1,9 +1,11 @@
 import { createContext } from "react";
 import type { Task, TaskFilters } from "../models/Task";
 import type { ErrorMessage } from "../../../shared/Error";
+import type { Status } from "../../../core/models/Status";
 
 interface TaskBoardContextType {
     tasks: Task[];
+    statuses: Status[];
     error: ErrorMessage | null;
     isLoading: boolean;
     refreshTasks: (cleanStorage?: boolean) => void;

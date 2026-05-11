@@ -3,9 +3,28 @@ import { filterTasks, RetrieveTaskService } from "../services/RetrieveTaskServic
 import type { Task, TaskFilters } from "../models/Task";
 import { DEFAULT_TASK_FILTERS } from "../models/Task";
 import type { ErrorMessage } from "../../../shared/Error";
+import type { Status } from "../../../core/models/Status";
+import { StatusService } from "../../../core/service/status/StatusService";
+
+const STATUS_ORDER = ['PENDIENTE', 'EN PROGRESO', 'BLOQUEADA', 'EN REVISION', 'COMPLETADA'];
+
+const normalize = (s: string) =>
+    s.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+const sortStatuses = (statuses: Status[]): Status[] =>
+    statuses
+        .filter(s => normalize(s.name ?? '') !== 'CANCELADA')
+        .sort((a, b) => {
+            const ai = STATUS_ORDER.indexOf(normalize(a.name ?? ''));
+            const bi = STATUS_ORDER.indexOf(normalize(b.name ?? ''));
+            const aOrder = ai === -1 ? STATUS_ORDER.length : ai;
+            const bOrder = bi === -1 ? STATUS_ORDER.length : bi;
+            return aOrder - bOrder;
+        });
 
 export const useTaskBoard = () => {
     const [allTasks, setAllTasks] = useState<Task[]>([]);
+    const [statuses, setStatuses] = useState<Status[]>([]);
     const [error, setError] = useState<ErrorMessage | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -15,11 +34,17 @@ export const useTaskBoard = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             setIsLoading(true);
-            const result = await RetrieveTaskService().getTasks(false);
-            if (result.error) {
-                setError(result.error);
+            const [taskResult, statusResult] = await Promise.all([
+                RetrieveTaskService().getAllTasks(),
+                StatusService.getAllStatus(),
+            ]);
+            if (taskResult.error) {
+                setError(taskResult.error);
             } else {
-                setAllTasks(result.tasks);
+                setAllTasks(taskResult.tasks.filter(t => t.status != null));
+            }
+            if (statusResult.status) {
+                setStatuses(sortStatuses(statusResult.status));
             }
             setIsLoading(false);
         };
@@ -39,5 +64,5 @@ export const useTaskBoard = () => {
     const openEditModal = (task: Task) => setEditingTask(task);
     const closeEditModal = () => setEditingTask(null);
 
-    return { tasks, error, isLoading, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
+    return { tasks, statuses, error, isLoading, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
 };
