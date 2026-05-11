@@ -1,13 +1,13 @@
 import { HabitLogRepository } from "../../../infra/repositories/HabitLogRepository"
+import { RetrieveHabitLogsService } from "./RetrieveHabitLogsService";
 
 export const CompleteHabitService = {
 
-    execute: async (habitId: string, date: string, isCompleted?: boolean): Promise<void> => {
-        
+    execute: async (habitId: string, date: string, isCompleted: boolean): Promise<void> => {
         let errorMessage = null;
         const userId = JSON.parse(sessionStorage.getItem('user') || '{}').id;
 
-        if (isCompleted) {
+        if (isCompleted === true) {
             const { error } = await HabitLogRepository.create(habitId, userId, date);
             errorMessage = error?.message || null;
         } else {
@@ -17,11 +17,12 @@ export const CompleteHabitService = {
                 errorMessage = error?.message || null;
             }
         }
-        
+
         if (errorMessage) {
             throw new Error(errorMessage);
         }
 
+        RetrieveHabitLogsService.removeLogsFromStorage(date);
     }
 
 }

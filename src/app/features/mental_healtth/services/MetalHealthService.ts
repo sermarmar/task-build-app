@@ -1,43 +1,73 @@
 import { HabitLogRepository } from "../../../infra/repositories/HabitLogRepository";
 import { TaskRepository } from "../../../infra/repositories/TaskRepository";
+import type { Group } from "../../group/models/Group";
 
 export const MetalHealthService = {
 
-    getMentalHealthData: async (): Promise<{ points: { [key: string]: number } | null, error: { message: string } | null }> => {
-        const { tasks, error: taskError } = await TaskRepository.getTasksCompleted();
-        const { habitLogs, error: habitLogError } = await HabitLogRepository.getHabitsCompleted();
+    getMentalHealthData: async (groups: Group[]): Promise<{
+        groupPoints: { [groupName: string]: number },
+        balance: number,
+        error: { message: string } | null
+    }> => {
+        const [{ data: tasks, error: taskError }, { habitLogs, error: habitLogError }] = await Promise.all([
+            TaskRepository.getCompletedInCurrentMonth(),
+            HabitLogRepository.getHabitsCompleted(),
+        ]);
 
         if (taskError || habitLogError) {
-            console.error('Error fetching completed tasks or habit logs:', taskError || habitLogError);
-            return { points: null, error: { message: 'No se pudieron obtener los datos de salud mental' } };
+            return { groupPoints: {}, balance: 0, error: { message: 'No se pudieron obtener los datos de salud mental' } };
         }
 
-        // Acumular puntos brutos por categoría
-        const rawPoints: { [key: string]: number } = {};
+        // Mapa categoría → nombre de grupo
+        const categoryToGroup: Record<string, string> = {};
+        groups.forEach(group => {
+            group.categories?.forEach(cat => {
+                categoryToGroup[cat.name] = group.name;
+            });
+        });
 
+        // Acumular puntos por categoría
+        const rawByCategory: Record<string, number> = {};
         tasks?.forEach(task => {
-            const categoryName = task.categories?.name;
-            if (!categoryName) return;
-            rawPoints[categoryName] = (rawPoints[categoryName] || 0) + task.points;
+            const cat = task.categories?.name;
+            if (!cat) return;
+            rawByCategory[cat] = (rawByCategory[cat] ?? 0) + task.points;
         });
-
         habitLogs?.forEach(log => {
-            const categoryName = log.habits?.categories?.name;
-            if (!categoryName) return;
-            rawPoints[categoryName] = (rawPoints[categoryName] || 0) + log.habits.points;
+            const cat = log.habits?.categories?.name;
+            if (!cat) return;
+            rawByCategory[cat] = (rawByCategory[cat] ?? 0) + log.habits.points;
         });
 
-        // Convertir a porcentajes (0–100)
-        const total = Object.values(rawPoints).reduce((sum, val) => sum + val, 0);
+        // Agregar por grupo
+        const rawByGroup: Record<string, number> = {};
+        Object.entries(rawByCategory).forEach(([cat, pts]) => {
+            const groupName = categoryToGroup[cat];
+            if (!groupName) return;
+            rawByGroup[groupName] = (rawByGroup[groupName] ?? 0) + pts;
+        });
 
-        if (total === 0) return { points: null, error: null };
+        const total = Object.values(rawByGroup).reduce((sum, v) => sum + v, 0);
 
-        const pointsByCategory: { [key: string]: number } = {};
-        for (const [category, value] of Object.entries(rawPoints)) {
-            pointsByCategory[category] = Math.round((value / total) * 100);
-        }
+        // Todos los grupos aparecen aunque tengan 0 puntos
+        const groupPoints: Record<string, number> = {};
+        groups.forEach(g => { groupPoints[g.name] = rawByGroup[g.name] ?? 0; });
 
-        return { points: pointsByCategory, error: null };
+        if (total === 0) return { groupPoints, balance: 0, error: null };
+
+        // Cuota ideal por grupo — cap para que ningún grupo domine
+        const idealShare = total / groups.length;
+        let earnedTotal = 0;
+        const cappedByGroup: Record<string, number> = {};
+        groups.forEach(g => {
+            const capped = Math.min(rawByGroup[g.name] ?? 0, idealShare);
+            cappedByGroup[g.name] = capped;
+            earnedTotal += capped;
+        });
+
+        const balance = Math.round((earnedTotal / total) * 100);
+
+        return { groupPoints: cappedByGroup, balance, error: null };
     }
 
 };

@@ -1,39 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { HabitBoardContext } from "./HabitBoardContext";
-import type { Habit } from "../models/Habit";
-import { RetrieveHabitsService } from "../services/RetrieveHabitsService";
+import type { Habit, HabitFilters } from "../models/Habit";
+import { DEFAULT_HABIT_FILTERS } from "../models/Habit";
+import { filterHabits, RetrieveHabitsService } from "../services/RetrieveHabitsService";
 import type { HabitLog } from "../models/HabitLog";
 import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
+import { ModalFormHabit } from "../components/ModalFormHabit";
+import { DAY_NAMES, toLocalDateString } from "../helpers/daysHelpers";
+
+const getTodayDays = (): string[] => {
+    const today = new Date();
+    const weekday = today.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    const dayName = DAY_NAMES.find(d => d.value === weekday)?.value ?? weekday;
+    return [dayName, today.getDate().toString()];
+};
 
 export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [habits, setHabits] = useState<Habit[]>([]);
+    const [allHabits, setAllHabits] = useState<Habit[]>([]);
+    const [filters, setFilters] = useState<HabitFilters>(DEFAULT_HABIT_FILTERS);
     const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
     const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [selectedDays, setSelectedDays] = useState<string[]>([]);
+    const [selectedDays, setSelectedDays] = useState<string[]>(getTodayDays);
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
+
+    useEffect(() => {
+        RetrieveHabitsService.removeHabitsFromStorage();
+    }, []);
 
     useEffect(() => {
         const fetchHabits = async () => {
+            setIsLoading(true);
             const result = await RetrieveHabitsService.getHabits(selectedDays);
 
             if (result.error) {
                 setError('Error al cargar los hábitos');
+                setIsLoading(false);
                 return;
             }
 
-            setHabits(result.habits);
+            setAllHabits(result.habits);
 
-            const habitLogsResult = await RetrieveHabitLogsService.getHabitLogs(
-                selectedDate.toISOString().split('T')[0]
-            );
+            const habitLogsResult = await RetrieveHabitLogsService.getHabitLogs(toLocalDateString(selectedDate));
 
             if (habitLogsResult.error) {
                 setError('Error al cargar los hábitos');
+                setIsLoading(false);
                 return;
             }
 
             setHabitLogs(habitLogsResult.habitLogs || []);
+            setIsLoading(false);
         };
 
         fetchHabits();
@@ -47,10 +68,26 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     const selectDay = (day: string[], date: Date) => {
-        refreshHabits(true);
         setSelectedDays(day);
         setSelectedDate(date);
     };
 
-    return <HabitBoardContext.Provider value={{habits, habitLogs, error, selectedDate, refreshHabits, selectDay}}>{children}</HabitBoardContext.Provider>;
+    const habits = useMemo(() => filterHabits(allHabits, filters), [allHabits, filters]);
+
+    const openModal = (open: boolean, isEdit: boolean = false, habit?: Habit) => {
+        setIsOpenModal(open);
+        setIsEdit(isEdit);
+        if (habit) {
+            setSelectedHabit(habit);
+        } else {
+            setSelectedHabit(null);
+        }
+    }
+
+    return (
+        <HabitBoardContext.Provider value={{habits, habitLogs, error, isLoading, selectedDate, refreshHabits, selectDay, openModal, filters, setFilters}}>
+            {children}
+            <ModalFormHabit show={isOpenModal} onClose={() => openModal(false)} isEdit={isEdit} habit={selectedHabit} />
+        </HabitBoardContext.Provider>
+    );
 };

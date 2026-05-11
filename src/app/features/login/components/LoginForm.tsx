@@ -58,6 +58,7 @@ export const LoginForm: React.FC = () => {
                 label="Contraseña"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
+                className='bg-white'
                 placeholder="Ingresa tu contraseña"
                 value={password}
                 required

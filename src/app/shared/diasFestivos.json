@@ -1,0 +1,72 @@
+[
+  {
+    "fecha": "01-01-2026",
+    "nombre": "Año Nuevo",
+    "tipo": "España"
+  },
+  {
+    "fecha": "06-01-2026",
+    "nombre": "Epifanía del Señor",
+    "tipo": "España"
+  },
+  {
+    "fecha": "03-04-2026",
+    "nombre": "Viernes Santo",
+    "tipo": "España"
+  },
+  {
+    "fecha": "01-05-2026",
+    "nombre": "Fiesta del Trabajo",
+    "tipo": "España"
+  },
+  {
+    "fecha": "12-10-2026",
+    "nombre": "Fiesta Nacional de España",
+    "tipo": "España"
+  },
+  {
+    "fecha": "01-11-2026",
+    "nombre": "Todos los Santos",
+    "tipo": "España"
+  },
+  {
+    "fecha": "06-12-2026",
+    "nombre": "Día de la Constitución Española",
+    "tipo": "España"
+  },
+  {
+    "fecha": "08-12-2026",
+    "nombre": "Inmaculada Concepción",
+    "tipo": "España"
+  },
+  {
+    "fecha": "25-12-2026",
+    "nombre": "Natividad del Señor",
+    "tipo": "España"
+  },
+  {
+    "fecha": "02-04-2026",
+    "nombre": "Jueves Santo",
+    "tipo": "Comunidad de Madrid"
+  },
+  {
+    "fecha": "02-05-2026",
+    "nombre": "Fiesta de la Comunidad de Madrid",
+    "tipo": "Comunidad de Madrid"
+  },
+  {
+    "fecha": "15-08-2026",
+    "nombre": "Asunción de la Virgen",
+    "tipo": "Comunidad de Madrid"
+  },
+  {
+    "fecha": "02-11-2026",
+    "nombre": "Traslado de Todos los Santos",
+    "tipo": "Comunidad de Madrid"
+  },
+  {
+    "fecha": "07-12-2026",
+    "nombre": "Traslado del Día de la Constitución Española",
+    "tipo": "Comunidad de Madrid"
+  }
+]

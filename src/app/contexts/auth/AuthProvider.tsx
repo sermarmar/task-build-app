@@ -48,6 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('categories'); // Clear cached categories on logout
         sessionStorage.removeItem('status'); // Clear cached statuses on logout
+        sessionStorage.clear();
     };
 
     const value: AuthContextType = {

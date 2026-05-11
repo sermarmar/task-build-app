@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import FrecuencyData from './FrecuencyData.json';
 import { Button } from '../../ux/Button';
-import { Calendar } from '../../ux/Calendar';
+import { CalendarRow } from '../../ux/CalendarRow';
 
 type FrecuencyData = {
     label: string;
@@ -16,13 +16,20 @@ type OptionsWeekly = {
 
 interface FrecuencyDaysProps {
     onChange: (frequency: string, selectedOptions?: string[], selectedDays?: string[]) => void;
+    initialFrequency?: string;
+    initialOptions?: string[];
+    initialDays?: string[];
 }
 
-export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onChange }) => {
+export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onChange, initialFrequency = '', initialOptions = [], initialDays = [] }) => {
     const frequencyDays: FrecuencyData[] = FrecuencyData;
-    const [selectedFrequency, setSelectedFrequency] = useState<string>('');
-    const [selectedOption, setSelectedOption] = useState<OptionsWeekly[]>([] as OptionsWeekly[]);
-    const [selectedDays, setSelectedDays] = useState<string[]>([]);
+    const [selectedFrequency, setSelectedFrequency] = useState<string>(initialFrequency);
+    const [selectedOption, setSelectedOption] = useState<OptionsWeekly[]>(
+        initialFrequency === 'weekly'
+            ? (FrecuencyData as FrecuencyData[]).find(f => f.value === 'weekly')?.options?.filter(o => initialOptions.includes(o.value)) ?? []
+            : []
+    );
+    const [selectedDays, setSelectedDays] = useState<string[]>(initialFrequency === 'monthly' ? initialDays : []);
 
     const handleFrequencyChange = (value: string) => {
         setSelectedFrequency(value);
@@ -90,7 +97,7 @@ export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onChange }) => {
                 </div>
             )}
             {selectedFrequency === 'monthly' && (
-                <Calendar selectedDays={selectedDays} onToggleDay={handleToggleDay} />
+                <CalendarRow selectedDays={selectedDays} onToggleDay={handleToggleDay} />
             )}
         </div>
     );

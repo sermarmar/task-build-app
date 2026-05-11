@@ -44,6 +44,13 @@ export function getDays(from: Date, count = 10, offset = 0): Date[] {
   });
 }
 
+export function toLocalDateString(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 export function isSameDay(a: Date, b: Date): boolean {
   return (
     a.getDate() === b.getDate() &&

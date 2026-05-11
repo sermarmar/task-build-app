@@ -3,7 +3,15 @@ import { CategoryService } from "../../../core/service/categories/CategoryServic
 import type { Category } from "../../../core/models/Category";
 import { Select } from "../../ux/Select";
 
-export const SelectCategory = ({ onChange }: { onChange: (category: Category) => void }) => {
+interface SelectCategoryProps {
+    onChange: (category: Category | null) => void;
+    value?: string;
+    label?: string;
+    showAll?: boolean;
+    className?: string;
+}
+
+export const SelectCategory = ({ onChange, value, label = "Categoría", showAll = false, className }: SelectCategoryProps) => {
 
     const [categories, setCategories] = useState<Category[]>([]);
 
@@ -13,16 +21,21 @@ export const SelectCategory = ({ onChange }: { onChange: (category: Category) =>
         });
     }, []);
 
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (!e.target.value) return onChange(null);
+        const selected = categories.find(c => c.id === e.target.value);
+        if (selected) onChange(selected);
+    };
+
     return (
-        <Select 
-            name="category" 
-            label="Categoría" 
-            list={ categories } 
-            onChange={(e) => {
-                const selected = categories.find(c => c.id === e.target.value);
-                if (selected) onChange(selected);
-            }} 
-            className="mb-4"
+        <Select
+            name="category"
+            label={label}
+            value={value}
+            list={categories}
+            onChange={handleChange}
+            className={className}
+            showAll={showAll}
             getOptionValue={(category: Category) => category.id}
             getOptionLabel={(category: Category) => category.name}
         />

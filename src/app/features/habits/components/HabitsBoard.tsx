@@ -1,38 +1,31 @@
-import { Award, Plus } from "lucide-react";
-import { Button } from "../../../components/ux/Button";
-import { Card, CardBody, CardTitle } from "../../../components/ux/Card"
-import { useState } from "react";
+import { Award } from "lucide-react";
+import { Card, CardBody } from "../../../components/ux/Card"
 import { HabitsCalendar } from "./HabitsCalendar";
-import { ModalCreateHabit } from "./ModalCreateHabit";
-import { HabitBoardProvider } from "../contexts/HabitBoardProvider";
 import { HabitsList } from "./HabitsList";
+import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
+import { TabActionsHabit } from "./TabActionsHabit";
+
+export const HabitsBoardContent: React.FC = () => (
+    <CardBody className="mt-2">
+        <HabitsCalendar />
+        <hr className="invisible my-3" />
+        <HabitsList />
+    </CardBody>
+);
 
 export const HabitsBoard: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { openModal } = useHabitBoardContext();
+
+    const tabTitle = (
+        <div className="flex gap-2 items-center">
+            <Award />
+            Mis hábitos
+        </div>
+    );
 
     return (
-        <HabitBoardProvider>
-            <Card className="h-full flex flex-col">
-                <CardTitle className="flex justify-between items-center">
-                    <div className="flex gap-2 items-center">
-                        <Award />
-                        Mis hábitos
-                    </div>
-                    <Button
-                        type="button"
-                        color="primary"
-                        className="text-sm"
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <Plus />
-                    </Button>
-                </CardTitle>
-                <CardBody className="mt-5">
-                    <HabitsCalendar />
-                    <HabitsList />
-                </CardBody>
-            </Card>
-            <ModalCreateHabit show={isModalOpen} onClose={() => setIsModalOpen(false)} />
-        </ HabitBoardProvider>
+        <Card className="h-full flex flex-col" tabTitle={tabTitle} tabActions={<TabActionsHabit onCreateClick={() => openModal(true)} />}>
+            <HabitsBoardContent />
+        </Card>
     );
 }

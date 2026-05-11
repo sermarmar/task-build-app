@@ -1,19 +1,33 @@
-import type { Category } from "../../../core/models/Category";
-import type { HabitLog } from "./HabitLog";
+export type HabitFrequency = 'daily' | 'weekly' | 'custom';
+
+export interface HabitFilters {
+    text: string;
+    categoryId: string | null;
+}
+
+export const DEFAULT_HABIT_FILTERS: HabitFilters = {
+    text: '',
+    categoryId: null,
+};
 
 export interface Habit {
-    id?: string;
-    user_id?: string;
+    id: string;
+    user_id: string;
     title: string;
-    description?: string;
-    category_id?: string | null;
-    categories?: Category | Category[] | null;
+    description: string | null;
+    category_id: string | null;
     points: number;
-    frequency: string;
-    custom_days?: string[];
-    current_streak?: number;
+    frequency: HabitFrequency;
+    custom_days: string[] | null;
+    current_streak: number;
     is_active: boolean;
-    created_at?: Date;
-    updated_at?: Date;
-    habit_logs?: HabitLog[];
+    categories?: {
+        id: string;
+        name: string;
+        icon: string;
+        group?: {
+            name: string;
+            color: string;
+        } | null;
+    } | null;
 }
