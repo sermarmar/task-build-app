@@ -6,16 +6,19 @@ import { CategoryService } from "../../../core/service/categories/CategoryServic
 export const useCategoryBoard = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [error, setError] = useState<ErrorMessage | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     useEffect(() => {
         const fetchCategories = async () => {
+            setIsLoading(true);
             const result = await CategoryService.getAllCategories();
             if (result.error) {
                 setError(result.error);
             } else {
                 setCategories(result.categories ?? []);
             }
+            setIsLoading(false);
         };
 
         fetchCategories();
@@ -26,5 +29,5 @@ export const useCategoryBoard = () => {
         setRefreshTrigger(prev => prev + 1);
     };
 
-    return { categories, error, refreshCategories };
+    return { categories, error, isLoading, refreshCategories };
 };

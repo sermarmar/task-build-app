@@ -5,6 +5,7 @@ import type { ErrorMessage } from "../../../shared/Error";
 interface CategoryBoardContextType {
     categories: Category[];
     error: ErrorMessage | null;
+    isLoading: boolean;
     refreshCategories: () => void;
 }
 

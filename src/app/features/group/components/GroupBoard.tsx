@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Skeleton, SkeletonLine } from "@/app/components/ux/Skeleton";
 import { Card, CardBody, CardTitle } from "@/app/components/ux/Card";
 import { DynamicIcon } from "@/app/components/ux/DynamicIcon";
 import { ColorPicker } from "@/app/components/template/ColorPicker";
@@ -13,8 +14,26 @@ const hexToRgba = (hex: string, alpha: number) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
+const GroupCardSkeleton: React.FC = () => (
+    <div className="p-4 rounded-md border-l-5 border-primary-100 flex items-center justify-between">
+        <div className="flex-1 flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+                <Skeleton className="w-3 h-3 rounded-full shrink-0" />
+                <SkeletonLine className="w-1/3" />
+            </div>
+            <div className="flex gap-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                    <Skeleton key={i} className="w-7 h-7 rounded-full" />
+                ))}
+            </div>
+        </div>
+        <Skeleton className="w-5 h-5 rounded shrink-0" />
+    </div>
+);
+
 export const GroupBoard: React.FC = () => {
     const [groups, setGroups] = useState<Group[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [openGroupId, setOpenGroupId] = useState<string | null>(null);
     const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -22,6 +41,7 @@ export const GroupBoard: React.FC = () => {
         GroupService.getAllGroups().then(({ groups, error }) => {
             if (error) return;
             setGroups(groups ?? []);
+            setIsLoading(false);
         });
     }, []);
 
@@ -46,7 +66,11 @@ export const GroupBoard: React.FC = () => {
         <Card className="w-full">
             <CardTitle className="mb-5">Grupos</CardTitle>
             <CardBody>
-                {groups.length === 0 ? (
+                {isLoading ? (
+                    <div className="grid grid-cols-3 gap-4 w-full">
+                        {Array.from({ length: 3 }).map((_, i) => <GroupCardSkeleton key={i} />)}
+                    </div>
+                ) : groups.length === 0 ? (
                     <p>No hay grupos disponibles.</p>
                 ) : (
                     <div className="grid grid-cols-3 gap-4 w-full">

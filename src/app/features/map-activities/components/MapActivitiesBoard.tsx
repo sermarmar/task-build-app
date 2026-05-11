@@ -6,6 +6,7 @@ import type { ActivityGrid } from '../models/MapActivity';
 import { Card } from '@/app/components/ux/Card';
 import { ActivityCell } from './ActivityCell';
 import { Legend } from './Legend';
+import { Skeleton, SkeletonLine } from '@/app/components/ux/Skeleton';
 
 const cn = (...inputs: Parameters<typeof clsx>) => twMerge(clsx(inputs));
 
@@ -24,9 +25,28 @@ export const MapActivitiesBoard: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-32">
-                <div className="w-5 h-5 rounded-full border-2 border-primary-400 border-t-transparent animate-spin" />
-            </div>
+            <Card className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                    <SkeletonLine className="w-40" />
+                    <Skeleton className="w-24 h-4 rounded" />
+                </div>
+                <div className="flex gap-1">
+                    <div className="flex flex-col gap-1 pt-5 pr-1">
+                        {Array.from({ length: 7 }).map((_, i) => (
+                            <Skeleton key={i} className="w-6 h-3 rounded" />
+                        ))}
+                    </div>
+                    <div className="flex gap-1">
+                        {Array.from({ length: 26 }).map((_, wi) => (
+                            <div key={wi} className="flex flex-col gap-1 pt-5">
+                                {Array.from({ length: 7 }).map((_, di) => (
+                                    <Skeleton key={di} className="w-3 h-3 rounded-sm" />
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </Card>
         );
     }
 
