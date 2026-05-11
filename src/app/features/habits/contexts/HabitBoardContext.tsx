@@ -6,6 +6,7 @@ export interface HabitBoardContextType {
     habits: Habit[];
     habitLogs: HabitLog[];
     error: string;
+    isLoading: boolean;
     selectedDate: Date;
     selectDay: (day: string[], date: Date) => void;
     refreshHabits: (cleanStorage?: boolean) => void;

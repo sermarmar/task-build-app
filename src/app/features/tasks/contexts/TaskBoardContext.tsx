@@ -5,6 +5,7 @@ import type { ErrorMessage } from "../../../shared/Error";
 interface TaskBoardContextType {
     tasks: Task[];
     error: ErrorMessage | null;
+    isLoading: boolean;
     refreshTasks: (cleanStorage?: boolean) => void;
     openEditModal: (task: Task) => void;
     closeEditModal: () => void;

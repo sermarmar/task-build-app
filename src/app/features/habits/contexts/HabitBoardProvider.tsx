@@ -20,6 +20,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const [filters, setFilters] = useState<HabitFilters>(DEFAULT_HABIT_FILTERS);
     const [habitLogs, setHabitLogs] = useState<HabitLog[]>([]);
     const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [selectedDays, setSelectedDays] = useState<string[]>(getTodayDays);
@@ -33,10 +34,12 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     useEffect(() => {
         const fetchHabits = async () => {
+            setIsLoading(true);
             const result = await RetrieveHabitsService.getHabits(selectedDays);
 
             if (result.error) {
                 setError('Error al cargar los hábitos');
+                setIsLoading(false);
                 return;
             }
 
@@ -46,10 +49,12 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
             if (habitLogsResult.error) {
                 setError('Error al cargar los hábitos');
+                setIsLoading(false);
                 return;
             }
 
             setHabitLogs(habitLogsResult.habitLogs || []);
+            setIsLoading(false);
         };
 
         fetchHabits();
@@ -80,7 +85,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
 
     return (
-        <HabitBoardContext.Provider value={{habits, habitLogs, error, selectedDate, refreshHabits, selectDay, openModal, filters, setFilters}}>
+        <HabitBoardContext.Provider value={{habits, habitLogs, error, isLoading, selectedDate, refreshHabits, selectDay, openModal, filters, setFilters}}>
             {children}
             <ModalFormHabit show={isOpenModal} onClose={() => openModal(false)} isEdit={isEdit} habit={selectedHabit} />
         </HabitBoardContext.Provider>

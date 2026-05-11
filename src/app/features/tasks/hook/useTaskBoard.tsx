@@ -7,18 +7,21 @@ import type { ErrorMessage } from "../../../shared/Error";
 export const useTaskBoard = () => {
     const [allTasks, setAllTasks] = useState<Task[]>([]);
     const [error, setError] = useState<ErrorMessage | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [filters, setFilters] = useState<TaskFilters>(DEFAULT_TASK_FILTERS);
 
     useEffect(() => {
         const fetchTasks = async () => {
+            setIsLoading(true);
             const result = await RetrieveTaskService().getTasks(false);
             if (result.error) {
                 setError(result.error);
             } else {
                 setAllTasks(result.tasks);
             }
+            setIsLoading(false);
         };
 
         fetchTasks();
@@ -36,5 +39,5 @@ export const useTaskBoard = () => {
     const openEditModal = (task: Task) => setEditingTask(task);
     const closeEditModal = () => setEditingTask(null);
 
-    return { tasks, error, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
+    return { tasks, error, isLoading, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
 };

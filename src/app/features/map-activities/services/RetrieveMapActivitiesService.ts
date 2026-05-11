@@ -12,7 +12,10 @@ function toLevel(count: number): DayActivity['level'] {
 }
 
 function toDateStr(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
 }
 
 export const RetrieveMapActivitiesService = {
@@ -29,9 +32,15 @@ export const RetrieveMapActivitiesService = {
 
         const endDate = today;
 
+        // tasks.completed_at is a TIMESTAMPTZ — '2026-05-11' is cast to '2026-05-11 00:00:00 UTC'
+        // by PostgreSQL, so lte would exclude tasks completed later that day. Pass tomorrow so
+        // all of today's timestamps are included.
+        const taskQueryEnd = new Date(today);
+        taskQueryEnd.setDate(today.getDate() + 1);
+
         const [habitsResult, tasksResult] = await Promise.all([
             MapActivitiesRepository.getHabitLogsByDateRange(toDateStr(startDate), toDateStr(endDate)),
-            MapActivitiesRepository.getCompletedTasksByDateRange(toDateStr(startDate), toDateStr(endDate)),
+            MapActivitiesRepository.getCompletedTasksByDateRange(toDateStr(startDate), toDateStr(taskQueryEnd)),
         ]);
 
         if (habitsResult.error || tasksResult.error) {
