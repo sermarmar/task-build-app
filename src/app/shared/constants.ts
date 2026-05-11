@@ -1,3 +1,4 @@
+import { DayActivity } from "../features/map-activities/models/MapActivity";
 
 /* ─── Constants ──────────────────────────────────────────────────────────── */
 export const MODES = {
@@ -40,3 +41,11 @@ export const TEXT_COLORS = [
     { hex: "#b57be8", label: "Violeta"  },
     { hex: "#e84fa3", label: "Rosa"     },
 ];
+
+export const LEVEL_CLASSES: Record<DayActivity['level'], string> = {
+    0: 'bg-tertiary-500/20',
+    1: 'bg-tertiary-300',
+    2: 'bg-secondary-300',
+    3: 'bg-primary-700',
+    4: 'bg-primary-900',
+};
