@@ -12,6 +12,7 @@ export interface TaskEntity {
     priority?: Priority;
     created_at?: string;
     updated_at?: string;
+    completed_at?: string | null;
     categories?: Category;
     statuses?: Status;
 }

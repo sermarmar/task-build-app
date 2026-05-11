@@ -33,8 +33,8 @@ export const TaskRepository = {
             .from('tasks')
             .select(TASK_SELECT)
             .eq('status_id', 5)
-            .gte('updated_at', firstDay)
-            .lte('updated_at', lastDay);
+            .gte('completed_at', firstDay)
+            .lte('completed_at', lastDay);
 
         if (error) return { data: null, error: { message: 'No se pudieron obtener las tareas' } };
         return { data, error: null };
@@ -52,9 +52,11 @@ export const TaskRepository = {
     },
 
     updateByStatus: async (taskId: string, statusId: number): Promise<{ data: TaskEntity | null; error: ErrorMessage | null }> => {
+        const completed_at = statusId === 5 ? new Date().toISOString() : null;
+
         const { data, error } = await supabase
             .from('tasks')
-            .update({ status_id: statusId })
+            .update({ status_id: statusId, completed_at })
             .eq('id', taskId)
             .select(TASK_SELECT)
             .single();

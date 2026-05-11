@@ -19,8 +19,9 @@ export const HabitsBoard: React.FC = () => {
 
     return (
         <Card className="h-full flex flex-col" tabTitle={tabTitle} tabActions={tabActions}>
-            <CardBody className="mt-5">
+            <CardBody className="mt-2">
                 <HabitsCalendar />
+                <hr className="invisible my-3"/>
                 <HabitsList />
             </CardBody>
         </Card>

@@ -1,4 +1,5 @@
-import { Card, CardBody } from "../../../components/ux/Card";
+import { Card } from "../../../components/ux/Card";
+import { ScrollFadeContainer } from "../../../components/ux/ScrollFadeContainer";
 import { Calendar } from "../../../components/template/calendar/Calendar";
 import { HabitsList } from "../../habits/components/HabitsList";
 import { useHabitBoardContext } from "../../habits/contexts/useHabitBoardContext";
@@ -14,12 +15,17 @@ export const CalendarBoard: React.FC = () => {
     };
 
     return (
-        <Card color="bg-primary-950 text-tertiary-50" className="h-full overflow-y-auto">
-            <Calendar selectDate={handleSelectDate} />
-            <hr className="border-tertiary-50 border rounded-full my-6" />
-            <CardBody>
+        <Card color="bg-primary-950 text-tertiary-50" className="h-full flex flex-col overflow-hidden">
+            <div className="shrink-0">
+                <Calendar selectDate={handleSelectDate} />
+                <hr className="border-tertiary-50 border rounded-full my-6" />
+            </div>
+            <ScrollFadeContainer
+                className="flex-1 min-h-0"
+                fadeColor="var(--color-primary-950)"
+            >
                 <HabitsList showButton={false}/>
-            </CardBody>
+            </ScrollFadeContainer>
         </Card>
     );
 };

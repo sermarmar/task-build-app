@@ -14,16 +14,16 @@ export const TabActionsTask: React.FC<TabActionsTaskProps> = ({ onCreateClick })
 
     return (
         <div className="flex gap-2 items-center">
+            <BadgeStatusDynamic
+                showAll
+                onChange={status => setFilters(prev => ({ ...prev, statusId: status?.id ?? null }))}
+            />
             <Input
                 name="Buscar"
                 type="text"
                 size="sm"
                 placeholder="Buscar tareas..."
                 onChange={e => setFilters(prev => ({ ...prev, text: e.target.value }))}
-            />
-            <BadgeStatusDynamic
-                showAll
-                onChange={status => setFilters(prev => ({ ...prev, statusId: status?.id ?? null }))}
             />
             <IconsList
                 size="sm"

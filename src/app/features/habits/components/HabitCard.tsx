@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Habit } from "../models/Habit";
 import { useHabitBoardContext } from "../contexts/useHabitBoardContext";
+import { toLocalDateString } from "../helpers/daysHelpers";
 import { CompleteHabitService } from "../services/CompleteHabitService";
 import { DeleteHabitService } from "../services/DeleteHabitService";
 import { Checkbox } from "../../../components/ux/Checkbox";
@@ -25,7 +26,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted, showBu
 
     const handleHabitCompleted = (isChecked: boolean) => {
         setChecked(isChecked);
-        CompleteHabitService.execute(habit.id!, selectedDate.toISOString().split('T')[0], isChecked);
+        CompleteHabitService.execute(habit.id!, toLocalDateString(selectedDate), isChecked);
     }
 
     const handleDelete = async () => {

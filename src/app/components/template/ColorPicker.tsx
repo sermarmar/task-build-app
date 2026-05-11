@@ -282,7 +282,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             {/* Hex input + copy button */}
             <div className="flex items-center gap-2 mb-3">
                 <div
-                className="w-8 h-8 rounded-md border border-border flex-shrink-0 transition-colors duration-150"
+                className="w-8 h-8 rounded-md border border-border shrink-0 transition-colors duration-150"
                 style={{ background: currentHex }}
                 />
                 <input
@@ -295,7 +295,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 {showCopyButton && (
                 <button
                     onClick={handleCopy}
-                    className="h-9 px-3 text-sm rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring flex-shrink-0"
+                    className="h-9 px-3 text-sm rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
                 >
                     {copyLabel}
                 </button>
@@ -327,7 +327,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         {/* Toast */}
         <div
             className={cn(
-            "absolute bottom-[-48px] left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-4 py-1.5 text-sm whitespace-nowrap pointer-events-none transition-all duration-200",
+            "absolute bottom-12 left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-4 py-1.5 text-sm whitespace-nowrap pointer-events-none transition-all duration-200",
             toastVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
             )}
             style={{ transform: `translateX(-50%) translateY(${toastVisible ? "0" : "8px"})` }}

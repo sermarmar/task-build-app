@@ -8,6 +8,7 @@ import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider"
 import { HabitsListToday } from "../features/habits/components/HabitsListToday";
 import { MentalHealthBoard } from "../features/mental_healtth/components/MentalHealthBoard";
 import { Pomodoro } from "../features/pomodoro/components/Pomodoro";
+import { MapActivitiesBoard } from "../features/map-activities/components/MapActivitiesBoard";
 
 
 export const DashboardPage: React.FC = () => {
@@ -62,9 +63,7 @@ export const DashboardPage: React.FC = () => {
                 <MentalHealthBoard />
             </div>
             <div className="col-span-3 row-span-2 row-start-4">
-                <Card className="h-full">
-                    <h2 className="text-sm">Mapa de actividad en desarrollo...</h2>
-                </Card>
+                <MapActivitiesBoard />
             </div>
         </div>
     );
