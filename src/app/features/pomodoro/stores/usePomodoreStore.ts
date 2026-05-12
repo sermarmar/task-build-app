@@ -29,6 +29,7 @@ interface PomodoroState {
     setMode: (m: Mode) => void;
     setStartedAt: (t: number | null) => void;
     reset: (mode: Mode) => void;
+    resetCycle: () => void;
     tick: () => void;
 }
 
@@ -56,6 +57,16 @@ export const usePomodoroStore = create<PomodoroState>()(
                 seconds: 0,
                 isActive: false,
                 startedAt: null,
+            }),
+            resetCycle: () => set({
+                minutes: MINUTES.work,
+                seconds: 0,
+                isActive: false,
+                mode: 'work',
+                startedAt: null,
+                completedWork: 0,
+                completedShortBreaks: 0,
+                completedLongBreaks: 0,
             }),
 
             tick: () => {

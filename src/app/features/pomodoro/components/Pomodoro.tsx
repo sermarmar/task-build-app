@@ -1,4 +1,4 @@
-import { Bed, GlassWater, Laptop, Pause, Play, RotateCcw, Timer } from "lucide-react";
+import { Bed, GlassWater, Laptop, Pause, Play, RefreshCcw, RotateCcw, Timer } from "lucide-react";
 import React, { useEffect, useCallback } from "react";
 import { usePomodoroStore } from "../stores/usePomodoreStore";
 import { Card } from "@/app/components/ux/Card";
@@ -40,7 +40,7 @@ export const Pomodoro: React.FC = () => {
         minutes, seconds, isActive, mode,
         completedWork, completedShortBreaks, completedLongBreaks,
         startedAt,
-        setMinutes, setSeconds, setIsActive, setMode, setStartedAt, reset
+        setMinutes, setSeconds, setIsActive, setMode, setStartedAt, reset, resetCycle
     } = usePomodoroStore();
 
     const getTotalSeconds = useCallback((m: ModeType) => {
@@ -121,9 +121,15 @@ export const Pomodoro: React.FC = () => {
         </div>
     )
 
+    const tabActions = (
+        <Button type="button" color="tertiary" form="pill" size="sm" onClick={resetCycle}>
+            <RefreshCcw size={18}/>
+        </Button>
+    )
+
     return (
         <>
-            <Card tabTitle={tabTitle} className="flex flex-col gap-4 overflow-hidden">
+            <Card tabTitle={tabTitle} tabActions={tabActions} className="flex flex-col gap-4 overflow-hidden">
                 <div className="flex items-center justify-center gap-20 flex-1 min-h-0">
                     <div className="flex flex-col gap-5">
                         <ButtonWithIcon
