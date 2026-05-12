@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Check, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Minus, X } from "lucide-react";
 import { Card, CardTitle } from "../../../components/ux/Card";
 import { Input } from "../../../components/ux/Input";
 import { TextareaDynamic } from "../../../components/ux/TextareaDynamic";
@@ -16,6 +16,9 @@ import { StatusService } from "../../../core/service/status/StatusService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
 import type { Task } from "../models/Task";
+import { PRIORITY_LEVELS } from "../models/Priority";
+import type { PriorityLevel } from "../models/Priority";
+import { twMerge } from "tailwind-merge";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -31,11 +34,18 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
     const { refreshTasks } = useTaskBoardContext();
 
     const { register, handleSubmit, control, setValue, reset, watch, formState: { errors } } = useForm<TaskResponse>({
-        defaultValues: { title: '', description: '', points: 0, category_id: '', status_id: undefined }
+        defaultValues: { title: '', description: '', points: 0, category_id: '', status_id: undefined, priority: undefined }
     });
 
     const watchedCategoryId = watch('category_id');
     const watchedStatusId = watch('status_id');
+    const watchedPriority = watch('priority');
+
+    const PRIORITY_ICONS: Record<PriorityLevel, React.ReactElement> = {
+        low:    <ArrowDown size={14} />,
+        medium: <Minus size={14} />,
+        high:   <ArrowUp size={14} />,
+    };
 
     useEffect(() => {
         if (!show) {
@@ -52,6 +62,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
                 points: task.points,
                 category_id: task.category?.id ?? '',
                 status_id: task.status?.id,
+                priority: task.priority?.id,
             });
             return;
         }
@@ -144,6 +155,29 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
                             {errors.points && (
                                 <span className="text-red-500 text-sm">{errors.points.message}</span>
                             )}
+                        </div>
+
+                        <div className="mb-4">
+                            <p className="text-xs font-medium text-gray-500 mb-1.5">Prioridad</p>
+                            <div className="flex gap-2">
+                                {PRIORITY_LEVELS.map((p) => (
+                                    <button
+                                        key={p.id}
+                                        type="button"
+                                        onClick={() => setValue('priority', watchedPriority === p.id ? undefined : p.id)}
+                                        className={twMerge(
+                                            'flex items-center gap-1 px-2.5 py-1 rounded-md border text-xs font-medium transition-all cursor-pointer',
+                                            watchedPriority === p.id
+                                                ? 'text-white border-transparent'
+                                                : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                                        )}
+                                        style={watchedPriority === p.id ? { backgroundColor: p.color } : {}}
+                                    >
+                                        {PRIORITY_ICONS[p.id]}
+                                        {p.name}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
                         <SelectCategory

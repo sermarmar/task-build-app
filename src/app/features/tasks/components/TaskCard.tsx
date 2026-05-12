@@ -1,4 +1,5 @@
-import { Check, Pencil, Trash2, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, Minus, Pencil, Trash2, X } from 'lucide-react';
+import type { PriorityLevel } from '../models/Priority';
 import { DynamicIcon } from '../../../components/ux/DynamicIcon';
 import { useColorAlpha } from '../../../hooks/useColorAlpha';
 import { DeleteTaskService } from '../services/DeleteTaskService';
@@ -11,6 +12,12 @@ import { CSS } from '@dnd-kit/utilities';
 interface TaskCardProps {
     task: Task;
 }
+
+const PRIORITY_ICONS: Record<PriorityLevel, React.ReactElement> = {
+    low:    <ArrowDown size={14} />,
+    medium: <Minus size={14} />,
+    high:   <ArrowUp size={14} />,
+};
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     const color = task.category?.group?.color ?? '#6b7280';
@@ -53,6 +60,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
+                    {task.priority && (
+                        <span style={{ color: task.priority.color }}>
+                            {PRIORITY_ICONS[task.priority.id]}
+                        </span>
+                    )}
                     <button
                         className="text-secondary-700 cursor-pointer hover:text-secondary-500 transition-colors"
                         onClick={() => openEditModal(task)}
