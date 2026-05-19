@@ -17,7 +17,7 @@ export const HabitsListToday: React.FC = () => {
     const tabTitle = (
         <div className="flex gap-2">
             <Award />
-            Hábitos para hoy
+            Hábitos de hoy
         </div>
     );
 
