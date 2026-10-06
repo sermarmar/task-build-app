@@ -1,9 +1,11 @@
 import { supabase } from "../../../../config/Database";
 import type { Group } from "../../../features/group/models/Group";
+import { USE_MOCKS } from '@/config/env';
+import { GroupMockService } from '@/app/infra/mocks/services/GroupMockService';
 
 const CACHE_KEY = 'groups';
 
-export const GroupService = {
+const GroupSupabaseService = {
 
     getAllGroups: async (): Promise<{ groups: Group[] | null; error: { message: string } | null }> => {
         const cached = sessionStorage.getItem(CACHE_KEY);
@@ -86,3 +88,5 @@ export const GroupService = {
     },
 
 };
+
+export const GroupService: typeof GroupSupabaseService = USE_MOCKS ? GroupMockService : GroupSupabaseService;

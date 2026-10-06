@@ -3,8 +3,10 @@ import type { ErrorMessage } from "../../../shared/Error";
 import type { Category } from "../../models/Category";
 import type { CategoryRequest } from "../../../features/category/resources/CategoryRequest";
 import { GroupService } from "../groups/GroupService";
+import { USE_MOCKS } from '@/config/env';
+import { CategoryMockService } from '@/app/infra/mocks/services/CategoryMockService';
 
-export const CategoryService = {
+const CategorySupabaseService = {
 
     getAllCategories: async (): Promise<{ categories: Category[] | null, error: ErrorMessage | null }> => {
         
@@ -103,3 +105,5 @@ export const CategoryService = {
     
 
 }
+
+export const CategoryService: typeof CategorySupabaseService = USE_MOCKS ? CategoryMockService : CategorySupabaseService;

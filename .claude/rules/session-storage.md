@@ -45,6 +45,7 @@ Usa `removeItem` en update solo si el cambio afecta a relaciones embebidas que n
 | `status`           | `StatusService`          | Array de `Status`                  |
 | `tasks`            | `RetrieveTaskService`    | Array de `Task`                    |
 | `user`             | `AuthProvider`           | Objeto `User` de sesión            |
+| `mock_db`          | `infra/mocks/mockDb`     | BD en memoria (solo con `VITE_USE_MOCKS`) |
 
 ## Caché entre entidades relacionadas
 

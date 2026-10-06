@@ -3,8 +3,10 @@ import type { Habit } from "../../features/habits/models/Habit";
 import type { HabitEntity } from "../entities/HabitEntity";
 import { HabitFactory } from "../../features/habits/services/factory/HabitFactory";
 import type { ErrorMessage } from "../../shared/Error";
+import { USE_MOCKS } from '@/config/env';
+import { HabitMockRepository } from '@/app/infra/mocks/repositories/HabitMockRepository';
 
-export const HabitRepository = {
+const HabitSupabaseRepository = {
 
     getHabitsByDays: async (days?: string[]): Promise<{ habits: Habit[]; error: ErrorMessage | null }> => {
         let query = supabase
@@ -67,3 +69,5 @@ export const HabitRepository = {
     },
 
 }
+
+export const HabitRepository: typeof HabitSupabaseRepository = USE_MOCKS ? HabitMockRepository : HabitSupabaseRepository;
