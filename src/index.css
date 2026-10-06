@@ -1,67 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Quicksand:wght@300..700&display=swap');
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Quicksand:wght@300..700&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 @theme {
-    --color-text-DEFAULT: #00363d;
-    
-    --color-primary-50: #ecfffd;
-    --color-primary-100: #bdfffa;
-    --color-primary-200: #7bfff8;
-    --color-primary-300: #31fffc;
-    --color-primary-400: #00fbff;
-    --color-primary-500: #00e5ed;
-    --color-primary-600: #00b5bf;
-    --color-primary-700: #008d97;
-    --color-primary-800: #006e77;
-    --color-primary-900: #00575e;
-    --color-primary-950: #00363d;
+    --color-text-DEFAULT: #3d3649;
 
-    --color-secondary-50: #f0f9f4;
-    --color-secondary-100: #daf1e3;
-    --color-secondary-200: #b8e2cb;
-    --color-secondary-300: #88cdac;
-    --color-secondary-400: #61b590;
-    --color-secondary-500: #35946d;
-    --color-secondary-600: #257657;
-    --color-secondary-700: #1d5f47;
-    --color-secondary-800: #194c3a;
-    --color-secondary-900: #163e30;
-    --color-secondary-950: #0b231b;
+    /* Tinta ciruela: textos, botones oscuros */
+    --color-primary-50: #f7f5f9;
+    --color-primary-100: #eeeaf2;
+    --color-primary-200: #ddd6e5;
+    --color-primary-300: #c4bad0;
+    --color-primary-400: #a597b5;
+    --color-primary-500: #887a9a;
+    --color-primary-600: #6f6382;
+    --color-primary-700: #5c526d;
+    --color-primary-800: #4f475e;
+    --color-primary-900: #453e52;
+    --color-primary-950: #2e2938;
 
-    --color-tertiary-50: #fafde8;
-    --color-tertiary-100: #f1f9ce;
-    --color-tertiary-200: #e0f297;
-    --color-tertiary-300: #cee96d;
-    --color-tertiary-400: #b8db40;
-    --color-tertiary-500: #9ac121;
-    --color-tertiary-600: #779a16;
-    --color-tertiary-700: #5a7516;
-    --color-tertiary-800: #495d17;
-    --color-tertiary-900: #3e4f18;
-    --color-tertiary-950: #202c07;
+    /* Azul polvo */
+    --color-secondary-50: #f3f7fc;
+    --color-secondary-100: #e5eef8;
+    --color-secondary-200: #cfdff1;
+    --color-secondary-300: #b3cbe7;
+    --color-secondary-400: #93b2da;
+    --color-secondary-500: #7698cb;
+    --color-secondary-600: #5f7fb9;
+    --color-secondary-700: #516ca3;
+    --color-secondary-800: #465a85;
+    --color-secondary-900: #3d4d6b;
+    --color-secondary-950: #283246;
 
-    --color-accent-blossom-50: #fcf4f6;
-    --color-accent-blossom-100: #f9eaed;
-    --color-accent-blossom-200: #f3d8df;
-    --color-accent-blossom-300: #e6adbb;
-    --color-accent-blossom-400: #dc90a4;
-    --color-accent-blossom-500: #cc6785;
-    --color-accent-blossom-600: #b6486e;
-    --color-accent-blossom-700: #98385b;
-    --color-accent-blossom-800: #803150;
-    --color-accent-blossom-900: #6e2d49;
-    --color-accent-blossom-950: #3c1525;
+    /* Melocotón: acento principal */
+    --color-tertiary-50: #fdf6f3;
+    --color-tertiary-100: #fbebe5;
+    --color-tertiary-200: #f7d6cb;
+    --color-tertiary-300: #f0b9a7;
+    --color-tertiary-400: #e9a08b;
+    --color-tertiary-500: #df8269;
+    --color-tertiary-600: #cc674d;
+    --color-tertiary-700: #ab523d;
+    --color-tertiary-800: #8d4637;
+    --color-tertiary-900: #753e32;
+    --color-tertiary-950: #3f1e17;
 
-    --color-background-DEFAULT: #eceee6;
-    --font-sans: 'Quicksand', sans-serif, 'Nunito', sans-serif, 'SN Pro', sans-serif;
+    /* Rosa empolvado */
+    --color-accent-blossom-50: #fcf5f6;
+    --color-accent-blossom-100: #f9eaec;
+    --color-accent-blossom-200: #f2d4d8;
+    --color-accent-blossom-300: #e7b9be;
+    --color-accent-blossom-400: #d9969e;
+    --color-accent-blossom-500: #c8747f;
+    --color-accent-blossom-600: #b25a67;
+    --color-accent-blossom-700: #964855;
+    --color-accent-blossom-800: #7d3f4a;
+    --color-accent-blossom-900: #6b3842;
+    --color-accent-blossom-950: #3b1b21;
+
+    --color-cream-50: #fdfaf5;
+    --color-cream-100: #f9f1e5;
+    --color-cream-200: #f3e2cc;
+    --color-cream-300: #ead0ad;
+    --color-cream-400: #dfb886;
+
+    --color-lilac-100: #efe9f5;
+    --color-lilac-200: #e0d5ec;
+    --color-lilac-300: #c9b8da;
+    --color-lilac-400: #b09cc8;
+    --color-lilac-500: #9580b5;
+
+    --color-surface: #fbf8f5;
+    --color-background-DEFAULT: #f2ece9;
+
+    --shadow-clay: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 22px 44px -24px rgb(120 90 100 / 0.38), 0 8px 18px -10px rgb(120 90 100 / 0.16);
+    --shadow-clay-sm: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 10px 20px -12px rgb(120 90 100 / 0.4);
+    --shadow-clay-inset: inset 3px 3px 8px rgb(150 120 130 / 0.16), inset -3px -3px 8px rgb(255 255 255 / 0.85);
+    --shadow-clay-pressed: inset 0 2px 0 rgb(255 255 255 / 0.35), inset 0 -3px 0 rgb(0 0 0 / 0.08), 0 10px 18px -10px rgb(90 60 70 / 0.45);
+
+    --font-sans: 'Nunito', 'Quicksand', sans-serif;
+    --font-heading: 'Quicksand', 'Nunito', sans-serif;
     --font-mono: 'SF Mono', monospace;
-    --font-heading: 'Quicksand', sans-serif, 'Nunito', sans-serif, 'SN Pro', sans-serif;
 }
 
 @layer base {
-  body {
-    @apply min-h-screen bg-background-DEFAULT text-text-DEFAULT;
-  }
+    body {
+        @apply min-h-screen text-text-DEFAULT font-sans antialiased;
+        background-color: var(--color-background-DEFAULT);
+        background-image:
+            radial-gradient(60rem 40rem at 5% -10%, rgb(240 185 167 / 0.35), transparent 60%),
+            radial-gradient(50rem 40rem at 100% 0%, rgb(201 184 218 / 0.35), transparent 60%),
+            radial-gradient(60rem 50rem at 85% 110%, rgb(179 203 231 / 0.4), transparent 60%);
+        background-attachment: fixed;
+    }
 }
 
 @keyframes notification-in {
@@ -84,5 +113,19 @@
 
 @utility scrollbar-primary {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-primary-900) transparent;
+    scrollbar-color: var(--color-primary-200) transparent;
+}
+
+/* Esfera 3D: el brillo arriba-izquierda da el volumen del UI kit */
+@utility clay-knob {
+    background: radial-gradient(circle at 32% 28%, #ffffff 0%, #fbf8f5 45%, #eee5df 100%);
+    box-shadow: inset -4px -6px 12px rgb(170 140 140 / 0.18), inset 3px 3px 6px rgb(255 255 255 / 0.9), 0 10px 20px -10px rgb(120 90 100 / 0.45);
+}
+
+@utility clay-peach {
+    background: linear-gradient(160deg, var(--color-tertiary-300) 0%, var(--color-tertiary-500) 100%);
+}
+
+@utility clay-blue {
+    background: linear-gradient(160deg, var(--color-secondary-200) 0%, var(--color-secondary-400) 100%);
 }

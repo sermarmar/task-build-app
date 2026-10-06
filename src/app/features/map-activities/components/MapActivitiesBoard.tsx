@@ -1,31 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { RetrieveMapActivitiesService } from '../services/RetrieveMapActivitiesService';
+import { CalendarRange } from 'lucide-react';
+import { cn } from '@/utils/cn';
 import type { ActivityGrid } from '../models/MapActivity';
 import { Card } from '@/app/components/ux/Card';
 import { ActivityCell } from './ActivityCell';
 import { Legend } from './Legend';
-import { Skeleton, SkeletonLine } from '@/app/components/ux/Skeleton';
-
-const cn = (...inputs: Parameters<typeof clsx>) => twMerge(clsx(inputs));
+import { Skeleton } from '@/app/components/ux/Skeleton';
 
 const DAYS_ES = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const MAX_SCALE = 1.5;
 
-export const MapActivitiesBoard: React.FC = () => {
-    const [grid, setGrid] = useState<ActivityGrid | null>(null);
-    const [loading, setLoading] = useState(true);
+interface MapActivitiesBoardProps {
+    grid: ActivityGrid | null;
+    loading: boolean;
+}
+
+export const MapActivitiesBoard: React.FC<MapActivitiesBoardProps> = ({ grid, loading }) => {
     const [scale, setScale] = useState(1);
     const [gridNaturalHeight, setGridNaturalHeight] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        RetrieveMapActivitiesService.getActivityGrid().then(({ grid }) => {
-            setGrid(grid);
-            setLoading(false);
-        });
-    }, []);
 
     useEffect(() => {
         if (!grid || !containerRef.current || !gridRef.current) return;
@@ -33,10 +27,8 @@ export const MapActivitiesBoard: React.FC = () => {
         const update = () => {
             const containerWidth = containerRef.current!.offsetWidth;
             const gridWidth = gridRef.current!.scrollWidth;
-            const naturalHeight = gridRef.current!.offsetHeight;
-            const newScale = gridWidth > containerWidth ? containerWidth / gridWidth : 1;
-            setScale(newScale);
-            setGridNaturalHeight(naturalHeight);
+            setScale(Math.min(containerWidth / gridWidth, MAX_SCALE));
+            setGridNaturalHeight(gridRef.current!.offsetHeight);
         };
 
         update();
@@ -46,103 +38,82 @@ export const MapActivitiesBoard: React.FC = () => {
         return () => observer.disconnect();
     }, [grid]);
 
-    if (loading) {
-        return (
-            <Card className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                    <SkeletonLine className="w-40" />
-                    <Skeleton className="w-24 h-4 rounded" />
-                </div>
-                <div className="flex gap-1">
-                    <div className="flex flex-col gap-1 pt-5 pr-1">
-                        {Array.from({ length: 7 }).map((_, i) => (
-                            <Skeleton key={i} className="w-6 h-3 rounded" />
-                        ))}
-                    </div>
-                    <div className="flex gap-1">
-                        {Array.from({ length: 26 }).map((_, wi) => (
-                            <div key={wi} className="flex flex-col gap-1 pt-5">
-                                {Array.from({ length: 7 }).map((_, di) => (
-                                    <Skeleton key={di} className="w-3 h-3 rounded-sm" />
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </Card>
-        );
-    }
-
-    if (!grid) return null;
-
     const tabTitle = (
         <>
+            <CalendarRange />
             Mapa de actividades
         </>
     );
 
+    const subtitle = loading
+        ? 'Cargando actividad…'
+        : `${grid?.totalCount ?? 0} actividades en el último año`;
+
     return (
-        <Card className="flex flex-col gap-3" tabTitle={tabTitle}>
-            <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-text-DEFAULT">
-                    {grid.totalCount} actividades este año
-                </h2>
-                <Legend />
-            </div>
-
-            <div ref={containerRef} className="w-full">
-                <div
-                    ref={gridRef}
-                    className="flex gap-1 min-w-max"
-                    style={{
-                        transform: `scale(${scale})`,
-                        transformOrigin: 'top left',
-                        marginBottom: scale < 1 ? `${gridNaturalHeight * (scale - 1)}px` : undefined,
-                    }}
-                >
-                    {/* Day labels */}
-                    <div className="flex flex-col gap-1 pt-5 pr-1">
-                        {DAYS_ES.map((day, i) => (
-                            <div
-                                key={day}
-                                className={cn(
-                                    'h-3 text-[9px] leading-3 text-text-DEFAULT/40 select-none',
-                                    i % 2 !== 0 && 'invisible'
-                                )}
-                            >
-                                {day}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Grid */}
-                    <div className="flex flex-col gap-0.5">
-                        {/* Month labels */}
-                        <div className="relative h-5 mb-0.5">
-                            {grid.months.map((month) => (
-                                <span
-                                    key={`${month.label}-${month.weekIndex}`}
-                                    className="absolute text-[10px] text-text-DEFAULT/50 select-none"
-                                    style={{ left: month.weekIndex * 16 }}
-                                >
-                                    {month.label}
-                                </span>
+        <Card tabTitle={tabTitle} tabSubtitle={subtitle} tabActions={<Legend />} className="flex flex-col justify-center">
+            {loading && (
+                <div className="flex gap-1 pt-2">
+                    {Array.from({ length: 40 }).map((_, wi) => (
+                        <div key={wi} className="flex flex-col gap-1">
+                            {Array.from({ length: 7 }).map((_, di) => (
+                                <Skeleton key={di} className="size-3.5 rounded-[4px]" />
                             ))}
                         </div>
+                    ))}
+                </div>
+            )}
 
-                        {/* Weeks */}
-                        <div className="flex gap-1">
-                            {grid.weeks.map((week, wi) => (
-                                <div key={wi} className="flex flex-col gap-1">
-                                    {week.days.map((day, di) => (
-                                        <ActivityCell day={day} key={di} />
-                                    ))}
+            {!loading && grid && (
+                <div ref={containerRef} className="w-full">
+                    <div
+                        ref={gridRef}
+                        className="flex gap-1 min-w-max"
+                        style={{
+                            transform: `scale(${scale})`,
+                            transformOrigin: 'top left',
+                            marginBottom: `${gridNaturalHeight * (scale - 1)}px`,
+                        }}
+                    >
+                        <div className="flex flex-col gap-1 pt-5 pr-1">
+                            {DAYS_ES.map((day, i) => (
+                                <div
+                                    key={day}
+                                    className={cn(
+                                        'h-3 text-[9px] leading-3 font-bold text-primary-400 select-none',
+                                        i % 2 !== 0 && 'invisible'
+                                    )}
+                                >
+                                    {day}
                                 </div>
                             ))}
                         </div>
+
+                        <div className="flex flex-col gap-0.5">
+                            <div className="relative h-5 mb-0.5">
+                                {grid.months.map((month) => (
+                                    <span
+                                        key={`${month.label}-${month.weekIndex}`}
+                                        className="absolute text-[10px] font-bold text-primary-400 select-none"
+                                        style={{ left: month.weekIndex * 16 }}
+                                    >
+                                        {month.label}
+                                    </span>
+                                ))}
+                            </div>
+
+                            <div className="flex gap-1">
+                                {grid.weeks.map((week, wi) => (
+                                    <div key={wi} className="flex flex-col gap-1">
+                                        {week.days.map((day, di) => (
+                                            <ActivityCell day={day} key={di} />
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </Card>
     );
 };

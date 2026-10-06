@@ -124,7 +124,7 @@ export const IconsList: React.FC<IconsListProps> = ({
             <Button
                 type='button'
                 form="pill"
-                color="tertiary"
+                color="primary"
                 style={triggerColor ? { backgroundColor: triggerColor } : undefined}
                 className={triggerClass}
                 onClick={() => setOpen(!open)}
@@ -132,13 +132,13 @@ export const IconsList: React.FC<IconsListProps> = ({
                 <DynamicIcon name={displayIcon} size={iconSize} />
             </Button>
 
-            <Card className={`absolute top-full left-1/2 -translate-x-1/2 mt-1 z-50 w-80 ${open ? 'block' : 'hidden'}`}>
-                <div className="flex overflow-x-auto gap-1 p-2 border-b border-gray-200">
+            <Card withPadding={false} className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 w-80 p-2 ${open ? 'block' : 'hidden'}`}>
+                <div className="flex overflow-x-auto scrollbar-primary gap-1 p-2 border-b border-primary-100">
                     {showAll && categoryMode && (
                         <button
                             type="button"
                             onClick={() => handleSelectCategory(null)}
-                            className="text-xs px-2 py-1 rounded-full whitespace-nowrap bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                            className="text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap bg-primary-100 text-primary-700 hover:bg-primary-200 transition-colors"
                         >
                             Todos
                         </button>
@@ -151,8 +151,8 @@ export const IconsList: React.FC<IconsListProps> = ({
                                 setActiveGroupId(group.id);
                                 if (!categoryMode) onSelectGroup?.(group);
                             }}
-                            className={`text-xs px-2 py-1 rounded-full whitespace-nowrap transition-colors ${
-                                activeGroupId === group.id ? 'text-tertiary-50' : 'text-secondary-600 hover:bg-tertiary-100'
+                            className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap capitalize transition-colors ${
+                                activeGroupId === group.id ? 'text-white' : 'text-primary-500 hover:bg-primary-100'
                             }`}
                             style={activeGroupId === group.id ? { backgroundColor: group.color } : undefined}
                         >
@@ -161,21 +161,21 @@ export const IconsList: React.FC<IconsListProps> = ({
                     ))}
                 </div>
 
-                <CardBody className="grid grid-cols-5 gap-2 overflow-y-auto h-64 p-3">
+                <CardBody className="grid grid-cols-5 gap-2 overflow-y-auto scrollbar-primary h-64 p-3">
                     {categoryMode
                         ? filteredCategories.map((cat) => (
                             <div key={cat.id} className="flex flex-col gap-1 justify-center items-center">
                                 <Button
                                     type="button"
                                     form="pill"
-                                    color="tertiary"
+                                    color="primary"
                                     style={activeCategoryGroup ? { backgroundColor: activeCategoryGroup.color } : undefined}
                                     className="flex flex-col items-center justify-center w-10 h-10"
                                     onClick={() => handleSelectCategory(cat)}
                                 >
                                     <DynamicIcon name={cat.icon} />
                                 </Button>
-                                <span className="text-xs text-center leading-tight text-gray-500 w-full truncate">
+                                <span className="text-xs text-center leading-tight text-primary-500 w-full truncate">
                                     {cat.name}
                                 </span>
                             </div>
@@ -185,7 +185,7 @@ export const IconsList: React.FC<IconsListProps> = ({
                                 <Button
                                     type="button"
                                     form="pill"
-                                    color="tertiary"
+                                    color="primary"
                                     style={activeIconGroup ? { backgroundColor: activeIconGroup.color } : undefined}
                                     className="flex flex-col items-center justify-center w-10 h-10"
                                     onClick={() => {
@@ -195,7 +195,7 @@ export const IconsList: React.FC<IconsListProps> = ({
                                 >
                                     <DynamicIcon name={icon.icon} />
                                 </Button>
-                                <span className="text-xs text-center leading-tight text-gray-500 w-full truncate">
+                                <span className="text-xs text-center leading-tight text-primary-500 w-full truncate">
                                     {icon.label}
                                 </span>
                             </div>

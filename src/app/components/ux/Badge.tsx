@@ -1,35 +1,44 @@
-import { twMerge } from "tailwind-merge";
-
+import { cn } from "@/utils/cn";
 
 interface BadgeProps {
     color: string;
     text: string;
     onClick?: () => void;
+    className?: string;
 }
 
-const colorMap: Record<string, { bg: string; text: string }> = {
-    'primary-900':  { bg: 'bg-primary-900',   text: 'text-tertiary-50' },
-    'amber-200':    { bg: 'bg-amber-200',   text: 'text-amber-700' },
-    'yellow':       { bg: 'bg-yellow-400',  text: 'text-black' },
-    'lime':         { bg: 'bg-lime-400',    text: 'text-black' },
-    'amber':        { bg: 'bg-amber-400',   text: 'text-black' },
-    'white':        { bg: 'bg-white',       text: 'text-black' },
-    'gray-100':     { bg: 'bg-gray-100',    text: 'text-black' },
-    'gray-200':     { bg: 'bg-gray-200',    text: 'text-black' },
-    'sky-200':      { bg: 'bg-sky-200',     text: 'text-sky-700' },
-    'red-400':      { bg: 'bg-red-400',     text: 'text-red-900' },
-    'blue':         { bg: 'bg-blue-500',    text: 'text-white' },
-    'emerald-300':  { bg: 'bg-emerald-300', text: 'text-emerald-800' },
-    'orange-300':   { bg: 'bg-orange-300',  text: 'text-orange-800'},
-    'stone-300':    { bg: 'bg-stone-300',   text: 'text-stone-800'}
-    // Añade los colores que necesites...
+const colorMap: Record<string, string> = {
+    'primary-900':  'bg-primary-900 text-tertiary-50',
+    'amber-200':    'bg-amber-100 text-amber-800',
+    'yellow':       'bg-cream-200 text-tertiary-900',
+    'lime':         'bg-lime-100 text-lime-800',
+    'amber':        'bg-amber-100 text-amber-800',
+    'white':        'bg-white text-primary-800',
+    'gray-100':     'bg-primary-50 text-primary-700',
+    'gray-200':     'bg-primary-100 text-primary-700',
+    'sky-200':      'bg-secondary-100 text-secondary-800',
+    'red-400':      'bg-accent-blossom-200 text-accent-blossom-800',
+    'blue':         'bg-secondary-200 text-secondary-900',
+    'emerald-300':  'bg-emerald-100 text-emerald-800',
+    'orange-300':   'bg-tertiary-100 text-tertiary-800',
+    'stone-300':    'bg-stone-200 text-stone-700',
 };
 
-export const Badge: React.FC<BadgeProps> = ({ color, text, onClick }) => {
-    const { bg, text: textColor } = colorMap[color] ?? { bg: 'bg-gray-300', text: 'text-black' };
+export const Badge: React.FC<BadgeProps> = ({ color, text, onClick, className }) => {
+    // En Supabase el color es un nombre del mapa; en los mocks llega como hex
+    const isHex = color.startsWith('#');
 
     return (
-        <span className={twMerge('px-2 py-1 rounded text-xs font-bold', bg, textColor)} onClick={onClick}>
+        <span
+            className={cn(
+                'inline-flex items-center whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold',
+                !isHex && (colorMap[color] ?? 'bg-primary-100 text-primary-800'),
+                onClick && 'cursor-pointer hover:brightness-95',
+                className,
+            )}
+            style={isHex ? { backgroundColor: `${color}26`, color } : undefined}
+            onClick={onClick}
+        >
             {text}
         </span>
     );

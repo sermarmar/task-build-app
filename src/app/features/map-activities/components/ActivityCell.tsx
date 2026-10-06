@@ -1,5 +1,5 @@
 import { DayActivity } from "../models/MapActivity";
-import { cn } from "@sglara/cn";
+import { cn } from "@/utils/cn";
 import { LEVEL_CLASSES } from "@/app/shared/constants";
 import { Tooltip } from "@/app/components/ux/Tooltip";
 
@@ -8,7 +8,7 @@ interface ActivityCellProps {
 }
 
 export const ActivityCell: React.FC<ActivityCellProps> = ({ day }) => {
-    if (!day) return <div className="w-3 h-3 rounded-sm" />;
+    if (!day) return <div className="size-3 rounded-[4px]" />;
 
     const formatted = new Date(day.date + 'T00:00:00').toLocaleDateString('es-ES', {
         day: 'numeric',
@@ -18,10 +18,10 @@ export const ActivityCell: React.FC<ActivityCellProps> = ({ day }) => {
 
     const tooltipContent = (
         <span>
-            <span className="font-semibold text-text-DEFAULT">
+            <span className="font-bold text-primary-950">
                 {day.count} {day.count === 1 ? 'actividad' : 'actividades'}
             </span>
-            <span className="text-text-DEFAULT/50 ml-1">— {formatted}</span>
+            <span className="text-primary-500 ml-1">— {formatted}</span>
         </span>
     );
 
@@ -29,7 +29,7 @@ export const ActivityCell: React.FC<ActivityCellProps> = ({ day }) => {
         <Tooltip content={tooltipContent} placement="top" arrow>
             <div
                 className={cn(
-                    'w-3 h-3 rounded-sm cursor-default transition-opacity duration-100 hover:opacity-80',
+                    'size-3 rounded-[4px] cursor-default transition-transform duration-100 hover:scale-125',
                     LEVEL_CLASSES[day.level],
                 )}
             />

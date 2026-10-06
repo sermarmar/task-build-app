@@ -23,9 +23,9 @@ const sizeConfig = {
 };
 
 const variantConfig = {
-  default: { bg: "bg-gray-700",   border: "border-gray-700" },
-  teal:    { bg: "bg-teal-700",   border: "border-teal-700" },
-  coral:   { bg: "bg-orange-700", border: "border-orange-700" },
+  default: { bg: "clay-peach",     border: "border-tertiary-400" },
+  teal:    { bg: "clay-blue",      border: "border-secondary-400" },
+  coral:   { bg: "bg-tertiary-600", border: "border-tertiary-600" },
 };
 
 const CheckIcon = ({ size }: { size: CheckboxSize }) => {
@@ -111,12 +111,12 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         className={[
           "flex-shrink-0 flex items-center justify-center border-[1.5px] mt-px",
           "transition-all duration-150 ease-out",
-          "group-hover:shadow-[0_0_0_3px_theme(colors.gray.100)]",
+          "group-hover:ring-4 group-hover:ring-tertiary-100",
           "group-active:scale-90",
           s.box,
           isActive
-            ? `${v.bg} ${v.border} border-transparent`
-            : "bg-white border-gray-300 group-hover:border-gray-400",
+            ? `${v.bg} ${v.border} border-transparent shadow-clay-sm`
+            : "bg-white/80 border-primary-200 shadow-clay-inset group-hover:border-tertiary-300",
         ].join(" ")}
       >
         <span
@@ -133,9 +133,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       {/* Texto — solo si hay label */}
       {label && (
         <span className="flex flex-col gap-0.5">
-          <span className={`leading-snug text-gray-900 ${s.label}`}>{label}</span>
+          <span className={`leading-snug text-primary-950 ${s.label}`}>{label}</span>
           {description && (
-            <span className={`leading-snug text-gray-500 ${s.desc}`}>{description}</span>
+            <span className={`leading-snug text-primary-500 ${s.desc}`}>{description}</span>
           )}
         </span>
       )}

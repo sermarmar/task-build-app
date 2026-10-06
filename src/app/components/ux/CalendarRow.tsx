@@ -17,8 +17,8 @@ export const CalendarRow: React.FC<CalendarRowProps> = ({ selectedDays, onToggle
                         <div
                             key={i}
                             className={twMerge(
-                                "p-3 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer",
-                                isSelected ? "bg-secondary-500 text-white font-bold" : "bg-tertiary-300"
+                                "rounded-full size-10 flex items-center justify-center cursor-pointer text-sm font-bold transition-all",
+                                isSelected ? "clay-peach text-white shadow-clay-pressed" : "bg-surface text-primary-600 shadow-clay-sm hover:text-primary-900"
                             )}
                             onClick={() => onToggleDay(day)}
                         >

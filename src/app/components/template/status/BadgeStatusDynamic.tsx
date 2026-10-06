@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import type { Status } from "../../../core/models/Status";
 import { Badge } from '../../ux/Badge';
 import { StatusService } from "../../../core/service/status/StatusService";
+import { cn } from "@/utils/cn";
 
 interface BadgeStatusDynamicProps {
     status?: Status;
@@ -37,15 +39,21 @@ export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ status, 
     };
 
     return (
-        <div ref={ref} className="cursor-default">
-            <div onClick={() => setIsOpen(!isOpen)}>
+        <div ref={ref} className="relative">
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                className="flex items-center gap-2 rounded-full bg-surface shadow-clay-sm pl-1.5 pr-3 py-1.5 cursor-pointer"
+            >
                 {status
                     ? <Badge color={status.color} text={status.name} />
-                    : <Badge color="primary-900" text="Todos" />
+                    : <Badge color="primary-900" text="Todos los estados" />
                 }
-            </div>
+                <ChevronDown size={16} className={cn("text-primary-500 transition-transform", isOpen && "rotate-180")} />
+            </button>
             {isOpen && (
-                <div className="absolute bg-white border border-gray-300 rounded shadow p-2 mt-1 grid gap-1 grid-cols-3 z-50">
+                <div className="absolute left-0 mt-2 z-50 flex flex-wrap gap-2 w-64 rounded-2xl bg-surface shadow-clay p-3">
                     {showAll && (
                         <Badge color="primary-900" text="Todos" onClick={() => { onChange(null); setIsOpen(false); }} />
                     )}

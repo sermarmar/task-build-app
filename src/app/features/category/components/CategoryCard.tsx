@@ -10,34 +10,41 @@ interface CategoyCardProps {
 }
 
 export const CategoryCard: React.FC<CategoyCardProps> = ({ category, onEdit, onDelete }) => {
-    const color = category.group?.color ?? '#6b7280';
+    const color = category.group?.color ?? '#9580b5';
+    const tint = useColorAlpha(color, 0.16);
 
     return (
-    <div key={category.id} className="flex items-center justify-between p-4 rounded-md border-l-5 border-tertiary-200 w-full"
-        style={{
-            backgroundColor: useColorAlpha(color, 0.2),
-            borderColor: color,
-        }}>
-        <div className="flex items-center gap-4">
-            <span className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
-                style={{ backgroundColor: color }}>
-                <DynamicIcon name={category.icon} />
-            </span>
-            <div className="flex flex-col gap-2">
-                <h3 className="text-md font-bold">{category.name}</h3>
-                <h5 className="text-sm text-secondary-800">{category.description}</h5>
+        <article className="group flex items-center justify-between gap-3 p-3 rounded-2xl bg-white/60 shadow-clay-sm">
+            <div className="flex items-center gap-3 min-w-0">
+                <span
+                    className="size-11 flex items-center justify-center rounded-xl shrink-0"
+                    style={{ backgroundColor: tint, color }}
+                >
+                    <DynamicIcon name={category.icon} />
+                </span>
+                <div className="min-w-0">
+                    <h3 className="font-bold text-primary-950 truncate">{category.name}</h3>
+                    <p className="text-sm text-primary-400 truncate">{category.description}</p>
+                </div>
             </div>
-        </div>
-        <div className="flex gap-2">
-            <span className="text-secondary-800/70 cursor-pointer" onClick={() => onEdit(category)}>
-                <Pencil />
-            </span>
-            <span className="text-secondary-800/70 cursor-pointer" onClick={() => onDelete(category)}>
-                <Trash2 />
-            </span>
-        </div>
-        
-
-    </div>
+            <div className="flex gap-2 shrink-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                <button
+                    type="button"
+                    aria-label={`Editar ${category.name}`}
+                    className="text-primary-400 hover:text-secondary-600 transition-colors cursor-pointer"
+                    onClick={() => onEdit(category)}
+                >
+                    <Pencil size={17} />
+                </button>
+                <button
+                    type="button"
+                    aria-label={`Eliminar ${category.name}`}
+                    className="text-primary-400 hover:text-accent-blossom-600 transition-colors cursor-pointer"
+                    onClick={() => onDelete(category)}
+                >
+                    <Trash2 size={17} />
+                </button>
+            </div>
+        </article>
     );
 }

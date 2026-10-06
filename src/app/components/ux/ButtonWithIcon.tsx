@@ -1,5 +1,4 @@
-import { twMerge } from "tailwind-merge";
-
+import { cn } from "@/utils/cn";
 
 interface ButtonWithIconProps {
     onClick: () => void;
@@ -10,26 +9,31 @@ interface ButtonWithIconProps {
     iconColor: string;
     icon: React.ReactNode;
     size?: 'small' | 'medium' | 'large';
+    className?: string;
 }
 
-export const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({ onClick, bgColor, buttonColor, buttonText, textColor, iconColor, icon, size = 'medium' }) => {
+export const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({ onClick, bgColor, buttonColor, buttonText, textColor, iconColor, icon, size = 'medium', className }) => {
 
-    const sizeClasses = size === 'small' ? 'p-1 pl-4' : size === 'large' ? 'p-4 pl-12' : 'p-3 pl-10';
+    const sizeClasses = size === 'small' ? 'p-1 pl-4 gap-3' : size === 'large' ? 'p-2 pl-6 gap-5' : 'p-1.5 pl-5 gap-4';
     const textSizeClasses = size === 'small' ? 'text-sm' : size === 'large' ? 'text-lg' : 'text-base';
-    const iconSizeClasses = size === 'small' ? 'p-3' : size === 'large' ? 'p-5' : 'p-4';
-    
+    const iconSizeClasses = size === 'small' ? 'size-8 [&_svg]:size-4' : size === 'large' ? 'size-12' : 'size-10 [&_svg]:size-5';
+
     return (
         <button
-            className={twMerge('w-full flex items-center justify-between rounded-full', bgColor, sizeClasses)}
+            type="button"
+            className={cn(
+                'flex items-center justify-between rounded-full cursor-pointer shadow-clay-sm',
+                'transition duration-200 hover:-translate-y-0.5 active:translate-y-0',
+                bgColor, sizeClasses, className,
+            )}
             onClick={onClick}
         >
-            <span className={twMerge(textSizeClasses, textColor, 'font-semibold')}>
+            <span className={cn(textSizeClasses, textColor, 'font-bold whitespace-nowrap')}>
                 {buttonText}
             </span>
-            <span className={twMerge('rounded-full cursor-pointer', buttonColor, iconColor, iconSizeClasses)}>
+            <span className={cn('rounded-full flex items-center justify-center shrink-0', buttonColor, iconColor, iconSizeClasses)}>
                 {icon}
             </span>
         </button>
     );
-
 }

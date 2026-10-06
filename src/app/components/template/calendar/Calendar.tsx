@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import partyDaysData from '../../../shared/diasFestivos.json';
+import { cn } from "@/utils/cn";
 
 interface CalendarProps {
     selectDate?: (date: Date) => void;
@@ -13,13 +14,12 @@ export const Calendar: React.FC<CalendarProps> = ({ selectDate }) => {
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
     const [selectedDay, setSelectedDay] = useState<number | null>(today.getDate());
     const [selectedMonthYear, setSelectedMonthYear] = useState<string>(`${today.getFullYear()}-${today.getMonth()}`);
-    const days = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
+    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
     // Día de la semana en que empieza el mes (0=Dom → convertimos a lun-based)
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const leadingEmptyDays = (firstDayOfMonth || 7) - 1;
 
-    // Total de días del mes actual y del anterior
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
 
@@ -48,7 +48,7 @@ export const Calendar: React.FC<CalendarProps> = ({ selectDate }) => {
             setCurrentMonth(currentMonth - 1);
         }
     };
-    
+
     const handleNextMonth = () => {
         if (currentMonth === 11) {
             setCurrentMonth(0);
@@ -68,69 +68,68 @@ export const Calendar: React.FC<CalendarProps> = ({ selectDate }) => {
     const isSelected = (dayNum: number): boolean =>
         selectedDay === dayNum && selectedMonthYear === `${currentYear}-${currentMonth}`;
 
+    const monthLabel = new Date(currentYear, currentMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+    const navButton = "size-9 rounded-full clay-knob flex items-center justify-center text-primary-600 hover:text-tertiary-600 transition cursor-pointer";
+    const outsideDay = "flex items-center justify-center size-9 rounded-full text-primary-300";
 
     return (
-        <>
-            <div className="flex flex-col items-center justify-center">
-                <div className="flex items-center justify-around w-full mb-5">
-                    <ChevronLeft onClick={handlePrevMonth} />
-                    <h2 className="text-lg font-medium text-center">
-                        {`${new Date(currentYear, currentMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).charAt(0).toUpperCase() + new Date(currentYear, currentMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).slice(1)}`}
-                    </h2>
-                    <ChevronRight onClick={handleNextMonth} />
-                </div>
-                
-                <div className="grid grid-cols-7 gap-1 w-full">
-                    {days.map((day) => (
-                        <div key={day} className="text-center text-sm font-medium flex items-center justify-center text-tertiary-50">
-                            {day}
-                        </div>
-                    ))}
-                    {Array.from({ length: leadingEmptyDays }, (_, i) => {
-                        const day = daysInPrevMonth - leadingEmptyDays + i + 1;
-                        return (
-                            <div key={`prev-${i}`} className="flex items-center justify-center text-sm relative">
-                                <span className="flex items-center justify-center w-10 h-10 rounded-full opacity-30 cursor-pointer hover:opacity-50">
-                                    {day}
-                                </span>
-                            </div>
-                        );
-                    })}
-                    {Array.from({ length: daysInMonth }, (_, i) => {
-                        const dayNum = i + 1;
-                        const isToday = new Date(currentYear, currentMonth, dayNum).toDateString() === today.toDateString();
-                        const festivo = isFestivo(currentYear, currentMonth, dayNum);
-                        const selected = isSelected(dayNum);
-
-                        return (
-                            <div key={i} className="flex items-center justify-center text-sm relative">
-                                <span
-                                    onClick={() => handleDayClick(dayNum)}
-                                    className={`
-                                    flex items-center justify-center w-10 h-10 rounded-full cursor-pointer
-                                    ${selected && !isToday
-                                        ? 'ring-2 ring-secondary-400 bg-primary-300/20'
-                                        : isToday
-                                            ? 'bg-secondary-600 text-tertiary-50 font-bold'
-                                            : festivo
-                                                ? 'bg-accent-blossom-400 text-accent-blossom-900 hover:brightness-110'
-                                                : 'bg-primary-300/10 hover:bg-secondary-200 hover:text-primary-950'
-                                    }
-                                `}>
-                                    {dayNum}
-                                </span>
-                            </div>
-                        );
-                    })}
-                    {Array.from({ length: trailingDays }, (_, i) => (
-                        <div key={`next-${i}`} className="flex items-center justify-center text-sm relative">
-                            <span className="flex items-center justify-center w-10 h-10 rounded-full opacity-30 cursor-pointer hover:opacity-50">
-                                {i + 1}
-                            </span>
-                        </div>
-                    ))}
-                </div>
+        <div className="flex flex-col">
+            <div className="flex items-center justify-between w-full mb-4">
+                <button type="button" aria-label="Mes anterior" onClick={handlePrevMonth} className={navButton}>
+                    <ChevronLeft size={18} />
+                </button>
+                <h3 className="font-heading text-base font-bold text-primary-900 first-letter:uppercase">
+                    {monthLabel}
+                </h3>
+                <button type="button" aria-label="Mes siguiente" onClick={handleNextMonth} className={navButton}>
+                    <ChevronRight size={18} />
+                </button>
             </div>
-        </>
+
+            <div className="grid grid-cols-7 gap-1 w-full justify-items-center">
+                {days.map((day) => (
+                    <div key={day} className="text-center text-xs font-bold text-primary-400 py-1">
+                        {day}
+                    </div>
+                ))}
+                {Array.from({ length: leadingEmptyDays }, (_, i) => (
+                    <span key={`prev-${i}`} className={outsideDay}>
+                        {daysInPrevMonth - leadingEmptyDays + i + 1}
+                    </span>
+                ))}
+                {Array.from({ length: daysInMonth }, (_, i) => {
+                    const dayNum = i + 1;
+                    const isToday = new Date(currentYear, currentMonth, dayNum).toDateString() === today.toDateString();
+                    const festivo = isFestivo(currentYear, currentMonth, dayNum);
+                    const selected = isSelected(dayNum);
+
+                    return (
+                        <button
+                            key={i}
+                            type="button"
+                            onClick={() => handleDayClick(dayNum)}
+                            aria-pressed={selected}
+                            className={cn(
+                                "flex items-center justify-center size-9 rounded-full text-sm font-bold cursor-pointer transition-all",
+                                isToday
+                                    ? "clay-peach text-white shadow-clay-pressed"
+                                    : festivo
+                                        ? "bg-accent-blossom-200 text-accent-blossom-800 hover:bg-accent-blossom-300"
+                                        : "text-primary-700 hover:bg-white hover:shadow-clay-sm",
+                                selected && !isToday && "clay-knob text-tertiary-600",
+                            )}
+                        >
+                            {dayNum}
+                        </button>
+                    );
+                })}
+                {Array.from({ length: trailingDays }, (_, i) => (
+                    <span key={`next-${i}`} className={outsideDay}>
+                        {i + 1}
+                    </span>
+                ))}
+            </div>
+        </div>
     );
 }
