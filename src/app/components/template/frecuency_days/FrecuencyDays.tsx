@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FrecuencyData from './FrecuencyData.json';
 import { Button } from '../../ux/Button';
 import { CalendarRow } from '../../ux/CalendarRow';
+import { cn } from '@/utils/cn';
 
 type FrecuencyData = {
     label: string;
@@ -60,38 +61,46 @@ export const FrecuencyDays: React.FC<FrecuencyDaysProps> = ({ onChange, initialF
     };
 
     return (
-        <div className='flex'>
-            <div className='flex flex-col gap-2'>
-                {frequencyDays.map((frequency) => (
-                    <div key={frequency.value}>
-                        <label className="flex items-center gap-2">
+        <div className='flex flex-col md:flex-row gap-6'>
+            <div className='flex md:flex-col gap-2' role="radiogroup" aria-label="Frecuencia">
+                {frequencyDays.map((frequency) => {
+                    const active = selectedFrequency === frequency.value;
+                    return (
+                        <label
+                            key={frequency.value}
+                            className={cn(
+                                "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold cursor-pointer transition-all whitespace-nowrap",
+                                active ? "bg-surface text-primary-950 shadow-clay-sm" : "text-primary-500 hover:text-primary-800",
+                            )}
+                        >
                             <input
                                 type="radio"
                                 name="frequency"
                                 value={frequency.value}
-                                checked={selectedFrequency === frequency.value}
+                                checked={active}
                                 onChange={() => handleFrequencyChange(frequency.value)}
+                                className="accent-tertiary-500"
                             />
                             {frequency.label}
                         </label>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
             {selectedFrequency === 'weekly' && (
-                <div className="ml-4 grid grid-cols-4 justify-items-center-self gap-y-2 gap-x-4">
+                <div className="flex flex-wrap content-start gap-2">
                     {frequencyDays
                         .find((f) => f.value === selectedFrequency)
                         ?.options?.map((option) => (
-                            <React.Fragment key={option.value}>
-                                <Button
-                                    type='button'
-                                    color={selectedOption.some((o) => o.value === option.value) ? 'primary' : 'secondary'}
-                                    onClick={() => handleSelectedDays(option)}
-                                >
-                                    {option.label}
-                                </Button>
-                            </React.Fragment>
-                            
+                            <Button
+                                key={option.value}
+                                type='button'
+                                form='rounded'
+                                size='sm'
+                                color={selectedOption.some((o) => o.value === option.value) ? 'tertiary' : 'light'}
+                                onClick={() => handleSelectedDays(option)}
+                            >
+                                {option.label}
+                            </Button>
                         ))
                     }
                 </div>

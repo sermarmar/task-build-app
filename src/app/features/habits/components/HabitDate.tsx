@@ -1,5 +1,4 @@
-import { twMerge } from "tailwind-merge";
-import { Card, CardBody, CardTitle } from "../../../components/ux/Card"
+import { cn } from "@/utils/cn";
 
 interface HabitDateProps {
     day: string;
@@ -10,25 +9,27 @@ interface HabitDateProps {
 }
 
 export const HabitDate: React.FC<HabitDateProps> = ({ day, numDay, isActive, isToday, onClick }) => {
-
-    let activeClass = 'bg-secondary-400 text-tertiary-50 hover:bg-tertiary-900 hover:text-tertiary-50';
-    if( isActive ) {
-        activeClass = 'bg-primary-900 text-tertiary-50';
-    } else if( isToday ) {
-        activeClass = 'bg-tertiary-300 text-primary-900';
-    }
-    const activeTitleClass = isActive ? 'text-tertiary-50' : 'text-primary-900';
-
     return (
-        <div onClick={ onClick }>
-            <Card color={ activeClass } className="w-10 text-center rounded-full pt-1" withPadding={ false }>
-                <CardTitle className={twMerge("text-sm font-light", activeTitleClass)}>
-                    { day }
-                </CardTitle>
-                <CardBody className="font-bold bg-gray-400/45 rounded-4xl py-2">
-                    { numDay }
-                </CardBody>
-            </Card>
-        </div>
+        <button
+            type="button"
+            onClick={onClick}
+            aria-pressed={isActive}
+            className={cn(
+                "flex flex-col items-center gap-1.5 w-14 shrink-0 rounded-full pt-2.5 pb-1.5 font-bold cursor-pointer transition-all",
+                isActive
+                    ? "clay-peach text-white shadow-clay-pressed"
+                    : isToday
+                        ? "bg-surface text-tertiary-600 shadow-clay-sm"
+                        : "text-primary-500 hover:bg-white/70",
+            )}
+        >
+            <span className="text-xs">{day}</span>
+            <span className={cn(
+                "size-10 rounded-full flex items-center justify-center text-base",
+                isActive ? "clay-knob text-tertiary-600" : "bg-white/60",
+            )}>
+                {numDay}
+            </span>
+        </button>
     )
 }

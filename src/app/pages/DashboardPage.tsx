@@ -1,5 +1,5 @@
-import { Card, CardBody, CardTitle } from "../components/ux/Card";
 import { useAuth } from "../contexts/auth/useAuth";
+import { PageHeader } from "../components/template/PageHeader";
 import { CalendarBoard } from "../features/calendar/components/CalendarBoard";
 import { ButtonCreateHabit } from "../features/habits/components/ButtonCreateHabit";
 import { HabitBoardProvider } from "../features/habits/contexts/HabitBoardProvider";
@@ -7,64 +7,65 @@ import { ButtonCreateTask } from "../features/tasks/components/ButtonCreateTask"
 import { TaskBoardProvider } from "../features/tasks/contexts/TaskBoardProvider";
 import { HabitsListToday } from "../features/habits/components/HabitsListToday";
 import { MentalHealthBoard } from "../features/mental_healtth/components/MentalHealthBoard";
+import { WellbeingAreasBoard } from "../features/mental_healtth/components/WellbeingAreasBoard";
+import { useMentalHealth } from "../features/mental_healtth/hooks/useMentalHealth";
 import { Pomodoro } from "../features/pomodoro/components/Pomodoro";
 import { MapActivitiesBoard } from "../features/map-activities/components/MapActivitiesBoard";
-
+import { useActivityGrid } from "../features/map-activities/hooks/useActivityGrid";
+import { SummaryStats } from "../features/summary/components/SummaryStats";
 
 export const DashboardPage: React.FC = () => {
 
     const { user } = useAuth();
+    const { grid, loading: gridLoading } = useActivityGrid();
+    const { areas, balance, isLoading: mentalHealthLoading } = useMentalHealth();
 
     return (
-        <div className="grid grid-cols-6 grid-rows-5 gap-4 h-[calc(100vh-80px)]">
-            <div className="col-span-3">
-                <Card className="h-full bg-gradient-to-br from-secondary-600 to-secondary-800 text-tertiary-50 px-6 py-3 relative overflow-hidden">
-                    <CardTitle className="text-[4.75vh] text-tertiary-50 font-medium">{`Hola ${user?.name} ${user?.lastName}!!`}</CardTitle>
-                    <CardBody className="text-lg text-tertiary-50 mt-2">
-                        Bienvenido a tu panel de control. Aquí podrás gestionar tus tareas, monitorear tu progreso y mantener un equilibrio saludable entre trabajo y descanso. ¡Vamos a ser productivos juntos!
-                    </CardBody>
-                    <svg
-                        className="absolute -right-[130px] -bottom-[150px] pointer-events-none text-tertiary-50"
-                        width="320" height="320" viewBox="0 0 320 320" fill="none"
-                    >
-                        <circle cx="160" cy="160" r="150" stroke="currentColor" strokeWidth="2" opacity="0.2"/>
-                        <circle cx="160" cy="160" r="100" stroke="currentColor" strokeWidth="2" opacity="0.2"/>
-                        <circle cx="160" cy="160" r="50" stroke="currentColor" strokeWidth="2" opacity="0.2"/>
-                    </svg>
-                </Card>
-            </div>
-            <div className="col-start-4 grid grid-rows-2 gap-2">
-                <HabitBoardProvider>
-                    <ButtonCreateHabit />
-                </HabitBoardProvider>
-                <TaskBoardProvider>
-                    <ButtonCreateTask />
-                </TaskBoardProvider>
-            </div>
-            <div className="col-span-2 row-span-5 col-start-5">
-                <HabitBoardProvider>
-                    <CalendarBoard />
-                </HabitBoardProvider>
-            </div>
-            <div className="col-span-2 row-span-2 row-start-2">
-                <Pomodoro />
-            </div>
-            <div className="row-span-2 col-start-3 row-start-2">
-                <HabitBoardProvider>
-                    <HabitsListToday />
-                </HabitBoardProvider>
-            </div>
-            <div className="row-span-2 col-start-4 row-start-2">
-                <Card className="h-full">
-                    <h2 className="text-sm">Tareas pendientes en desarrollo...</h2>
-                </Card>
-            </div>
-            <div className="row-span-2 row-start-4">
-                <MentalHealthBoard />
-            </div>
-            <div className="col-span-3 row-span-2 row-start-4">
-                <MapActivitiesBoard />
-            </div>
-        </div>
+        <TaskBoardProvider>
+            <HabitBoardProvider>
+                <div className="flex flex-col gap-5 pb-4">
+                    <PageHeader
+                        title={`¡Hola, ${user?.name ?? ''}!`}
+                        subtitle="Mide cómo avanzas cada día con tus tareas, tus hábitos y tu bienestar."
+                    />
+
+                    <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
+                        <h2 className="font-heading text-2xl font-bold text-primary-950">Resumen</h2>
+                        <div className="flex flex-wrap gap-3">
+                            <ButtonCreateHabit />
+                            <ButtonCreateTask />
+                        </div>
+                    </div>
+
+                    <SummaryStats grid={grid} gridLoading={gridLoading} />
+
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
+                        <div className="xl:col-span-8">
+                            <MapActivitiesBoard grid={grid} loading={gridLoading} />
+                        </div>
+                        <div className="xl:col-span-4">
+                            <MentalHealthBoard balance={balance} isLoading={mentalHealthLoading} />
+                        </div>
+
+                        <div className="xl:col-span-4">
+                            <WellbeingAreasBoard areas={areas} isLoading={mentalHealthLoading} />
+                        </div>
+                        <div className="xl:col-span-8">
+                            <Pomodoro />
+                        </div>
+
+                        <div className="xl:col-span-8">
+                            {/* Provider propio: elegir un día en el calendario no debe cambiar "Hábitos de hoy" */}
+                            <HabitBoardProvider>
+                                <CalendarBoard />
+                            </HabitBoardProvider>
+                        </div>
+                        <div className="xl:col-span-4">
+                            <HabitsListToday />
+                        </div>
+                    </div>
+                </div>
+            </HabitBoardProvider>
+        </TaskBoardProvider>
     );
 }

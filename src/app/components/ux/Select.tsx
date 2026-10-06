@@ -1,5 +1,4 @@
-import type { ReactElement } from "react";
-
+import { cn } from "@/utils/cn";
 
 interface InputProps<T> {
     name: string;
@@ -15,23 +14,23 @@ interface InputProps<T> {
 }
 
 export const Select = <T,>({ name, label, value, onChange, required, className, list, showAll = false, getOptionValue, getOptionLabel }: InputProps<T>) => {
-    
-    let labelElement: ReactElement = <></>;
-
-    if(label) {
-        labelElement = <label className="block text-sm font-medium text-gray-700 mb-2">
-            { label }
-        </label>
-    }
-    
     return (
         <>
-            {labelElement}
+            {label && (
+                <label htmlFor={name} className="block text-sm font-bold text-primary-800 mb-2">
+                    { label }
+                </label>
+            )}
             <select
+                id={name}
                 value={ value }
                 name={ name }
                 onChange={ onChange }
-                className={`w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary-500 focus:border-transparent outline-none transition ${className || ''}`}
+                className={cn(
+                    'w-full px-4 py-3 rounded-2xl bg-white/70 border border-white shadow-clay-inset text-primary-950',
+                    'focus:ring-2 focus:ring-tertiary-300 focus:bg-white outline-none transition cursor-pointer',
+                    className,
+                )}
                 required ={ required }
             >
                 {showAll && <option value="">Todos</option>}

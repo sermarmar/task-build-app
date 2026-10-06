@@ -1,8 +1,10 @@
 import { supabase } from "../../../../config/Database";
 import type { ErrorMessage } from "../../../shared/Error";
 import type { Status } from "../../models/Status";
+import { USE_MOCKS } from '@/config/env';
+import { StatusMockService } from '@/app/infra/mocks/services/StatusMockService';
 
-export const StatusService = {
+const StatusSupabaseService = {
 
     getAllStatus: async (): Promise<{ status: Status[] | null, error: ErrorMessage | null }> => {
         
@@ -39,3 +41,5 @@ export const StatusService = {
     }
 
 }
+
+export const StatusService: typeof StatusSupabaseService = USE_MOCKS ? StatusMockService : StatusSupabaseService;

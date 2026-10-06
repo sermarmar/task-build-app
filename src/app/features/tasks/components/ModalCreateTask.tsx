@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Check, X } from "lucide-react";
-import { Card, CardTitle } from "../../../components/ux/Card";
+import React, { useEffect } from "react";
+import { ArrowDown, ArrowUp, Check, Minus, X } from "lucide-react";
+import { Modal } from "../../../components/ux/Modal";
 import { Input } from "../../../components/ux/Input";
 import { TextareaDynamic } from "../../../components/ux/TextareaDynamic";
 import { Button } from "../../../components/ux/Button";
@@ -16,6 +16,9 @@ import { StatusService } from "../../../core/service/status/StatusService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
 import type { Task } from "../models/Task";
+import { PRIORITY_LEVELS } from "../models/Priority";
+import type { PriorityLevel } from "../models/Priority";
+import { cn } from "@/utils/cn";
 
 interface ModalCreateTaskProps {
     show: boolean;
@@ -23,27 +26,28 @@ interface ModalCreateTaskProps {
     task?: Task | null;
 }
 
+const PRIORITY_ICONS: Record<PriorityLevel, React.ReactElement> = {
+    low:    <ArrowDown size={14} />,
+    medium: <Minus size={14} />,
+    high:   <ArrowUp size={14} />,
+};
+
 export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose, task }) => {
 
     const isEditMode = !!task;
-    const [visible, setVisible] = useState(show);
     const { notify } = useNotification();
     const { refreshTasks } = useTaskBoardContext();
 
     const { register, handleSubmit, control, setValue, reset, watch, formState: { errors } } = useForm<TaskResponse>({
-        defaultValues: { title: '', description: '', points: 0, category_id: '', status_id: undefined }
+        defaultValues: { title: '', description: '', points: 0, category_id: '', status_id: undefined, priority: undefined }
     });
 
     const watchedCategoryId = watch('category_id');
     const watchedStatusId = watch('status_id');
+    const watchedPriority = watch('priority');
 
     useEffect(() => {
-        if (!show) {
-            const t = setTimeout(() => setVisible(false), 300);
-            return () => clearTimeout(t);
-        }
-
-        setVisible(true);
+        if (!show) return;
 
         if (isEditMode) {
             reset({
@@ -52,6 +56,7 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
                 points: task.points,
                 category_id: task.category?.id ?? '',
                 status_id: task.status?.id,
+                priority: task.priority?.id,
             });
             return;
         }
@@ -63,8 +68,6 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
             setValue('status_id', res.status?.id ?? 1);
         });
     }, [show]);
-
-    if (!visible) return null;
 
     const handleSubmitForm = async (form: TaskResponse) => {
         if (isEditMode) {
@@ -93,75 +96,95 @@ export const ModalCreateTask: React.FC<ModalCreateTaskProps> = ({ show, onClose,
     };
 
     return (
-        <div
-            id="modal-create-task"
-            tabIndex={-1}
-            className={`fixed inset-0 z-50 flex items-center justify-center -top-50 transition-all duration-300 ${
-                show ? "backdrop-blur-sm opacity-100" : "backdrop-blur-none opacity-0"
-            }`}
+        <Modal
+            show={show}
+            onClose={onClose}
+            title={isEditMode ? 'Editar tarea' : 'Nueva tarea'}
+            subtitle="Dale un título claro y decide cuánto esfuerzo te va a llevar."
         >
-            <Card
-                className={`relative p-4 w-300 mx-auto mt-20 transform transition-all duration-300 ${
-                    show ? "scale-100 opacity-100" : "scale-95 opacity-0"
-                }`}
-            >
-                <CardTitle className="flex justify-between items-center">
-                    {isEditMode ? 'Editar tarea' : 'Crear nueva tarea'}
-                    <X className="cursor-pointer" onClick={onClose} />
-                </CardTitle>
-                <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-3 gap-5 mt-4">
-                    <div className="col-span-3 mb-4">
-                        <Input
-                            type="text"
-                            placeholder="Escribe un título para la tarea"
-                            className={`w-full text-2xl ${errors.title ? 'border-red-500' : ''}`}
-                            {...register('title', { required: 'El título es obligatorio' })}
+            <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-3">
+                    <Input
+                        type="text"
+                        placeholder="Escribe un título para la tarea"
+                        className={cn('text-xl font-bold', errors.title && 'ring-2 ring-accent-blossom-400')}
+                        {...register('title', { required: 'El título es obligatorio' })}
+                    />
+                    {errors.title && (
+                        <span className="block text-accent-blossom-700 text-sm font-bold mt-1.5">{errors.title.message}</span>
+                    )}
+                </div>
+
+                <div className="md:col-span-2">
+                    <TextareaDynamic
+                        label="Descripción"
+                        defaultValue={isEditMode ? task.description : undefined}
+                        onChange={(value) => setValue('description', value)}
+                    />
+                </div>
+
+                <div className="flex flex-col gap-5 rounded-3xl bg-white/40 shadow-clay-inset p-5">
+                    <div>
+                        <Controller
+                            name="points"
+                            control={control}
+                            rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
+                            render={({ field }) => (
+                                <Stars
+                                    label="Puntos de esfuerzo"
+                                    points={field.value}
+                                    onChange={(value: number) => field.onChange(value)}
+                                />
+                            )}
                         />
-                        {errors.title && (
-                            <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+                        {errors.points && (
+                            <span className="block text-accent-blossom-700 text-sm font-bold mt-1">{errors.points.message}</span>
                         )}
                     </div>
-                    <div className="col-span-2">
-                        <TextareaDynamic
-                            label="Descripción"
-                            defaultValue={isEditMode ? task.description : undefined}
-                            onChange={(value) => setValue('description', value)}
-                        />
-                    </div>
-                    <div>
-                        <div className="mb-4">
-                            <Controller
-                                name="points"
-                                control={control}
-                                rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
-                                render={({ field }) => (
-                                    <Stars
-                                        points={field.value}
-                                        onChange={(value: number) => field.onChange(value)}
-                                    />
-                                )}
-                            />
-                            {errors.points && (
-                                <span className="text-red-500 text-sm">{errors.points.message}</span>
-                            )}
-                        </div>
 
+                    <div>
+                        <p className="text-sm font-bold text-primary-800 mb-2">Prioridad</p>
+                        <div className="flex gap-2">
+                            {PRIORITY_LEVELS.map((p) => {
+                                const active = watchedPriority === p.id;
+                                return (
+                                    <button
+                                        key={p.id}
+                                        type="button"
+                                        aria-pressed={active}
+                                        onClick={() => setValue('priority', active ? undefined : p.id)}
+                                        className={cn(
+                                            'flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer',
+                                            active ? 'text-white shadow-clay-pressed' : 'bg-surface text-primary-500 shadow-clay-sm hover:text-primary-800'
+                                        )}
+                                        style={active ? { backgroundColor: p.color } : undefined}
+                                    >
+                                        {PRIORITY_ICONS[p.id]}
+                                        {p.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div>
                         <SelectCategory
                             value={watchedCategoryId}
                             onChange={(c) => c && setValue('category_id', c.id)}
                         />
+                    </div>
+                    <div>
                         <SelectStatus
                             value={watchedStatusId}
                             onChange={(s) => setValue('status_id', s.id)}
                         />
-                        <div className="flex justify-end items-end h-53">
-                            <Button type="submit" color="primary" className="justify-center">
-                                {isEditMode ? 'Guardar cambios' : 'Crear tarea'}
-                            </Button>
-                        </div>
                     </div>
-                </form>
-            </Card>
-        </div>
+
+                    <Button type="submit" color="tertiary" form="rounded" size="lg" className="mt-auto justify-center">
+                        {isEditMode ? 'Guardar cambios' : 'Crear tarea'}
+                    </Button>
+                </div>
+            </form>
+        </Modal>
     );
 }

@@ -7,6 +7,7 @@ import type { Status } from "../../../core/models/Status";
 import { StatusService } from "../../../core/service/status/StatusService";
 
 const STATUS_ORDER = ['PENDIENTE', 'EN PROGRESO', 'BLOQUEADA', 'EN REVISION', 'COMPLETADA'];
+const PRIORITY_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
 
 const normalize = (s: string) =>
     s.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -52,7 +53,14 @@ export const useTaskBoard = () => {
         fetchTasks();
     }, [refreshTrigger]);
 
-    const tasks = useMemo(() => filterTasks(allTasks, filters), [allTasks, filters]);
+    const tasks = useMemo(() => {
+        const filtered = filterTasks(allTasks, filters);
+        return [...filtered].sort((a, b) => {
+            const aOrder = a.priority ? (PRIORITY_ORDER[a.priority.id] ?? 3) : 3;
+            const bOrder = b.priority ? (PRIORITY_ORDER[b.priority.id] ?? 3) : 3;
+            return aOrder - bOrder;
+        });
+    }, [allTasks, filters]);
 
     const refreshTasks = (cleanStorage?: boolean) => {
         if (cleanStorage) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
-import { Card, CardTitle } from "../../../components/ux/Card";
+import { Modal } from "../../../components/ux/Modal";
 import { Input } from "../../../components/ux/Input";
 import { Button } from "../../../components/ux/Button";
 import { Stars } from "../../../components/ux/Stars";
@@ -25,7 +25,6 @@ interface ModalFormHabitProps {
 
 export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, habit, onClose }) => {
 
-    const [visible, setVisible] = useState(show);
     const [category, setCategory] = useState<Category | null>(null);
     const { notify } = useNotification();
     const { refreshHabits } = useHabitBoardContext();
@@ -59,17 +58,6 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
             options_weekly: habit?.custom_days?.map(String) || []
         });
     }, [habit, category, reset]);
-
-    useEffect(() => {
-        if (show) {
-            setVisible(true);
-        } else {
-            const t = setTimeout(() => setVisible(false), 300);
-            return () => clearTimeout(t);
-        }
-    }, [show]);
-
-    if (!visible) return null;
 
     const handleCreateHabit = async (form: HabitRequest) => {
         const response = isEdit && habit
@@ -110,71 +98,61 @@ export const ModalFormHabit: React.FC<ModalFormHabitProps> = ({ show, isEdit, ha
     }
 
     return (
-        <div
-            id="modal-create-habit"
-            tabIndex={-1}
-            className={`fixed inset-0 z-50 flex items-center justify-center -top-50 transition-all duration-300 ${
-                show ? "backdrop-blur-sm opacity-100" : "backdrop-blur-none opacity-0"
-            }`}
+        <Modal
+            show={show}
+            onClose={onClose}
+            title={isEdit ? "Editar hábito" : "Nuevo hábito"}
+            subtitle="Los hábitos pequeños y constantes son los que más suman."
         >
-            <Card
-                className={`relative p-4 w-300 mx-auto mt-20 transform transition-all duration-300 ${
-                    show ? "scale-100 opacity-100" : "scale-95 opacity-0"
-                }`}/* prevent closing when clicking inside */
-            >
-                <CardTitle className="flex justify-between items-center">
-                    { isEdit ? "Editar hábito" : "Crear nuevo hábito" }
-                    <X className="cursor-pointer" onClick={onClose} />
-                </CardTitle>
-                <form onSubmit={ handleSubmit(handleCreateHabit) } className="grid grid-cols-3 gap-5 mt-4">
-                    <div>
-                        <Input 
-                            label="Nombre del hábito"
-                            type="text"
-                            placeholder="Escribe un título para un hábito"
-                            {...register("title", { required: "El título es obligatorio" })}
-                        />
-                        {errors.title && (
-                            <span className="text-red-500 text-sm mt-1">{errors.title.message}</span>
+            <form onSubmit={ handleSubmit(handleCreateHabit) } className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <Input
+                        label="Nombre del hábito"
+                        type="text"
+                        placeholder="Escribe un título para un hábito"
+                        {...register("title", { required: "El título es obligatorio" })}
+                    />
+                    {errors.title && (
+                        <span className="block text-accent-blossom-700 text-sm font-bold mt-1.5">{errors.title.message}</span>
+                    )}
+                </div>
+                <div>
+                    <SelectCategory value={habit?.category_id ?? undefined} onChange={(c) => c && setValue('category_id', c.id)} />
+                </div>
+
+                <div>
+                    <Controller
+                        name="points"
+                        control={control}
+                        rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
+                        render={({ field }) => (
+                            <Stars
+                                label="Puntos de esfuerzo"
+                                points={field.value}
+                                onChange={(value: number) => field.onChange(value)}
+                            />
                         )}
-                    </div>
-                    <div>
-                        <SelectCategory value={habit?.category_id ?? undefined} onChange={(c) => c && setValue('category_id', c.id)} />
-                    </div>
-                    
-                    <div className="mb-4">
-                        <Controller
-                            name="points"
-                            control={control}
-                            rules={{ min: { value: 1, message: 'Selecciona al menos 1 punto' } }}
-                            render={({ field }) => (
-                                <Stars
-                                    label="Puntos de esfuerzos"
-                                    points={field.value}
-                                    onChange={(value: number) => field.onChange(value)}
-                                />
-                            )}
-                        />
-                        {errors.points && (
-                            <span className="text-red-500 text-sm">{errors.points.message}</span>
-                        )}
-                    </div>
-                    <div className="col-span-3">
-                        <FrecuencyDays
-                            key={habit?.id ?? 'new'}
-                            onChange={handleFrecuencyClick}
-                            initialFrequency={habit?.frequency ?? ''}
-                            initialOptions={habit?.frequency === 'weekly' ? (habit.custom_days ?? []) : []}
-                            initialDays={habit?.frequency === 'custom' ? (habit.custom_days ?? []) : []}
-                        />
-                    </div>
-                    <div className="flex col-span-3 justify-end">
-                        <Button type="submit">
-                            { isEdit ? "Guardar cambios" : "Crear hábito" }
-                        </Button> 
-                    </div>
-                </form>
-            </Card>
-        </div>
+                    />
+                    {errors.points && (
+                        <span className="block text-accent-blossom-700 text-sm font-bold mt-1">{errors.points.message}</span>
+                    )}
+                </div>
+                <div className="md:col-span-3 rounded-3xl bg-white/40 shadow-clay-inset p-5">
+                    <p className="text-sm font-bold text-primary-800 mb-3">Frecuencia</p>
+                    <FrecuencyDays
+                        key={habit?.id ?? 'new'}
+                        onChange={handleFrecuencyClick}
+                        initialFrequency={habit?.frequency ?? ''}
+                        initialOptions={habit?.frequency === 'weekly' ? (habit.custom_days ?? []) : []}
+                        initialDays={habit?.frequency === 'custom' ? (habit.custom_days ?? []) : []}
+                    />
+                </div>
+                <div className="flex md:col-span-3 justify-end">
+                    <Button type="submit" color="tertiary" form="rounded" size="lg">
+                        { isEdit ? "Guardar cambios" : "Crear hábito" }
+                    </Button>
+                </div>
+            </form>
+        </Modal>
     );
 }

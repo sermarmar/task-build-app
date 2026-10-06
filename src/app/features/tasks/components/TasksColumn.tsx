@@ -1,9 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
-import { Card, CardTitle, CardHeader } from '../../../components/ux/Card';
-import { ScrollFadeContainer } from '@/app/components/ux/ScrollFadeContainer';
 import type { Task } from "../models/Task";
 import type { Status } from "../../../core/models/Status";
 import { TaskCard } from "./TaskCard";
+import { Badge } from "@/app/components/ux/Badge";
+import { cn } from "@/utils/cn";
 
 interface TasksColumnProps {
     status: Status;
@@ -14,30 +14,31 @@ export const TasksColumn: React.FC<TasksColumnProps> = ({ status, tasks }) => {
     const { setNodeRef, isOver } = useDroppable({ id: status.id! });
 
     return (
-        <Card
-            className={`h-full flex flex-col transition-colors pb-5 px-2 duration-150 ${isOver ? 'ring-2 ring-primary-400 ring-offset-1' : ''} shadow-none border-2 border-dashed border-primary-950/40`}
-            color={`bg-[#eceee6]`}
-            withPadding={false}
+        <div
+            className={cn(
+                "flex flex-col flex-1 min-w-[220px] h-full min-h-[24rem] rounded-3xl bg-white/35 shadow-clay-inset p-3 transition-colors duration-150",
+                isOver && "bg-tertiary-50/80 ring-2 ring-tertiary-300",
+            )}
         >
-            <CardHeader className="border-none rounded-t-lg p-4 shrink-0">
-                <CardTitle className="text-base text-primary-950">{status.name}</CardTitle>
-            </CardHeader>
+            <header className="flex items-center justify-between px-2 pt-1 pb-3 shrink-0">
+                <h3>
+                    <Badge color={status.color} text={status.name} className="text-sm" />
+                </h3>
+                <span className="min-w-7 rounded-full bg-surface shadow-clay-sm px-2 py-0.5 text-center text-xs font-bold text-primary-600">
+                    {tasks.length}
+                </span>
+            </header>
 
-            <ScrollFadeContainer
-                className="flex-1 min-h-0"
-                fadeColor={`#eceee6`}
-            >
-                <div ref={setNodeRef} className="flex flex-col gap-4 min-h-full">
-                    {tasks.map((task) => (
-                        <TaskCard key={task.id} task={task} />
-                    ))}
-                    {tasks.length === 0 && (
-                        <div className="text-gray-400 text-sm text-center">
-                            Sin tareas
-                        </div>
-                    )}
-                </div>
-            </ScrollFadeContainer>
-        </Card>
+            <div ref={setNodeRef} className="flex-1 min-h-0 overflow-y-auto scrollbar-primary flex flex-col gap-3 p-1">
+                {tasks.map((task) => (
+                    <TaskCard key={task.id} task={task} />
+                ))}
+                {tasks.length === 0 && (
+                    <div className="flex-1 flex items-center justify-center rounded-2xl border-2 border-dashed border-primary-200 text-primary-400 text-sm font-bold py-8">
+                        Suelta aquí una tarea
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };

@@ -91,8 +91,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
                     <div className="relative drop-shadow-md">
                         <div
                             className={cn(
-                                'bg-white rounded-xl px-3 py-2 text-xs text-text-DEFAULT whitespace-nowrap',
-                                'border border-primary-900/60',
+                                'bg-surface rounded-xl px-3 py-2 text-xs text-text-DEFAULT whitespace-nowrap',
+                                'border border-primary-100',
                                 className
                             )}
                         >
@@ -103,7 +103,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
                             <div
                                 className={cn(
                                     ARROW_CLASSES[placement],
-                                    'w-2 h-2 bg-white border border-primary-900/60'
+                                    'w-2 h-2 bg-surface border border-primary-100'
                                 )}
                             />
                         )}

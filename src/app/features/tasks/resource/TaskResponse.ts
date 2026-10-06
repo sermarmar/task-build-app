@@ -4,4 +4,5 @@ export type TaskResponse = {
     points: number;
     category_id: string;
     status_id: number;
+    priority?: string;
 };
