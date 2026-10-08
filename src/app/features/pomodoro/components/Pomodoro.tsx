@@ -1,32 +1,29 @@
 import { Bed, GlassWater, Laptop, Pause, Play, RefreshCcw, RotateCcw, Timer } from "lucide-react";
-import React, { useEffect, useCallback } from "react";
-import { usePomodoroStore } from "../stores/usePomodoreStore";
+import React, { useEffect } from "react";
+import { MODE_SECONDS, usePomodoroStore, type PomodoroMode } from "../stores/usePomodoreStore";
 import { Card } from "@/app/components/ux/Card";
 import { CircularProgress } from "@/app/components/ux/CircularProgress";
 import { Button } from "@/app/components/ux/Button";
 import { cn } from "@/utils/cn";
 
-const MODES = {
+const MODES: Record<'WORK' | 'SHORT_BREAK' | 'LONG_BREAK', { name: PomodoroMode; label: string; strokeColor: string; activeClass: string; dotClass: string }> = {
     WORK: {
-        name: 'work' as const,
+        name: 'work',
         label: 'Trabajo',
-        minutes: 25,
         strokeColor: "var(--color-tertiary-400)",
         activeClass: "clay-peach text-white",
         dotClass: "clay-peach",
     },
     SHORT_BREAK: {
-        name: 'shortBreak' as const,
+        name: 'shortBreak',
         label: 'Descanso',
-        minutes: 5,
         strokeColor: "var(--color-secondary-400)",
         activeClass: "clay-blue text-secondary-950",
         dotClass: "clay-blue",
     },
     LONG_BREAK: {
-        name: 'longBreak' as const,
+        name: 'longBreak',
         label: 'Descanso largo',
-        minutes: 15,
         strokeColor: "var(--color-lilac-400)",
         activeClass: "bg-lilac-300 text-primary-950",
         dotClass: "bg-lilac-400",
@@ -41,33 +38,13 @@ const MODE_ICONS = {
 
 const CYCLE_SLOTS = 8;
 
-type ModeType = typeof MODES.WORK.name | typeof MODES.SHORT_BREAK.name | typeof MODES.LONG_BREAK.name;
-
 export const Pomodoro: React.FC = () => {
+    // El reloj vive en el store (startPomodoroInterval en main.tsx): este componente solo pinta y lanza acciones
     const {
-        minutes, seconds, isActive, mode,
+        remaining, isActive, mode,
         completedWork, completedShortBreaks, completedLongBreaks,
-        startedAt,
-        setMinutes, setSeconds, setIsActive, setMode, setStartedAt, reset, resetCycle
+        toggle, changeMode, resetTimer, resetCycle,
     } = usePomodoroStore();
-
-    const getTotalSeconds = useCallback((m: ModeType) => {
-        switch (m) {
-            case MODES.WORK.name:        return MODES.WORK.minutes * 60;
-            case MODES.SHORT_BREAK.name: return MODES.SHORT_BREAK.minutes * 60;
-            case MODES.LONG_BREAK.name:  return MODES.LONG_BREAK.minutes * 60;
-            default: return 0;
-        }
-    }, []);
-
-    const setTimerByMode = useCallback((m: ModeType) => {
-        switch (m) {
-            case MODES.WORK.name:        setMinutes(MODES.WORK.minutes); break;
-            case MODES.SHORT_BREAK.name: setMinutes(MODES.SHORT_BREAK.minutes); break;
-            case MODES.LONG_BREAK.name:  setMinutes(MODES.LONG_BREAK.minutes); break;
-        }
-        setSeconds(0);
-    }, [setMinutes, setSeconds]);
 
     useEffect(() => {
         if (Notification.permission === 'default') {
@@ -75,46 +52,9 @@ export const Pomodoro: React.FC = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (isActive && startedAt) {
-            const elapsed = Math.floor((Date.now() - startedAt) / 1000);
-            const totalRemaining = minutes * 60 + seconds - elapsed;
-
-            if (totalRemaining <= 0) {
-                reset(mode);
-            } else {
-                setMinutes(Math.floor(totalRemaining / 60));
-                setSeconds(totalRemaining % 60);
-                setStartedAt(Date.now());
-            }
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleChangeMode = (newMode: ModeType) => {
-        setMode(newMode);
-        setTimerByMode(newMode);
-        setIsActive(false);
-        setStartedAt(null);
-    };
-
-    const handleReset = () => {
-        reset(mode);
-        setTimerByMode(mode);
-    };
-
-    const handleToggle = () => {
-        if (!isActive) {
-            setStartedAt(Date.now());
-        } else {
-            setStartedAt(null);
-        }
-        setIsActive((prev) => !prev);
-    };
-
-    const totalSeconds = getTotalSeconds(mode) || 1;
-    const currentSeconds = minutes * 60 + seconds;
-    const progress = Math.round((currentSeconds / totalSeconds) * 100);
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+    const progress = Math.round((remaining / MODE_SECONDS[mode]) * 100);
 
     const currentMode = mode === MODES.WORK.name
         ? MODES.WORK
@@ -154,7 +94,7 @@ export const Pomodoro: React.FC = () => {
                                 type="button"
                                 role="radio"
                                 aria-checked={active}
-                                onClick={() => handleChangeMode(m.name)}
+                                onClick={() => changeMode(m.name)}
                                 className={cn(
                                     "flex items-center gap-3 rounded-full p-1.5 pr-5 font-bold text-sm transition-all cursor-pointer",
                                     active ? cn(m.activeClass, "shadow-clay-pressed") : "bg-white/40 text-primary-500 shadow-clay-inset hover:text-primary-800",
@@ -185,7 +125,7 @@ export const Pomodoro: React.FC = () => {
                     <div className="flex items-center gap-4">
                         <button
                             type="button"
-                            onClick={handleReset}
+                            onClick={resetTimer}
                             aria-label="Reiniciar temporizador"
                             className="size-11 rounded-full clay-knob flex items-center justify-center text-primary-600 hover:text-primary-900 transition cursor-pointer"
                         >
@@ -193,7 +133,7 @@ export const Pomodoro: React.FC = () => {
                         </button>
                         <button
                             type="button"
-                            onClick={handleToggle}
+                            onClick={toggle}
                             aria-label={isActive ? 'Pausar' : 'Iniciar'}
                             className="size-16 rounded-full clay-peach shadow-clay-pressed flex items-center justify-center text-white transition hover:-translate-y-0.5 cursor-pointer"
                         >
