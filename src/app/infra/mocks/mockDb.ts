@@ -2,6 +2,7 @@ import type { Category } from '@/app/core/models/Category';
 import type { Status } from '@/app/core/models/Status';
 import type { Group } from '@/app/features/group/models/Group';
 import type { HabitEntity } from '@/app/infra/entities/HabitEntity';
+import type { HealthProfileEntity } from '@/app/infra/entities/HealthProfileEntity';
 import type { TaskEntity } from '@/app/infra/entities/TaskEntity';
 import { createSeed } from '@/app/infra/mocks/mockSeed';
 
@@ -25,6 +26,7 @@ export interface MockDb {
     tasks: TaskRow[];
     habits: HabitRow[];
     habitLogs: HabitLogRow[];
+    healthProfiles?: HealthProfileEntity[];
 }
 
 const STORAGE_KEY = 'mock_db';

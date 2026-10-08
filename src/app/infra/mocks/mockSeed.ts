@@ -9,6 +9,7 @@ export const MOCK_USER: User = {
     email: 'demo@task-build.dev',
     name: 'Demo',
     lastName: 'Usuario',
+    birthDate: '1995-06-15',
 };
 
 const HISTORY_DAYS = 150;
@@ -210,5 +211,23 @@ export const createSeed = (): MockDb => {
         tasks: createTasks(),
         habits,
         habitLogs: createHabitLogs(),
+        healthProfiles: [{
+            user_id: MOCK_USER.id,
+            height_cm: 168,
+            weight_kg: 63.5,
+            target_weight_kg: 60,
+            sex: 'female',
+            activity_level: 'moderate',
+            sleep_goal_hours: 8,
+            bedtime: '23:30',
+            wake_time: '07:15',
+            water_goal_liters: 2,
+            stress_level: 3,
+            energy_level: 4,
+            practices_meditation: true,
+            attends_therapy: false,
+            created_at: SEED_DATE,
+            updated_at: SEED_DATE,
+        }],
     };
 };
