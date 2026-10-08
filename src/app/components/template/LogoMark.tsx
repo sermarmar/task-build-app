@@ -1,4 +1,3 @@
-import { Waves } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 interface LogoMarkProps {
@@ -6,15 +5,12 @@ interface LogoMarkProps {
     className?: string;
 }
 
+// La imagen ya trae la insignia clay, la esfera azul y su sombra: el círculo ocupa ~3/4 del lado.
 export const LogoMark: React.FC<LogoMarkProps> = ({ size = 'sm', className }) => (
-    <span
-        className={cn(
-            "relative inline-flex items-center justify-center rounded-full clay-peach text-white shadow-clay-pressed shrink-0",
-            size === 'sm' ? "size-12 [&_svg]:size-6" : "size-20 [&_svg]:size-10",
-            className,
-        )}
-    >
-        <span className="absolute -right-1 -bottom-1 size-1/2 rounded-full clay-blue shadow-clay-sm" />
-        <Waves className="relative" strokeWidth={2.5} />
-    </span>
+    <img
+        src="/logo-abyssal.webp"
+        alt=""
+        draggable={false}
+        className={cn("shrink-0 select-none", size === 'sm' ? "size-16" : "size-28", className)}
+    />
 );
