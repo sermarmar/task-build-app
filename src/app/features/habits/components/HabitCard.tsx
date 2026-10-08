@@ -6,7 +6,6 @@ import { CompleteHabitService } from "../services/CompleteHabitService";
 import { DeleteHabitService } from "../services/DeleteHabitService";
 import { Checkbox } from "../../../components/ux/Checkbox";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
-import { useColorAlpha } from "../../../hooks/useColorAlpha";
 import { Pencil, Trash2, X } from "lucide-react";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import { cn } from "@/utils/cn";
@@ -23,7 +22,6 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted, showBu
     const { selectedDate, openModal, refreshHabits } = useHabitBoardContext();
     const { notify } = useNotification();
     const color = habit.categories?.group?.color ?? '#9580b5';
-    const tint = useColorAlpha(color, 0.16);
 
     useEffect(() => {
         setChecked(isCompleted);
@@ -50,8 +48,8 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted, showBu
         <div className="group flex gap-3 items-center justify-between p-2.5 pr-4 rounded-2xl bg-white/70 shadow-clay-sm text-primary-950">
             <div className="flex gap-3 items-center min-w-0">
                 <span
-                    className="size-10 flex items-center justify-center rounded-xl shrink-0 [&_svg]:size-5"
-                    style={{ backgroundColor: tint, color }}
+                    className="size-10 flex items-center justify-center rounded-2xl shrink-0 text-white shadow-clay-pressed [&_svg]:size-5"
+                    style={{ background: `linear-gradient(160deg, ${color}aa, ${color})` }}
                 >
                     <DynamicIcon name={habit.categories?.icon ?? 'Star'} />
                 </span>

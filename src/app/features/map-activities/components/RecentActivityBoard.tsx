@@ -2,17 +2,17 @@ import { History } from "lucide-react";
 import { Card } from "@/app/components/ux/Card";
 import { DynamicIcon } from "@/app/components/ux/DynamicIcon";
 import { Skeleton, SkeletonLine } from "@/app/components/ux/Skeleton";
-import { useColorAlpha } from "@/app/hooks/useColorAlpha";
 import { useRecentActivity } from "../hooks/useRecentActivity";
 import { formatRelativeTime } from "../helpers/relativeTime";
 import type { RecentActivityItem } from "../services/RetrieveRecentActivityService";
 
 const RecentActivityRow: React.FC<{ item: RecentActivityItem }> = ({ item }) => {
-    const tint = useColorAlpha(item.color, 0.16);
-
     return (
         <li className="flex items-start gap-3">
-            <span className="size-10 shrink-0 rounded-xl flex items-center justify-center [&_svg]:size-5" style={{ backgroundColor: tint, color: item.color }}>
+            <span
+                className="size-10 shrink-0 rounded-2xl flex items-center justify-center text-white shadow-clay-pressed [&_svg]:size-5"
+                style={{ background: `linear-gradient(160deg, ${item.color}aa, ${item.color})` }}
+            >
                 <DynamicIcon name={item.icon} />
             </span>
             <div className="min-w-0">

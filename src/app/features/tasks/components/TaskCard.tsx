@@ -28,15 +28,14 @@ const PRIORITY_ICONS: Record<PriorityLevel, React.ReactElement> = {
 // Solo presentación: lo usan la tarjeta arrastrable y la copia que flota en el DragOverlay
 export const TaskCardView: React.FC<TaskCardViewProps> = ({ task, className, actions }) => {
     const color = task.category?.group?.color ?? '#9580b5';
-    const tint = useColorAlpha(color, 0.16);
     const priorityTint = useColorAlpha(task.priority?.color ?? '#000000', 0.14);
 
     return (
         <article className={cn('group flex flex-col gap-3 p-3 rounded-2xl bg-surface shadow-clay-sm', className)}>
             <div className="flex gap-3 items-start">
                 <span
-                    className="size-10 flex items-center justify-center rounded-xl shrink-0 [&_svg]:size-5"
-                    style={{ backgroundColor: tint, color }}
+                    className="size-10 flex items-center justify-center rounded-2xl shrink-0 text-white shadow-clay-pressed [&_svg]:size-5"
+                    style={{ background: `linear-gradient(160deg, ${color}aa, ${color})` }}
                 >
                     <DynamicIcon name={task.category?.icon ?? 'ClipboardList'} />
                 </span>

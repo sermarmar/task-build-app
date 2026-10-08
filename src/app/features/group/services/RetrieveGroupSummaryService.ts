@@ -36,7 +36,7 @@ export const RetrieveGroupSummaryService = {
                     id: group.id,
                     name: group.name.charAt(0).toUpperCase() + group.name.slice(1),
                     color: group.color,
-                    icon: group.categories?.[0]?.icon ?? 'Sparkles',
+                    icon: group.icon,
                     habits: habitsByGroup[group.name] ?? 0,
                     categories: group.categories?.length ?? 0,
                 }))

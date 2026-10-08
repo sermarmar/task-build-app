@@ -90,9 +90,9 @@
     "group": "productividad"
   },
   {
-    "key": "CheckSquare",
+    "key": "SquareCheck",
     "label": "Tareas",
-    "icon": "CheckSquare",
+    "icon": "SquareCheck",
     "group": "productividad"
   },
   {
@@ -270,9 +270,9 @@
     "group": "hogar"
   },
   {
-    "key": "Home",
+    "key": "House",
     "label": "Hogar",
-    "icon": "Home",
+    "icon": "House",
     "group": "hogar"
   },
   {
@@ -348,9 +348,9 @@
     "group": "aprendizaje"
   },
   {
-    "key": "Code2",
+    "key": "CodeXml",
     "label": "Programar",
-    "icon": "Code2",
+    "icon": "CodeXml",
     "group": "aprendizaje"
   },
   {

@@ -5,7 +5,10 @@ import { DynamicIcon } from "@/app/components/ux/DynamicIcon";
 import { ColorPicker } from "@/app/components/template/ColorPicker";
 import { GroupService } from "@/app/core/service/groups/GroupService";
 import type { Group } from "../models/Group";
+import icons from "@/app/shared/icons.json";
 import { Layers, Palette } from "lucide-react";
+
+type Picker = { groupId: string; kind: 'color' | 'icon' };
 
 const hexToRgba = (hex: string, alpha: number) => {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -17,7 +20,7 @@ const hexToRgba = (hex: string, alpha: number) => {
 const GroupCardSkeleton: React.FC = () => (
     <div className="rounded-3xl bg-white/50 p-4 flex flex-col gap-4">
         <div className="flex items-center gap-3">
-            <Skeleton className="size-10 rounded-full shrink-0" />
+            <Skeleton className="size-10 rounded-2xl shrink-0" />
             <SkeletonLine className="w-1/3" />
         </div>
         <div className="flex gap-2">
@@ -31,7 +34,7 @@ const GroupCardSkeleton: React.FC = () => (
 export const GroupBoard: React.FC = () => {
     const [groups, setGroups] = useState<Group[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [openGroupId, setOpenGroupId] = useState<string | null>(null);
+    const [picker, setPicker] = useState<Picker | null>(null);
     const pickerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -45,18 +48,28 @@ export const GroupBoard: React.FC = () => {
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-                setOpenGroupId(null);
+                setPicker(null);
             }
         };
-        if (openGroupId) {
+        if (picker) {
             document.addEventListener('mousedown', handleClickOutside);
         }
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [openGroupId]);
+    }, [picker]);
+
+    const togglePicker = (groupId: string, kind: Picker['kind']) => {
+        setPicker(prev => prev?.groupId === groupId && prev.kind === kind ? null : { groupId, kind });
+    };
 
     const handleColorChange = async (groupId: string, color: string) => {
         setGroups(prev => prev.map(g => g.id === groupId ? { ...g, color } : g));
         await GroupService.updateGroupColor(groupId, color);
+    };
+
+    const handleIconChange = async (groupId: string, icon: string) => {
+        setGroups(prev => prev.map(g => g.id === groupId ? { ...g, icon } : g));
+        setPicker(null);
+        await GroupService.updateGroupIcon(groupId, icon);
     };
 
     const tabTitle = (
@@ -67,7 +80,7 @@ export const GroupBoard: React.FC = () => {
     );
 
     return (
-        <Card tabTitle={tabTitle} tabSubtitle="Cada grupo es un área de tu bienestar. Cambia su color con la paleta.">
+        <Card tabTitle={tabTitle} tabSubtitle="Cada grupo es un área de tu bienestar. Toca su icono para cambiarlo o usa la paleta para el color.">
             {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     {Array.from({ length: 3 }).map((_, i) => <GroupCardSkeleton key={i} />)}
@@ -79,10 +92,15 @@ export const GroupBoard: React.FC = () => {
                     {groups.map((group) => (
                         <article key={group.id} className="relative rounded-3xl bg-white/60 shadow-clay-sm p-4">
                             <div className="flex items-center gap-3 mb-4">
-                                <span
-                                    className="size-10 rounded-full shrink-0 shadow-clay-pressed"
-                                    style={{ background: `radial-gradient(circle at 32% 28%, #ffffffaa, ${group.color} 60%)` }}
-                                />
+                                <button
+                                    type="button"
+                                    aria-label={`Cambiar icono de ${group.name}`}
+                                    onClick={() => togglePicker(group.id, 'icon')}
+                                    className="size-10 rounded-2xl shrink-0 flex items-center justify-center text-white shadow-clay-pressed cursor-pointer"
+                                    style={{ background: `linear-gradient(160deg, ${group.color}aa, ${group.color})` }}
+                                >
+                                    <DynamicIcon name={group.icon} size={20} />
+                                </button>
                                 <div className="min-w-0 flex-1">
                                     <h3 className="font-heading font-bold text-primary-950 capitalize truncate">{group.name}</h3>
                                     <p className="text-xs text-primary-400">{group.categories?.length ?? 0} categorías</p>
@@ -90,7 +108,7 @@ export const GroupBoard: React.FC = () => {
                                 <button
                                     type="button"
                                     aria-label={`Cambiar color de ${group.name}`}
-                                    onClick={() => setOpenGroupId(openGroupId === group.id ? null : group.id)}
+                                    onClick={() => togglePicker(group.id, 'color')}
                                     className="size-9 rounded-full clay-knob flex items-center justify-center text-primary-500 hover:text-tertiary-600 transition cursor-pointer"
                                 >
                                     <Palette size={16} />
@@ -102,8 +120,8 @@ export const GroupBoard: React.FC = () => {
                                     <span
                                         key={cat.id}
                                         title={cat.name}
-                                        className="size-8 flex items-center justify-center rounded-xl"
-                                        style={{ backgroundColor: hexToRgba(group.color, 0.16), color: group.color }}
+                                        className="size-8 flex items-center justify-center rounded-xl text-white shadow-clay-pressed"
+                                        style={{ background: `linear-gradient(160deg, ${group.color}aa, ${group.color})` }}
                                     >
                                         <DynamicIcon name={cat.icon} size={15} />
                                     </span>
@@ -115,7 +133,26 @@ export const GroupBoard: React.FC = () => {
                                 )}
                             </div>
 
-                            {openGroupId === group.id && (
+                            {picker?.groupId === group.id && picker.kind === 'icon' && (
+                                <div ref={pickerRef} className="absolute inset-x-2 top-16 z-50 flex flex-wrap justify-center gap-2 rounded-3xl bg-surface shadow-clay p-3">
+                                    {icons.filter(i => i.group === group.name.toLowerCase()).map(i => (
+                                        <button
+                                            key={i.key}
+                                            type="button"
+                                            title={i.label}
+                                            onClick={() => handleIconChange(group.id, i.icon)}
+                                            className="size-10 rounded-xl flex items-center justify-center transition hover:scale-105 cursor-pointer"
+                                            style={i.icon === group.icon
+                                                ? { background: group.color, color: 'white' }
+                                                : { backgroundColor: hexToRgba(group.color, 0.16), color: group.color }}
+                                        >
+                                            <DynamicIcon name={i.icon} size={18} />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            {picker?.groupId === group.id && picker.kind === 'color' && (
                                 <div ref={pickerRef} className="absolute right-4 top-16 z-50">
                                     <ColorPicker
                                         value={group.color}

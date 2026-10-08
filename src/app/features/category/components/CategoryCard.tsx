@@ -1,6 +1,5 @@
 import { DynamicIcon } from "@/app/components/ux/DynamicIcon";
 import { Category } from "@/app/core/models/Category";
-import { useColorAlpha } from "@/app/hooks/useColorAlpha";
 import { Pencil, Trash2 } from "lucide-react";
 
 interface CategoyCardProps {
@@ -11,14 +10,13 @@ interface CategoyCardProps {
 
 export const CategoryCard: React.FC<CategoyCardProps> = ({ category, onEdit, onDelete }) => {
     const color = category.group?.color ?? '#9580b5';
-    const tint = useColorAlpha(color, 0.16);
 
     return (
         <article className="group flex items-center justify-between gap-3 p-3 rounded-2xl bg-white/60 shadow-clay-sm">
             <div className="flex items-center gap-3 min-w-0">
                 <span
-                    className="size-11 flex items-center justify-center rounded-xl shrink-0"
-                    style={{ backgroundColor: tint, color }}
+                    className="size-11 flex items-center justify-center rounded-2xl shrink-0 text-white shadow-clay-pressed"
+                    style={{ background: `linear-gradient(160deg, ${color}aa, ${color})` }}
                 >
                     <DynamicIcon name={category.icon} />
                 </span>

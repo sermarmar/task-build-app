@@ -26,6 +26,7 @@ const GroupSupabaseService = {
             id: g.id,
             name: g.name,
             color: g.color,
+            icon: g.icon,
             created_at: g.created_at,
             categories: g.categories ?? [],
         }));
@@ -65,6 +66,26 @@ const GroupSupabaseService = {
                     : cat
             );
             sessionStorage.setItem('categories', JSON.stringify(updatedCategories));
+        }
+
+        return { error: null };
+    },
+
+    updateGroupIcon: async (id: string, icon: string): Promise<{ error: { message: string } | null }> => {
+        const { error } = await supabase
+            .from('groups')
+            .update({ icon })
+            .eq('id', id);
+
+        if (error) {
+            return { error: { message: "No se pudo actualizar el icono del grupo." } };
+        }
+
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        if (cached) {
+            const groups: Group[] = JSON.parse(cached);
+            const updated = groups.map(g => g.id === id ? { ...g, icon } : g);
+            sessionStorage.setItem(CACHE_KEY, JSON.stringify(updated));
         }
 
         return { error: null };

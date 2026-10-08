@@ -7,6 +7,7 @@ export interface WellbeingArea {
     label: string;
     value: number;
     color: string;
+    icon: string;
 }
 
 interface UseMentalHealthResult {
@@ -38,6 +39,7 @@ export const useMentalHealth = (): UseMentalHealthResult => {
                 label: group.name.charAt(0).toUpperCase() + group.name.slice(1),
                 value: groupPoints[group.name] ?? 0,
                 color: group.color,
+                icon: group.icon,
             })));
             setBalance(bal);
             setIsLoading(false);
