@@ -3,7 +3,7 @@ import type { Category } from "../../../core/models/Category";
 import { useNotification } from "../../../contexts/notification/useNotification";
 import { useForm } from "react-hook-form";
 import type { CategoryRequest } from "../resources/CategoryRequest";
-import { Card, CardTitle } from "../../../components/ux/Card";
+import { Modal } from "../../../components/ux/Modal";
 import { Button } from "../../../components/ux/Button";
 import { Input } from "../../../components/ux/Input";
 import { Check, X } from "lucide-react";
@@ -22,8 +22,7 @@ interface ModalFormCategoryProps {
 
 export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEdit, category, onClose }) => {
 
-    const [visible, setVisible] = useState(show);
-    const [previewColor, setPreviewColor] = useState('#6b7280');
+    const [previewColor, setPreviewColor] = useState('#9580b5');
     const { notify } = useNotification();
 
     const { register, handleSubmit, watch, setValue, reset } = useForm<CategoryRequest>({
@@ -40,16 +39,7 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
     const watchedIcon = watch("icon");
     const watchedGroupId = watch("group_id");
 
-    const previewBg = useColorAlpha(previewColor, 0.2);
-
-    useEffect(() => {
-        if (show) {
-            setVisible(true);
-        } else {
-            const t = setTimeout(() => setVisible(false), 300);
-            return () => clearTimeout(t);
-        }
-    }, [show]);
+    const previewBg = useColorAlpha(previewColor, 0.16);
 
     useEffect(() => {
         if (isEdit && category) {
@@ -63,8 +53,6 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
             reset({ name: '', description: '', icon: 'Star', group_id: '' });
         }
     }, [isEdit, category, reset]);
-
-    if (!visible) return null;
 
     const handleGroupSelect = (group: Pick<Group, 'id' | 'name' | 'color'>) => {
         setValue("group_id", group.id);
@@ -102,40 +90,33 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
     }
 
     return (
-        <div
-            id="modal-form-category"
-            tabIndex={-1}
-            className={`fixed inset-0 z-50 flex items-center justify-center -top-50 transition-all duration-300 ${
-                show ? "backdrop-blur-sm opacity-100" : "backdrop-blur-none opacity-0"
-            }`}
+        <Modal
+            show={show}
+            onClose={onClose}
+            title={isEdit ? "Editar categoría" : "Nueva categoría"}
+            subtitle="Elige un grupo y un icono para reconocerla de un vistazo."
+            className="max-w-3xl"
         >
-            <Card
-                className={`relative p-4 w-300 mx-auto mt-20 transform transition-all duration-300 ${
-                    show ? "scale-100 opacity-100" : "scale-95 opacity-0"
-                }`}
-            >
-                <CardTitle className="flex justify-between items-center">
-                    {isEdit ? "Editar categoría" : "Crear nueva categoría"}
-                    <X className="cursor-pointer" onClick={onClose} />
-                </CardTitle>
-                <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-3 gap-5 mt-4">
-                    <div>
-                        <Input
-                            label="Nombre de la categoría"
-                            type="text"
-                            placeholder="Escribe un nombre para la categoría"
-                            {...register("name", { required: "El nombre es obligatorio" })}
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            label="Descripción"
-                            type="text"
-                            placeholder="Escribe una descripción para la categoría"
-                            {...register("description")}
-                        />
-                    </div>
-                    <div className="flex items-center">
+            <form onSubmit={handleSubmit(handleSubmitForm)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <Input
+                        label="Nombre de la categoría"
+                        type="text"
+                        placeholder="Escribe un nombre para la categoría"
+                        {...register("name", { required: "El nombre es obligatorio" })}
+                    />
+                </div>
+                <div>
+                    <Input
+                        label="Descripción"
+                        type="text"
+                        placeholder="Escribe una descripción para la categoría"
+                        {...register("description")}
+                    />
+                </div>
+
+                <div className="md:col-span-2 flex items-center gap-5 rounded-3xl bg-white/40 shadow-clay-inset p-5">
+                    <div className="flex flex-col items-center gap-2">
                         <IconsList
                             selected={watchedIcon}
                             selectedGroupId={watchedGroupId}
@@ -143,32 +124,29 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
                             onSelectGroup={handleGroupSelect}
                             size="md"
                         />
+                        <span className="text-xs font-bold text-primary-400">Icono</span>
                     </div>
 
-                    {/* Preview en tiempo real */}
-                    <div
-                        className="flex gap-4 items-center p-4 rounded-md border-l-5 w-full col-span-2"
-                        style={{ backgroundColor: previewBg, borderColor: previewColor }}
-                    >
+                    <div className="flex-1 flex gap-4 items-center p-4 rounded-2xl bg-surface shadow-clay-sm">
                         <span
-                            className="text-tertiary-50 w-10 h-10 flex items-center justify-center rounded-full"
-                            style={{ backgroundColor: previewColor }}
+                            className="size-12 flex items-center justify-center rounded-xl shrink-0"
+                            style={{ backgroundColor: previewBg, color: previewColor }}
                         >
                             <DynamicIcon name={watchedIcon} />
                         </span>
-                        <div className="flex flex-col gap-2">
-                            <h3 className="text-md font-bold">{watchedName || "Nombre de categoría"}</h3>
-                            <h5 className="text-sm text-secondary-800">{watchedDescription || "Descripción de la categoría"}</h5>
+                        <div className="min-w-0">
+                            <h3 className="font-bold text-primary-950 truncate">{watchedName || "Nombre de categoría"}</h3>
+                            <p className="text-sm text-primary-400 truncate">{watchedDescription || "Descripción de la categoría"}</p>
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex col-span-3 justify-end">
-                        <Button type="submit">
-                            {isEdit ? "Guardar cambios" : "Crear categoría"}
-                        </Button>
-                    </div>
-                </form>
-            </Card>
-        </div>
+                <div className="flex md:col-span-2 justify-end">
+                    <Button type="submit" color="tertiary" form="rounded" size="lg">
+                        {isEdit ? "Guardar cambios" : "Crear categoría"}
+                    </Button>
+                </div>
+            </form>
+        </Modal>
     );
 };

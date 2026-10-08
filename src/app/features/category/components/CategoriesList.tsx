@@ -9,13 +9,12 @@ interface CategoriesListProps {
 }
 
 const CategoryCardSkeleton: React.FC = () => (
-    <div className="rounded-xl border border-primary-100 p-4 flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-            <Skeleton className="w-7 h-7 rounded-full shrink-0" />
+    <div className="rounded-2xl bg-white/50 p-3 flex items-center gap-3">
+        <Skeleton className="size-11 rounded-xl shrink-0" />
+        <div className="flex-1 flex flex-col gap-2">
             <SkeletonLine className="w-1/2" />
+            <SkeletonLine className="w-3/4 h-3" />
         </div>
-        <SkeletonLine className="w-3/4 h-3" />
-        <Skeleton className="w-16 h-5 rounded-full" />
     </div>
 );
 
@@ -24,23 +23,19 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({ onEdit, onDelete
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-3 gap-4 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {Array.from({ length: 6 }).map((_, i) => <CategoryCardSkeleton key={i} />)}
             </div>
         );
     }
 
-    return (
-        <>
-            {categories.length === 0 ? (
-                <p>No hay categorías disponibles.</p>
-            ) : (
-                <div className="grid grid-cols-3 gap-4 w-full">
-                    {categories.map((category: Category) => (
-                        <CategoryCard key={category.id} category={category} onEdit={onEdit} onDelete={onDelete} />
-                    ))}
-                </div>
-            )}
-        </>
+    return categories.length === 0 ? (
+        <p className="text-primary-400 font-bold">No hay categorías disponibles.</p>
+    ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {categories.map((category: Category) => (
+                <CategoryCard key={category.id} category={category} onEdit={onEdit} onDelete={onDelete} />
+            ))}
+        </div>
     );
 };

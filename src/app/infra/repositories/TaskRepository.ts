@@ -2,10 +2,12 @@ import { supabase } from "../../../config/Database";
 import type { TaskEntity } from "../entities/TaskEntity";
 import type { TaskResponse } from "../../features/tasks/resource/TaskResponse";
 import type { ErrorMessage } from "../../shared/Error";
+import { USE_MOCKS } from '@/config/env';
+import { TaskMockRepository } from '@/app/infra/mocks/repositories/TaskMockRepository';
 
 const TASK_SELECT = '*, categories:category_id (*, group:group_id (*)), statuses:status_id (*)';
 
-export const TaskRepository = {
+const TaskSupabaseRepository = {
 
     getAll: async (): Promise<{ data: TaskEntity[] | null; error: ErrorMessage | null }> => {
         const { data, error } = await supabase.from('tasks').select(TASK_SELECT);
@@ -85,3 +87,5 @@ export const TaskRepository = {
     },
 
 }
+
+export const TaskRepository: typeof TaskSupabaseRepository = USE_MOCKS ? TaskMockRepository : TaskSupabaseRepository;

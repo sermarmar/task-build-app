@@ -1,8 +1,10 @@
 import { supabase } from "../../../config/Database";
 import type { HabitLog } from "../../features/habits/models/HabitLog";
 import type { ErrorMessage } from "../../shared/Error";
+import { USE_MOCKS } from '@/config/env';
+import { HabitLogMockRepository } from '@/app/infra/mocks/repositories/HabitLogMockRepository';
 
-export const HabitLogRepository = {
+const HabitLogSupabaseRepository = {
 
     getByHabitIdAndDate: async (habitId: string, date: string): Promise<{ habitLogs: HabitLog[] | null; error: ErrorMessage | null }> => {
         const { data, error } = await supabase
@@ -86,3 +88,5 @@ export const HabitLogRepository = {
     }
 
 };
+
+export const HabitLogRepository: typeof HabitLogSupabaseRepository = USE_MOCKS ? HabitLogMockRepository : HabitLogSupabaseRepository;

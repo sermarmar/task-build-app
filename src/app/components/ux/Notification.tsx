@@ -1,12 +1,11 @@
-import { twMerge } from "tailwind-merge";
-import { Card } from "./Card";
+import { cn } from "@/utils/cn";
 
 const colorMap: Record<string, string> = {
-    success: 'bg-green-200 text-green-600',
-    danger:   'bg-red-200 text-red-600',
-    warning: 'bg-yellow-200 text-yellow-600',
-    info: 'bg-cyan-200 text-cyan-600',
-    default: 'bg-gray-200 text-gray-600'
+    success: 'text-emerald-800 [&_svg]:bg-emerald-100',
+    danger:  'text-accent-blossom-800 [&_svg]:bg-accent-blossom-100',
+    warning: 'text-tertiary-800 [&_svg]:bg-cream-200',
+    info:    'text-secondary-800 [&_svg]:bg-secondary-100',
+    default: 'text-primary-800 [&_svg]:bg-primary-100',
 };
 
 interface NotificationProps {
@@ -16,14 +15,18 @@ interface NotificationProps {
 }
 
 export const Notification: React.FC<NotificationProps> = ( { children, color = 'default', leaving} ) => {
-
-    const colorClass = colorMap[color];
-
     return (
         <div className={leaving ? 'animate-notification-out' : 'animate-notification-in'}>
-            <Card className={twMerge('flex items-center rounded-2xl p-5', colorClass)}>
+            <div
+                role="status"
+                className={cn(
+                    'flex items-center gap-3 rounded-2xl bg-surface shadow-clay px-4 py-3 font-bold text-sm',
+                    '[&_svg]:size-8 [&_svg]:p-1.5 [&_svg]:rounded-full [&_svg]:shrink-0',
+                    colorMap[color],
+                )}
+            >
                 {children}
-            </Card>
+            </div>
         </div>
     );
 }

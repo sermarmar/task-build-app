@@ -43,9 +43,9 @@ export const TEXT_COLORS = [
 ];
 
 export const LEVEL_CLASSES: Record<DayActivity['level'], string> = {
-    0: 'bg-tertiary-500/20',
-    1: 'bg-tertiary-300',
-    2: 'bg-secondary-300',
-    3: 'bg-primary-700',
-    4: 'bg-primary-900',
+    0: 'bg-primary-100/80',
+    1: 'bg-tertiary-200',
+    2: 'bg-tertiary-300',
+    3: 'bg-tertiary-400',
+    4: 'bg-tertiary-600',
 };

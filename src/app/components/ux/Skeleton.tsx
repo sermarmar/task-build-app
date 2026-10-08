@@ -8,7 +8,7 @@ interface SkeletonProps {
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({ className }) => (
-    <div className={cn('animate-pulse rounded-md bg-primary-100/60', className)} />
+    <div className={cn('animate-pulse rounded-md bg-primary-100', className)} />
 );
 
 export const SkeletonLine: React.FC<{ className?: string }> = ({ className }) => (

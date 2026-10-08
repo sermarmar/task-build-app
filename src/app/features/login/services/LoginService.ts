@@ -1,8 +1,10 @@
 import { supabase } from '../../../../config/Database';
 import type { ErrorMessage } from '../../../shared/Error';
 import type { User } from '../model/User';
+import { USE_MOCKS } from '@/config/env';
+import { LoginMockService } from '@/app/infra/mocks/services/LoginMockService';
 
-export const LoginService = {
+const LoginSupabaseService = {
     /**
      * Login usando username + password.
      * 1. Busca el email asociado al username en la tabla `profile`.
@@ -56,3 +58,5 @@ export const LoginService = {
         return { data, error };
     },
 };
+
+export const LoginService: typeof LoginSupabaseService = USE_MOCKS ? LoginMockService : LoginSupabaseService;

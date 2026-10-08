@@ -1,7 +1,7 @@
 import { ClipboardList, X } from "lucide-react";
 import { ModalCreateTask } from "./ModalCreateTask";
 import { useState } from "react";
-import { Card, CardBody } from "../../../components/ux/Card";
+import { Card } from "../../../components/ux/Card";
 import { TaskBoardProvider } from "../contexts/TaskBoardProvider";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
 import { TabActionsTask } from "./TabActionsTask";
@@ -12,13 +12,13 @@ import { UpdateTaskService } from "../services/UpdateTaskService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 
 const TasksBoardSkeleton: React.FC = () => (
-    <div className="grid grid-cols-2 gap-5">
+    <div className="flex gap-5 h-full">
         {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-primary-100 p-4 flex flex-col gap-3">
+            <div key={i} className="flex-1 min-w-[260px] rounded-3xl bg-white/35 shadow-clay-inset p-4 flex flex-col gap-3">
                 <SkeletonLine className="w-1/3" />
                 {Array.from({ length: 3 }).map((_, j) => (
-                    <div key={j} className="rounded-md border-l-4 border-primary-200 p-3 flex gap-3 items-center">
-                        <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                    <div key={j} className="rounded-2xl bg-white/60 p-3 flex gap-3 items-center">
+                        <Skeleton className="size-10 rounded-xl shrink-0" />
                         <div className="flex flex-col gap-2 flex-1">
                             <SkeletonLine className="w-2/3" />
                             <SkeletonLine className="w-1/3" />
@@ -52,15 +52,15 @@ export const TasksBoardContent: React.FC = () => {
     };
 
     return (
-        <CardBody className="mt-5 flex-1 min-h-0 flex flex-col">
+        <div className="h-full flex flex-col">
             {isLoading && <TasksBoardSkeleton />}
-            {!isLoading && error && <div className="error">{error.message}</div>}
+            {!isLoading && error && <p className="text-sm text-accent-blossom-700">{error.message}</p>}
             {!isLoading && !error && (
                 <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                     <TaskColumns status={statuses} tasks={tasks} />
                 </DndContext>
             )}
-        </CardBody>
+        </div>
     );
 };
 
@@ -69,15 +69,15 @@ const TasksBoardInner: React.FC = () => {
     const { editingTask, closeEditModal } = useTaskBoardContext();
 
     const tabTitle = (
-        <div className="flex items-center gap-2">
+        <>
             <ClipboardList />
-            Mis Tareas
-        </div>
+            Mis tareas
+        </>
     );
 
     return (
         <>
-            <Card className="h-full flex flex-col" tabTitle={tabTitle} tabActions={<TabActionsTask onCreateClick={() => setIsCreateModalOpen(true)} />}>
+            <Card tabTitle={tabTitle} tabActions={<TabActionsTask onCreateClick={() => setIsCreateModalOpen(true)} />}>
                 <TasksBoardContent />
             </Card>
             <ModalCreateTask show={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />

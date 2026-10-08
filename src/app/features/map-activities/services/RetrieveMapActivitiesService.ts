@@ -3,12 +3,16 @@ import type { ActivityGrid, DayActivity } from '../models/MapActivity';
 
 const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
-function toLevel(count: number): DayActivity['level'] {
-    if (count === 0) return 0;
-    if (count <= 2) return 1;
-    if (count <= 4) return 2;
-    if (count <= 7) return 3;
-    return 4;
+function buildLevelFn(max: number): (count: number) => DayActivity['level'] {
+    if (max === 0) return () => 0;
+    const step = max / 4;
+    return (count) => {
+        if (count === 0) return 0;
+        if (count <= step) return 1;
+        if (count <= step * 2) return 2;
+        if (count <= step * 3) return 3;
+        return 4;
+    };
 }
 
 function toDateStr(date: Date): string {
@@ -56,6 +60,9 @@ export const RetrieveMapActivitiesService = {
         }
 
         // Build weeks (Mon..Sun) from startDate to endDate
+        const maxCount = Object.values(countMap).reduce((a, b) => Math.max(a, b), 0);
+        const toLevel = buildLevelFn(maxCount);
+
         const weeks: ActivityGrid['weeks'] = [];
         const monthLabels: ActivityGrid['months'] = [];
         const current = new Date(startDate);

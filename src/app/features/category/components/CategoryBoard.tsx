@@ -1,6 +1,6 @@
-import { Plus } from "lucide-react";
+import { Plus, Tags } from "lucide-react";
 import { Button } from "../../../components/ux/Button";
-import { Card, CardBody, CardTitle } from "../../../components/ux/Card";
+import { Card } from "../../../components/ux/Card";
 import { CategoriesList } from "./CategoriesList";
 import { ModalFormCategory } from "./ModalFormCategory";
 import { useState } from "react";
@@ -38,18 +38,24 @@ export const CategoryBoard: React.FC = () => {
         }
     };
 
+    const tabTitle = (
+        <>
+            <Tags />
+            Categorías
+        </>
+    );
+
+    const tabActions = (
+        <Button type='button' color='tertiary' form='rounded' onClick={() => setIsModalOpen(true)}>
+            <Plus size={18} />
+            <span className="hidden sm:inline">Nueva categoría</span>
+        </Button>
+    );
+
     return(
         <>
-            <Card className='w-full'>
-                <CardTitle className='mb-5 flex items-center justify-between'>
-                    Categorías
-                    <Button type='button' color='primary' className='text-sm' onClick={() => setIsModalOpen(true)}>
-                        Agregar categoría <Plus />
-                    </Button>
-                </CardTitle>
-                <CardBody>
-                    <CategoriesList onEdit={handleEdit} onDelete={handleDelete} />
-                </CardBody>
+            <Card tabTitle={tabTitle} tabSubtitle="Clasifica tus tareas y hábitos." tabActions={tabActions}>
+                <CategoriesList onEdit={handleEdit} onDelete={handleDelete} />
             </Card>
             <ModalFormCategory
                 show={isModalOpen}

@@ -1,11 +1,13 @@
 import { supabase } from '../../../config/Database';
 import type { ErrorMessage } from '../../shared/Error';
+import { USE_MOCKS } from '@/config/env';
+import { MapActivitiesMockRepository } from '@/app/infra/mocks/repositories/MapActivitiesMockRepository';
 
 interface RawDateLog {
     completed_at: string;
 }
 
-export const MapActivitiesRepository = {
+const MapActivitiesSupabaseRepository = {
     getHabitLogsByDateRange: async (
         startDate: string,
         endDate: string
@@ -41,3 +43,5 @@ export const MapActivitiesRepository = {
         return { data, error: null };
     },
 };
+
+export const MapActivitiesRepository: typeof MapActivitiesSupabaseRepository = USE_MOCKS ? MapActivitiesMockRepository : MapActivitiesSupabaseRepository;

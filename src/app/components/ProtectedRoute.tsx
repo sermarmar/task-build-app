@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <p className="text-lg font-semibold text-gray-600">Cargando...</p>
+                <p className="text-lg font-bold text-primary-500 animate-pulse">Cargando…</p>
             </div>
         );
     }

@@ -37,9 +37,9 @@ export const LoginForm: React.FC = () => {
     }
 
     return(
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-5">
             {error && (
-                <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                <div role="alert" className="p-3 rounded-2xl bg-accent-blossom-100 text-accent-blossom-800 text-sm font-bold">
                     {error}
                 </div>
             )}
@@ -58,17 +58,13 @@ export const LoginForm: React.FC = () => {
                 label="Contraseña"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
-                className='bg-white'
                 placeholder="Ingresa tu contraseña"
                 value={password}
                 required
             />
-            <div className="flex justify-end">
-                <Button type="submit" disabled={loading} >
-                    {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-                </Button>
-            </div>
-            
+            <Button type="submit" color="tertiary" form="rounded" size="lg" disabled={loading} className="w-full justify-center mt-2">
+                {loading ? 'Iniciando sesión…' : 'Iniciar sesión'}
+            </Button>
         </form>
     )
 }

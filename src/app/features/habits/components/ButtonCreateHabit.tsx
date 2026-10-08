@@ -7,16 +7,14 @@ export const ButtonCreateHabit: React.FC = () => {
     const { openModal } = useHabitBoardContext();
 
     return (
-        <>
-            <ButtonWithIcon 
-                onClick={() => openModal(true)}
-                bgColor="bg-tertiary-300"
-                buttonText="Nuevo hábito"
-                textColor="text-primary-900"
-                iconColor="text-tertiary-50"
-                buttonColor="bg-primary-900"
-                icon={<Plus />}
-            />
-        </>
+        <ButtonWithIcon
+            onClick={() => openModal(true)}
+            bgColor="bg-surface"
+            buttonText="Nuevo hábito"
+            textColor="text-primary-800"
+            iconColor="text-secondary-950"
+            buttonColor="clay-blue"
+            icon={<Plus />}
+        />
     );
 }

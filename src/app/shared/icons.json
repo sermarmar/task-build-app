@@ -192,18 +192,6 @@
     "group": "bienestar"
   },
   {
-    "key": "Music",
-    "label": "Música",
-    "icon": "Music",
-    "group": "bienestar"
-  },
-  {
-    "key": "Palette",
-    "label": "Arte",
-    "icon": "Palette",
-    "group": "bienestar"
-  },
-  {
     "key": "Footprints",
     "label": "Paseo",
     "icon": "Footprints",
@@ -351,7 +339,7 @@
     "key": "Mic",
     "label": "Podcast",
     "icon": "Mic",
-    "group": "aprendizaje"
+    "group": "ocio"
   },
   {
     "key": "Globe",
@@ -393,12 +381,60 @@
     "key": "Gamepad2",
     "label": "Videojuegos",
     "icon": "Gamepad2",
-    "group": "bienestar"
+    "group": "ocio"
   },
   {
     "key": "Film",
     "label": "Películas",
     "icon": "Film",
-    "group": "bienestar"
+    "group": "ocio"
+  },
+  {
+    "key": "Music",
+    "label": "Música",
+    "icon": "Music",
+    "group": "ocio"
+  },
+  {
+    "key": "Palette",
+    "label": "Arte",
+    "icon": "Palette",
+    "group": "ocio"
+  },
+  {
+    "key": "Tv",
+    "label": "Series",
+    "icon": "Tv",
+    "group": "ocio"
+  },
+  {
+    "key": "Camera",
+    "label": "Fotografía",
+    "icon": "Camera",
+    "group": "ocio"
+  },
+  {
+    "key": "Dice5",
+    "label": "Juegos",
+    "icon": "Dice5",
+    "group": "ocio"
+  },
+  {
+    "key": "TreePine",
+    "label": "Senderismo",
+    "icon": "TreePine",
+    "group": "ocio"
+  },
+  {
+    "key": "Plane",
+    "label": "Viajes",
+    "icon": "Plane",
+    "group": "ocio"
+  },
+  {
+    "key": "Headphones",
+    "label": "Escuchar",
+    "icon": "Headphones",
+    "group": "ocio"
   }
 ]
