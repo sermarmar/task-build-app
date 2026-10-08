@@ -8,6 +8,7 @@ import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
 import { ModalFormHabit } from "../components/ModalFormHabit";
 import { DAY_NAMES, toLocalDateString } from "../helpers/daysHelpers";
 import { useHabitLogsStore } from "../stores/useHabitLogsStore";
+import { usePageLoading } from "../../../contexts/page-loading/usePageLoading";
 
 const getTodayDays = (): string[] => {
     const today = new Date();
@@ -85,6 +86,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     const habits = useMemo(() => filterHabits(allHabits, filters), [allHabits, filters]);
+    const pageLoading = usePageLoading(isLoading);
 
     const openModal = (open: boolean, isEdit: boolean = false, habit?: Habit) => {
         setIsOpenModal(open);
@@ -97,7 +99,7 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
 
     return (
-        <HabitBoardContext.Provider value={{habits, habitLogs, error, isLoading, selectedDate, refreshHabits, selectDay, openModal, filters, setFilters}}>
+        <HabitBoardContext.Provider value={{habits, habitLogs, error, isLoading: pageLoading, selectedDate, refreshHabits, selectDay, openModal, filters, setFilters}}>
             {children}
             <ModalFormHabit show={isOpenModal} onClose={() => openModal(false)} isEdit={isEdit} habit={selectedHabit} />
         </HabitBoardContext.Provider>

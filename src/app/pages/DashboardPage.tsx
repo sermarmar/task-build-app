@@ -44,7 +44,7 @@ export const DashboardPage: React.FC = () => {
                             <MapActivitiesBoard grid={grid} loading={gridLoading} />
                         </div>
                         <div className="xl:col-span-4">
-                            <MentalHealthBoard balance={balance} isLoading={mentalHealthLoading} />
+                            <MentalHealthBoard areas={areas} balance={balance} isLoading={mentalHealthLoading} />
                         </div>
 
                         <div className="xl:col-span-4">

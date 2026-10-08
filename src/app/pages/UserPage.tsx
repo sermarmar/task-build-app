@@ -38,13 +38,13 @@ export const UserPage: React.FC = () => {
 
             <div className="grid grid-cols-1 xl:grid-cols-[340px_1fr] gap-6 items-start">
                 <div className="flex flex-col gap-6">
-                    <ProfileCard profile={profile} metrics={metrics} completion={completion} onEdit={() => setIsModalOpen(true)} />
+                    <ProfileCard profile={profile} metrics={metrics} completion={completion} isLoading={isLoading} onEdit={() => setIsModalOpen(true)} />
                     <RecentActivityBoard />
                 </div>
 
                 <div className="flex flex-col gap-6 min-w-0">
                     <WeeklyActivityChart />
-                    {!isLoading && <RecommendationsBoard recommendations={recommendations} onEdit={() => setIsModalOpen(true)} />}
+                    <RecommendationsBoard recommendations={recommendations} isLoading={isLoading} onEdit={() => setIsModalOpen(true)} />
                 </div>
             </div>
 

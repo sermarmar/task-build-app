@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GroupService } from "@/app/core/service/groups/GroupService";
 import { MetalHealthService } from "../services/MetalHealthService";
+import { usePageLoading } from "@/app/contexts/page-loading/usePageLoading";
 
 export interface WellbeingArea {
     label: string;
@@ -44,5 +45,7 @@ export const useMentalHealth = (): UseMentalHealthResult => {
         load();
     }, []);
 
-    return { areas, balance, isLoading };
+    const pageLoading = usePageLoading(isLoading);
+
+    return { areas, balance, isLoading: pageLoading };
 };

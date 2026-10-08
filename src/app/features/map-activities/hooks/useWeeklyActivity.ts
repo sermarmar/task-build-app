@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RetrieveWeeklyActivityService, type WeeklyActivity } from "../services/RetrieveWeeklyActivityService";
+import { usePageLoading } from "@/app/contexts/page-loading/usePageLoading";
 
 interface UseWeeklyActivityResult {
     weekly: WeeklyActivity | null;
@@ -17,5 +18,7 @@ export const useWeeklyActivity = (): UseWeeklyActivityResult => {
         });
     }, []);
 
-    return { weekly, isLoading };
+    const pageLoading = usePageLoading(isLoading);
+
+    return { weekly, isLoading: pageLoading };
 };

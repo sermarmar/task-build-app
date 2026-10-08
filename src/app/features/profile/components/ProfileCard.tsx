@@ -4,6 +4,7 @@ import { useAuth } from "@/app/contexts/auth/useAuth";
 import { Card } from "@/app/components/ux/Card";
 import { Button } from "@/app/components/ux/Button";
 import { CircularProgress } from "@/app/components/ux/CircularProgress";
+import { Skeleton, SkeletonCircle, SkeletonLine } from "@/app/components/ux/Skeleton";
 import type { HealthProfile } from "@/app/features/health/models/HealthProfile";
 import type { HealthMetrics } from "@/app/features/health/services/HealthMetricsService";
 import { isFilled } from "@/app/features/health/helpers/formatters";
@@ -12,6 +13,7 @@ interface ProfileCardProps {
     profile: HealthProfile;
     metrics: HealthMetrics;
     completion: number;
+    isLoading: boolean;
     onEdit: () => void;
 }
 
@@ -22,7 +24,33 @@ const MiniRing: React.FC<{ label: string; value: number; text: string; color: st
     </div>
 );
 
-export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, metrics, completion, onEdit }) => {
+const ProfileCardSkeleton: React.FC = () => (
+    <Card className="flex flex-col items-center gap-5">
+        <div className="flex flex-col items-center gap-2">
+            <SkeletonCircle className="size-[156px]" />
+            <SkeletonLine className="w-32 h-3" />
+        </div>
+        <div className="flex flex-col items-center gap-2 w-full">
+            <SkeletonLine className="w-40 h-6" />
+            <SkeletonLine className="w-28" />
+        </div>
+        <div className="grid grid-cols-3 gap-3 w-full">
+            {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                    <SkeletonCircle className="size-[76px]" />
+                    <SkeletonLine className="w-12 h-3" />
+                </div>
+            ))}
+        </div>
+        <Skeleton className="h-10 w-full rounded-full" />
+        <div className="w-full border-t border-primary-100 pt-4 flex items-center justify-between gap-3">
+            <SkeletonLine className="w-1/2" />
+            <SkeletonCircle className="size-9" />
+        </div>
+    </Card>
+);
+
+export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, metrics, completion, isLoading, onEdit }) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const initials = `${user?.name?.charAt(0) ?? ''}${user?.lastName?.charAt(0) ?? ''}`.toUpperCase();
@@ -34,6 +62,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile, metrics, comp
         logout();
         navigate('/');
     };
+
+    if (isLoading) return <ProfileCardSkeleton />;
 
     return (
         <Card className="flex flex-col items-center text-center gap-5">

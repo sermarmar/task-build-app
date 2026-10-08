@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { RetrieveMapActivitiesService } from "../services/RetrieveMapActivitiesService";
 import type { ActivityGrid } from "../models/MapActivity";
+import { usePageLoading } from "@/app/contexts/page-loading/usePageLoading";
 
 interface UseActivityGridResult {
     grid: ActivityGrid | null;
@@ -18,5 +19,7 @@ export const useActivityGrid = (): UseActivityGridResult => {
         });
     }, []);
 
-    return { grid, loading };
+    const pageLoading = usePageLoading(loading);
+
+    return { grid, loading: pageLoading };
 };
