@@ -7,7 +7,8 @@ import { DeleteHabitService } from "../services/DeleteHabitService";
 import { Checkbox } from "../../../components/ux/Checkbox";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
 import { useColorAlpha } from "../../../hooks/useColorAlpha";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
+import { useNotification } from "../../../contexts/notification/useNotification";
 import { cn } from "@/utils/cn";
 
 interface HabitCardProps {
@@ -20,6 +21,7 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted, showBu
 
     const [checked, setChecked] = useState<boolean>(isCompleted);
     const { selectedDate, openModal, refreshHabits } = useHabitBoardContext();
+    const { notify } = useNotification();
     const color = habit.categories?.group?.color ?? '#9580b5';
     const tint = useColorAlpha(color, 0.16);
 
@@ -27,9 +29,14 @@ export const HabitCard: React.FC<HabitCardProps> = ({ habit, isCompleted, showBu
         setChecked(isCompleted);
     }, [isCompleted]);
 
-    const handleHabitCompleted = (isChecked: boolean) => {
+    const handleHabitCompleted = async (isChecked: boolean) => {
         setChecked(isChecked);
-        CompleteHabitService.execute(habit.id!, toLocalDateString(selectedDate), isChecked);
+        try {
+            await CompleteHabitService.execute(habit.id!, toLocalDateString(selectedDate), isChecked);
+        } catch {
+            setChecked(!isChecked);
+            notify(<><X /><span>No se pudo guardar el hábito.</span></>, 'danger');
+        }
     }
 
     const handleDelete = async () => {

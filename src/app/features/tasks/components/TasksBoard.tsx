@@ -1,13 +1,15 @@
 import { ClipboardList, X } from "lucide-react";
 import { ModalCreateTask } from "./ModalCreateTask";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Card } from "../../../components/ux/Card";
 import { TaskBoardProvider } from "../contexts/TaskBoardProvider";
 import { useTaskBoardContext } from "../contexts/useTaskBoardContext";
 import { TabActionsTask } from "./TabActionsTask";
 import { TaskColumns } from "./TaskColumns";
+import { TaskCardView } from "./TaskCard";
 import { Skeleton, SkeletonLine } from "@/app/components/ux/Skeleton";
-import { DndContext, type DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { UpdateTaskService } from "../services/UpdateTaskService";
 import { useNotification } from "../../../contexts/notification/useNotification";
 
@@ -34,9 +36,15 @@ export const TasksBoardContent: React.FC = () => {
     const { tasks, statuses, isLoading, error, refreshTasks } = useTaskBoardContext();
     const { notify } = useNotification();
 
+    const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+    const activeTask = tasks.find(t => t.id === activeTaskId);
+
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
+    const handleDragStart = (event: DragStartEvent) => setActiveTaskId(event.active.id as string);
+
     const handleDragEnd = async (event: DragEndEvent) => {
+        setActiveTaskId(null);
         const { active, over } = event;
         if (!over) return;
         const taskId = active.id as string;
@@ -56,8 +64,22 @@ export const TasksBoardContent: React.FC = () => {
             {isLoading && <TasksBoardSkeleton />}
             {!isLoading && error && <p className="text-sm text-accent-blossom-700">{error.message}</p>}
             {!isLoading && !error && (
-                <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+                <DndContext
+                    sensors={sensors}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onDragCancel={() => setActiveTaskId(null)}
+                >
                     <TaskColumns status={statuses} tasks={tasks} />
+                    {/* Portal al body: dentro de las columnas (con scroll propio) la tarjeta quedaba recortada y por debajo */}
+                    {createPortal(
+                        <DragOverlay dropAnimation={null}>
+                            {activeTask && (
+                                <TaskCardView task={activeTask} className="shadow-clay rotate-2 cursor-grabbing" />
+                            )}
+                        </DragOverlay>,
+                        document.body
+                    )}
                 </DndContext>
             )}
         </div>

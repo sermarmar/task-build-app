@@ -6,12 +6,12 @@ import { StatusService } from "../../../core/service/status/StatusService";
 import { cn } from "@/utils/cn";
 
 interface BadgeStatusDynamicProps {
-    status?: Status;
+    value?: number | null;
     showAll?: boolean;
     onChange: (status: Status | null) => void;
 }
 
-export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ status, showAll = false, onChange }) => {
+export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ value, showAll = false, onChange }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [statuses, setStatuses] = useState<Status[]>([]);
     const ref = useRef<HTMLDivElement>(null);
@@ -33,6 +33,8 @@ export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ status, 
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isOpen]);
 
+    const selected = statuses.find(s => s.id === value);
+
     const handleSelect = (selected: Status) => {
         onChange(selected);
         setIsOpen(false);
@@ -46,8 +48,8 @@ export const BadgeStatusDynamic: React.FC<BadgeStatusDynamicProps> = ({ status, 
                 aria-expanded={isOpen}
                 className="flex items-center gap-2 rounded-full bg-surface shadow-clay-sm pl-1.5 pr-3 py-1.5 cursor-pointer"
             >
-                {status
-                    ? <Badge color={status.color} text={status.name} />
+                {selected
+                    ? <Badge color={selected.color} text={selected.name} />
                     : <Badge color="primary-900" text="Todos los estados" />
                 }
                 <ChevronDown size={16} className={cn("text-primary-500 transition-transform", isOpen && "rotate-180")} />

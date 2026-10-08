@@ -7,6 +7,7 @@ import type { HabitLog } from "../models/HabitLog";
 import { RetrieveHabitLogsService } from "../services/RetrieveHabitLogsService";
 import { ModalFormHabit } from "../components/ModalFormHabit";
 import { DAY_NAMES, toLocalDateString } from "../helpers/daysHelpers";
+import { useHabitLogsStore } from "../stores/useHabitLogsStore";
 
 const getTodayDays = (): string[] => {
     const today = new Date();
@@ -59,6 +60,17 @@ export const HabitBoardProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
         fetchHabits();
     }, [refreshTrigger, selectedDays, selectedDate]);
+
+    // Recarga solo los logs (sin skeleton) cuando se marca un hábito desde cualquier lista.
+    // selectedDate se omite a propósito: el cambio de fecha ya lo cubre el efecto anterior
+    const logsVersion = useHabitLogsStore(state => state.version);
+    useEffect(() => {
+        if (logsVersion === 0) return;
+        RetrieveHabitLogsService.getHabitLogs(toLocalDateString(selectedDate)).then(({ habitLogs }) => {
+            if (habitLogs) setHabitLogs(habitLogs);
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [logsVersion]);
 
     const refreshHabits = (cleanStorage?: boolean) => {
         if(cleanStorage) {
