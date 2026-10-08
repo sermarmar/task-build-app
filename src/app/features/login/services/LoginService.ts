@@ -37,6 +37,7 @@ const LoginSupabaseService = {
             email: profile.email,
             name: profile.name,
             lastName: profile.last_name,
+            birthDate: profile.birth_date,
         };
 
         return { user, error };

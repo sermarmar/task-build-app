@@ -15,14 +15,19 @@ interface InputProps {
     type: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' | 'color' | 'file' | 'range' | 'textarea';
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     placeholder?: string;
     required?: boolean;
     size?: InputSize;
     className?: string;
     icon?: React.ReactNode;
+    suffix?: string;
+    min?: number | string;
+    max?: number | string;
+    step?: number | string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(({ name, label, type, value, onChange, placeholder, required, size = 'md', className, icon }, ref) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ name, label, type, value, onChange, onBlur, placeholder, required, size = 'md', className, icon, suffix, min, max, step }, ref) => {
     return (
         <>
             {label && (
@@ -43,16 +48,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ name, label, ty
                     value={value}
                     name={name}
                     onChange={onChange}
+                    onBlur={onBlur}
+                    min={min}
+                    max={max}
+                    step={step}
                     className={cn(
                         'w-full rounded-2xl bg-white/70 border border-white shadow-clay-inset text-primary-950 placeholder:text-primary-400',
                         'focus:ring-2 focus:ring-tertiary-300 focus:bg-white outline-none transition',
                         sizeClasses[size],
                         !!icon && 'pl-10',
+                        !!suffix && 'pr-12',
                         className,
                     )}
                     placeholder={placeholder}
                     required={required}
                 />
+                {suffix && (
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-primary-400 pointer-events-none">
+                        {suffix}
+                    </span>
+                )}
             </div>
         </>
     );
