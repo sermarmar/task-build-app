@@ -55,19 +55,13 @@ export const MetalHealthService = {
 
         if (total === 0) return { groupPoints, balance: 0, error: null };
 
-        // Cuota ideal por grupo — cap para que ningún grupo domine
+        // Cuota ideal por grupo — el cap solo cuenta para el balance, los puntos se muestran reales
         const idealShare = total / groups.length;
-        let earnedTotal = 0;
-        const cappedByGroup: Record<string, number> = {};
-        groups.forEach(g => {
-            const capped = Math.min(rawByGroup[g.name] ?? 0, idealShare);
-            cappedByGroup[g.name] = capped;
-            earnedTotal += capped;
-        });
+        const earnedTotal = groups.reduce((sum, g) => sum + Math.min(rawByGroup[g.name] ?? 0, idealShare), 0);
 
         const balance = Math.round((earnedTotal / total) * 100);
 
-        return { groupPoints: cappedByGroup, balance, error: null };
+        return { groupPoints, balance, error: null };
     }
 
 };
