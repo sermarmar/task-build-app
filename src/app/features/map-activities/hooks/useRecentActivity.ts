@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RetrieveRecentActivityService, type RecentActivityItem } from "../services/RetrieveRecentActivityService";
+import { usePageLoading } from "@/app/contexts/page-loading/usePageLoading";
 
 interface UseRecentActivityResult {
     items: RecentActivityItem[];
@@ -17,5 +18,7 @@ export const useRecentActivity = (): UseRecentActivityResult => {
         });
     }, []);
 
-    return { items, isLoading };
+    const pageLoading = usePageLoading(isLoading);
+
+    return { items, isLoading: pageLoading };
 };

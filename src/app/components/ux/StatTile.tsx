@@ -47,11 +47,16 @@ export const StatTile: React.FC<StatTileProps> = ({ icon, label, value, hint, to
         <div className="ml-auto text-right min-w-0">
             <p className="text-sm font-bold opacity-90">{label}</p>
             {isLoading ? (
-                <Skeleton className="h-9 w-20 my-0.5 ml-auto rounded-xl bg-white/40" />
+                <>
+                    <Skeleton className="h-9 w-20 my-0.5 ml-auto rounded-xl bg-white/40" />
+                    <Skeleton className="h-3 w-28 mt-1 ml-auto rounded-full bg-white/40" />
+                </>
             ) : (
-                <p className="font-heading text-3xl font-bold leading-tight">{value}</p>
+                <>
+                    <p className="font-heading text-3xl font-bold leading-tight">{value}</p>
+                    <p className="text-xs font-bold opacity-80 truncate">{hint}</p>
+                </>
             )}
-            <p className="text-xs font-bold opacity-80 truncate">{hint}</p>
         </div>
     </article>
 );

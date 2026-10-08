@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RetrieveGroupSummaryService, type GroupSummary } from "../services/RetrieveGroupSummaryService";
+import { usePageLoading } from "@/app/contexts/page-loading/usePageLoading";
 
 interface UseGroupSummaryResult {
     groups: GroupSummary[];
@@ -17,5 +18,7 @@ export const useGroupSummary = (): UseGroupSummaryResult => {
         });
     }, []);
 
-    return { groups, isLoading };
+    const pageLoading = usePageLoading(isLoading);
+
+    return { groups, isLoading: pageLoading };
 };

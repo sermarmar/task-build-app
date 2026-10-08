@@ -7,6 +7,7 @@ import { TaskPage } from "../pages/TaskPage";
 import { Navbar } from "../components/template/Navbar";
 import { ConfigPage } from "../pages/ConfigPage";
 import { UserPage } from "../pages/UserPage";
+import { PageLoadingProvider } from "../contexts/page-loading/PageLoadingProvider";
 
 export const RouterProvider: React.FC = () => {
     return (
@@ -23,9 +24,9 @@ export const RouterProvider: React.FC = () => {
                                 <Navbar />
                                 <main className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-primary px-4 pt-6 pb-28 md:px-6 md:py-3">
                                     <Routes>
-                                        <Route path="/home" element={<DashboardPage />} />
-                                        <Route path="/notes" element={<TaskPage />} />
-                                        <Route path="/profile" element={<UserPage />} />
+                                        <Route path="/home" element={<PageLoadingProvider><DashboardPage /></PageLoadingProvider>} />
+                                        <Route path="/notes" element={<PageLoadingProvider><TaskPage /></PageLoadingProvider>} />
+                                        <Route path="/profile" element={<PageLoadingProvider><UserPage /></PageLoadingProvider>} />
                                         <Route path="/settings" element={<ConfigPage />} />
                                     </Routes>
                                 </main>

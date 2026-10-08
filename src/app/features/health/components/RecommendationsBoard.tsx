@@ -1,12 +1,32 @@
 import { Activity, BatteryCharging, Brain, Droplets, MoonStar, Scale, UserRoundPen } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { Button } from "@/app/components/ux/Button";
+import { Skeleton, SkeletonLine } from "@/app/components/ux/Skeleton";
 import type { HealthRecommendation, RecommendationKind } from "../services/HealthRecommendationsService";
 
 interface RecommendationsBoardProps {
     recommendations: HealthRecommendation[];
+    isLoading: boolean;
     onEdit: () => void;
 }
+
+const RecommendationCardSkeleton: React.FC = () => (
+    <div className="flex flex-col gap-4 rounded-3xl bg-surface shadow-clay p-5">
+        <div className="flex items-start justify-between gap-3">
+            <SkeletonLine className="w-2/3 h-5" />
+            <Skeleton className="size-12 shrink-0 rounded-2xl" />
+        </div>
+        <div className="flex flex-col gap-2">
+            <SkeletonLine className="w-full h-3" />
+            <SkeletonLine className="w-full h-3" />
+            <SkeletonLine className="w-3/4 h-3" />
+        </div>
+        <div className="flex items-center justify-between gap-3">
+            <Skeleton className="h-6 w-20 rounded-full" />
+            <SkeletonLine className="w-16" />
+        </div>
+    </div>
+);
 
 const KIND_STYLES: Record<RecommendationKind, { icon: React.ReactNode; badge: string; tag: string }> = {
     water:    { icon: <Droplets />,        badge: 'clay-blue text-secondary-950',                                         tag: 'bg-secondary-100 text-secondary-800' },
@@ -18,10 +38,14 @@ const KIND_STYLES: Record<RecommendationKind, { icon: React.ReactNode; badge: st
     profile:  { icon: <UserRoundPen />,    badge: 'clay-peach text-white',                                               tag: 'bg-tertiary-100 text-tertiary-700' },
 };
 
-export const RecommendationsBoard: React.FC<RecommendationsBoardProps> = ({ recommendations, onEdit }) => (
+export const RecommendationsBoard: React.FC<RecommendationsBoardProps> = ({ recommendations, isLoading, onEdit }) => (
     <section className="flex flex-col gap-4">
         <h2 className="font-heading text-xl font-bold text-primary-950">Recomendaciones para ti</h2>
-        {recommendations.length === 0 ? (
+        {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {Array.from({ length: 3 }).map((_, i) => <RecommendationCardSkeleton key={i} />)}
+            </div>
+        ) : recommendations.length === 0 ? (
             <p className="rounded-3xl bg-white/40 shadow-clay-inset p-6 text-sm font-bold text-primary-500">
                 Todo en orden con tus datos actuales. Sigue así.
             </p>

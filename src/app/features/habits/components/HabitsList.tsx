@@ -9,7 +9,7 @@ interface HabitsListProps {
     className?: string;
 }
 
-const HabitCardSkeleton: React.FC = () => (
+export const HabitCardSkeleton: React.FC = () => (
     <div className="rounded-2xl bg-white/50 p-3 flex items-center gap-3">
         <Skeleton className="size-10 rounded-xl shrink-0" />
         <div className="flex-1 flex flex-col gap-2">

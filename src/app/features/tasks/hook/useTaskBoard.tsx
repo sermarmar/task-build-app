@@ -5,6 +5,7 @@ import { DEFAULT_TASK_FILTERS } from "../models/Task";
 import type { ErrorMessage } from "../../../shared/Error";
 import type { Status } from "../../../core/models/Status";
 import { StatusService } from "../../../core/service/status/StatusService";
+import { usePageLoading } from "../../../contexts/page-loading/usePageLoading";
 
 const STATUS_ORDER = ['PENDIENTE', 'EN PROGRESO', 'BLOQUEADA', 'EN REVISION', 'COMPLETADA'];
 const PRIORITY_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
@@ -72,5 +73,7 @@ export const useTaskBoard = () => {
     const openEditModal = (task: Task) => setEditingTask(task);
     const closeEditModal = () => setEditingTask(null);
 
-    return { tasks, statuses, error, isLoading, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
+    const pageLoading = usePageLoading(isLoading);
+
+    return { tasks, statuses, error, isLoading: pageLoading, refreshTasks, editingTask, openEditModal, closeEditModal, filters, setFilters };
 };

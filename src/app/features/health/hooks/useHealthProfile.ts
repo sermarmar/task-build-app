@@ -3,6 +3,7 @@ import type { ErrorMessage } from "@/app/shared/Error";
 import { EMPTY_HEALTH_PROFILE, type HealthProfile } from "../models/HealthProfile";
 import { RetrieveHealthProfileService } from "../services/RetrieveHealthProfileService";
 import { SaveHealthProfileService } from "../services/SaveHealthProfileService";
+import { usePageLoading } from "@/app/contexts/page-loading/usePageLoading";
 
 interface UseHealthProfileResult {
     profile: HealthProfile;
@@ -36,5 +37,7 @@ export const useHealthProfile = (userId?: string): UseHealthProfileResult => {
         return { error };
     };
 
-    return { profile, isLoading, isSaving, error, save };
+    const pageLoading = usePageLoading(isLoading);
+
+    return { profile, isLoading: pageLoading, isSaving, error, save };
 };
