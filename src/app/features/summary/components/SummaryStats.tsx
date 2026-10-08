@@ -1,10 +1,10 @@
 import { Activity, Award, ListTodo, Timer } from "lucide-react";
+import { StatTile } from "@/app/components/ux/StatTile";
 import { useTaskBoardContext } from "@/app/features/tasks/contexts/useTaskBoardContext";
 import { useHabitBoardContext } from "@/app/features/habits/contexts/useHabitBoardContext";
 import { usePomodoroStore } from "@/app/features/pomodoro/stores/usePomodoreStore";
 import type { ActivityGrid } from "@/app/features/map-activities/models/MapActivity";
 import { percent, SummaryStatsService } from "../services/SummaryStatsService";
-import { StatCard } from "./StatCard";
 
 interface SummaryStatsProps {
     grid: ActivityGrid | null;
@@ -24,39 +24,39 @@ export const SummaryStats: React.FC<SummaryStatsProps> = ({ grid, gridLoading })
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            <StatCard
+            <StatTile
                 icon={<ListTodo />}
-                value={stats.tasks.pending}
                 label="Tareas pendientes"
+                value={stats.tasks.pending}
                 hint={`${stats.tasks.completed} de ${stats.tasks.total} completadas`}
+                tone="peach"
                 progress={percent(stats.tasks.completed, stats.tasks.total)}
-                color="var(--color-tertiary-500)"
                 isLoading={tasksLoading}
             />
-            <StatCard
+            <StatTile
                 icon={<Award />}
-                value={`${stats.habits.completed}/${stats.habits.total}`}
                 label="Hábitos de hoy"
+                value={`${stats.habits.completed}/${stats.habits.total}`}
                 hint={`${percent(stats.habits.completed, stats.habits.total)}% del día cumplido`}
+                tone="blue"
                 progress={percent(stats.habits.completed, stats.habits.total)}
-                color="var(--color-secondary-500)"
                 isLoading={habitsLoading}
             />
-            <StatCard
+            <StatTile
                 icon={<Timer />}
-                value={stats.pomodoros.completed}
                 label="Pomodoros"
+                value={stats.pomodoros.completed}
                 hint={`Objetivo diario: ${stats.pomodoros.goal}`}
+                tone="lilac"
                 progress={percent(stats.pomodoros.completed, stats.pomodoros.goal)}
-                color="var(--color-lilac-500)"
             />
-            <StatCard
+            <StatTile
                 icon={<Activity />}
-                value={stats.activities.total}
                 label="Actividades"
+                value={stats.activities.total}
                 hint={`${stats.activities.activeDays} días activos este año`}
+                tone="rose"
                 progress={percent(stats.activities.activeDays, stats.activities.days)}
-                color="var(--color-accent-blossom-500)"
                 isLoading={gridLoading}
             />
         </div>
