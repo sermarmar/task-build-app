@@ -26,6 +26,16 @@ export const GroupMockService = {
         return { error: null };
     },
 
+    updateGroupIcon: async (id: string, icon: string) => {
+        const db = mockDb.read();
+        const group = db.groups.find(g => g.id === id);
+        if (!group) return { error: { message: 'No se pudo actualizar el icono del grupo.' } };
+
+        group.icon = icon;
+        mockDb.write(db);
+        return { error: null };
+    },
+
     // Sin caché: los mocks leen siempre de mockDb
     clearCache: () => {},
 

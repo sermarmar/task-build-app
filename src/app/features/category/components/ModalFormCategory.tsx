@@ -8,7 +8,6 @@ import { Button } from "../../../components/ux/Button";
 import { Input } from "../../../components/ux/Input";
 import { Check, X } from "lucide-react";
 import { IconsList } from "../../../components/template/IconsList";
-import { useColorAlpha } from "../../../hooks/useColorAlpha";
 import { DynamicIcon } from "../../../components/ux/DynamicIcon";
 import { CategoryService } from "../../../core/service/categories/CategoryService";
 import type { Group } from "../../group/models/Group";
@@ -38,8 +37,6 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
     const watchedDescription = watch("description");
     const watchedIcon = watch("icon");
     const watchedGroupId = watch("group_id");
-
-    const previewBg = useColorAlpha(previewColor, 0.16);
 
     useEffect(() => {
         if (isEdit && category) {
@@ -129,8 +126,8 @@ export const ModalFormCategory: React.FC<ModalFormCategoryProps> = ({ show, isEd
 
                     <div className="flex-1 flex gap-4 items-center p-4 rounded-2xl bg-surface shadow-clay-sm">
                         <span
-                            className="size-12 flex items-center justify-center rounded-xl shrink-0"
-                            style={{ backgroundColor: previewBg, color: previewColor }}
+                            className="size-12 flex items-center justify-center rounded-2xl shrink-0 text-white shadow-clay-pressed"
+                            style={{ background: `linear-gradient(160deg, ${previewColor}aa, ${previewColor})` }}
                         >
                             <DynamicIcon name={watchedIcon} />
                         </span>

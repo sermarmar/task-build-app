@@ -32,13 +32,13 @@ let seedCounter = 0;
 const mockSeedId = (prefix: string) => `${prefix}-${++seedCounter}`;
 
 const groups: GroupRow[] = [
-    { id: 'grp-salud',         name: 'Salud',         color: '#4fa38a', created_at: SEED_DATE },
-    { id: 'grp-productividad', name: 'Productividad', color: '#3e7fb5', created_at: SEED_DATE },
-    { id: 'grp-bienestar',     name: 'Bienestar',     color: '#b57be8', created_at: SEED_DATE },
-    { id: 'grp-hogar',         name: 'Hogar',         color: '#e8a535', created_at: SEED_DATE },
-    { id: 'grp-social',        name: 'Social',        color: '#e84fa3', created_at: SEED_DATE },
-    { id: 'grp-aprendizaje',   name: 'Aprendizaje',   color: '#e85d35', created_at: SEED_DATE },
-    { id: 'grp-ocio',          name: 'Ocio',          color: '#22c55e', created_at: SEED_DATE },
+    { id: 'grp-salud',         name: 'Salud',         color: '#4fa38a', icon: 'Heart',         created_at: SEED_DATE },
+    { id: 'grp-productividad', name: 'Productividad', color: '#3e7fb5', icon: 'Target',        created_at: SEED_DATE },
+    { id: 'grp-bienestar',     name: 'Bienestar',     color: '#b57be8', icon: 'Smile',         created_at: SEED_DATE },
+    { id: 'grp-hogar',         name: 'Hogar',         color: '#e8a535', icon: 'House',         created_at: SEED_DATE },
+    { id: 'grp-social',        name: 'Social',        color: '#e84fa3', icon: 'Users',         created_at: SEED_DATE },
+    { id: 'grp-aprendizaje',   name: 'Aprendizaje',   color: '#e85d35', icon: 'GraduationCap', created_at: SEED_DATE },
+    { id: 'grp-ocio',          name: 'Ocio',          color: '#22c55e', icon: 'Gamepad2',      created_at: SEED_DATE },
 ];
 
 const categories: CategoryRow[] = [
