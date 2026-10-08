@@ -46,7 +46,8 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
                         return (
                             <li key={path} className="relative flex">
                                 {active && (
-                                    <span className="hidden md:block absolute -left-4 top-1/2 -translate-y-1/2 h-7 w-1.5 rounded-r-full clay-peach" />
+                                    // -left-6 = (w-24 de la nav - size-12 del botón) / 2, para que quede pegada al borde
+                                    <span className="hidden md:block absolute -left-6 top-1/2 -translate-y-1/2 h-7 w-1.5 rounded-r-full clay-peach" />
                                 )}
                                 <button
                                     type="button"

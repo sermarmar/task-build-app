@@ -10,11 +10,12 @@ interface TabActionsTaskProps {
 }
 
 export const TabActionsTask: React.FC<TabActionsTaskProps> = ({ onCreateClick }) => {
-    const { setFilters } = useTaskBoardContext();
+    const { filters, setFilters } = useTaskBoardContext();
 
     return (
         <div className="flex flex-wrap gap-3 items-center">
             <BadgeStatusDynamic
+                value={filters.statusId}
                 showAll
                 onChange={status => setFilters(prev => ({ ...prev, statusId: status?.id ?? null }))}
             />

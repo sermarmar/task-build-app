@@ -1,5 +1,6 @@
 import { HabitLogRepository } from "../../../infra/repositories/HabitLogRepository"
 import { RetrieveHabitLogsService } from "./RetrieveHabitLogsService";
+import { useHabitLogsStore } from "../stores/useHabitLogsStore";
 
 export const CompleteHabitService = {
 
@@ -23,6 +24,7 @@ export const CompleteHabitService = {
         }
 
         RetrieveHabitLogsService.removeLogsFromStorage(date);
+        useHabitLogsStore.getState().notifyChange();
     }
 
 }

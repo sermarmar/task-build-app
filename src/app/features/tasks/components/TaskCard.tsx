@@ -7,11 +7,16 @@ import { useTaskBoardContext } from '../contexts/useTaskBoardContext';
 import { useNotification } from '../../../contexts/notification/useNotification';
 import type { Task } from '../models/Task';
 import { useDraggable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/utils/cn';
 
 interface TaskCardProps {
     task: Task;
+}
+
+interface TaskCardViewProps {
+    task: Task;
+    className?: string;
+    actions?: React.ReactNode;
 }
 
 const PRIORITY_ICONS: Record<PriorityLevel, React.ReactElement> = {
@@ -20,36 +25,14 @@ const PRIORITY_ICONS: Record<PriorityLevel, React.ReactElement> = {
     high:   <ArrowUp size={12} />,
 };
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+// Solo presentación: lo usan la tarjeta arrastrable y la copia que flota en el DragOverlay
+export const TaskCardView: React.FC<TaskCardViewProps> = ({ task, className, actions }) => {
     const color = task.category?.group?.color ?? '#9580b5';
     const tint = useColorAlpha(color, 0.16);
     const priorityTint = useColorAlpha(task.priority?.color ?? '#000000', 0.14);
-    const { refreshTasks, openEditModal } = useTaskBoardContext();
-    const { notify } = useNotification();
-
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: task.id! });
-
-    const handleDelete = async () => {
-        const { error } = await DeleteTaskService.delete(task.id!);
-        if (error) {
-            notify(<><X /><span>No se pudo eliminar la tarea.</span></>, 'danger');
-        } else {
-            refreshTasks();
-            notify(<><Check /><span>Tarea eliminada correctamente.</span></>, 'success');
-        }
-    };
 
     return (
-        <article
-            ref={setNodeRef}
-            {...listeners}
-            {...attributes}
-            className={cn(
-                'group flex flex-col gap-3 p-3 rounded-2xl bg-surface shadow-clay-sm cursor-grab active:cursor-grabbing transition-shadow',
-                isDragging && 'opacity-50 shadow-clay',
-            )}
-            style={{ transform: CSS.Translate.toString(transform) }}
-        >
+        <article className={cn('group flex flex-col gap-3 p-3 rounded-2xl bg-surface shadow-clay-sm', className)}>
             <div className="flex gap-3 items-start">
                 <span
                     className="size-10 flex items-center justify-center rounded-xl shrink-0 [&_svg]:size-5"
@@ -81,25 +64,56 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         </span>
                     )}
                 </div>
-                <div className="flex items-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                    <button
-                        type="button"
-                        aria-label="Editar tarea"
-                        className="text-primary-400 cursor-pointer hover:text-secondary-600 transition-colors"
-                        onClick={() => openEditModal(task)}
-                    >
-                        <Pencil size={15} />
-                    </button>
-                    <button
-                        type="button"
-                        aria-label="Eliminar tarea"
-                        className="text-primary-400 cursor-pointer hover:text-accent-blossom-600 transition-colors"
-                        onClick={handleDelete}
-                    >
-                        <Trash2 size={15} />
-                    </button>
-                </div>
+                {actions}
             </div>
         </article>
+    );
+};
+
+export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+    const { refreshTasks, openEditModal } = useTaskBoardContext();
+    const { notify } = useNotification();
+
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: task.id! });
+
+    const handleDelete = async () => {
+        const { error } = await DeleteTaskService.delete(task.id!);
+        if (error) {
+            notify(<><X /><span>No se pudo eliminar la tarea.</span></>, 'danger');
+        } else {
+            refreshTasks();
+            notify(<><Check /><span>Tarea eliminada correctamente.</span></>, 'success');
+        }
+    };
+
+    const actions = (
+        <div className="flex items-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+            <button
+                type="button"
+                aria-label="Editar tarea"
+                className="text-primary-400 cursor-pointer hover:text-secondary-600 transition-colors"
+                onClick={() => openEditModal(task)}
+            >
+                <Pencil size={15} />
+            </button>
+            <button
+                type="button"
+                aria-label="Eliminar tarea"
+                className="text-primary-400 cursor-pointer hover:text-accent-blossom-600 transition-colors"
+                onClick={handleDelete}
+            >
+                <Trash2 size={15} />
+            </button>
+        </div>
+    );
+
+    return (
+        <div ref={setNodeRef} {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing">
+            <TaskCardView
+                task={task}
+                actions={actions}
+                className={cn(isDragging && 'opacity-40 shadow-none border-2 border-dashed border-tertiary-300')}
+            />
+        </div>
     );
 }
